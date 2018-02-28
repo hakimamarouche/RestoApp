@@ -2,53 +2,37 @@
 /*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
-import java.sql.Date;
 import java.util.*;
 
-// line 3 "../../../../../main.ump"
-// line 70 "../../../../../main.ump"
+// line 66 "../../../../../RestoApp.ump"
 public class Bill
 {
-
-  //------------------------
-  // STATIC VARIABLES
-  //------------------------
-
-  private static int nextBillId = 1;
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Bill Attributes
-  private int numberOfPeople;
-  private double total;
-  private Date billingDate;
-
-  //Autounique Attributes
-  private int billId;
-
   //Bill Associations
-  private List<Order> orders;
-  private List<Table> tables;
+  private Order order;
+  private List<Seat> issuedForSeats;
   private RestoApp restoApp;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Bill(int aNumberOfPeople, double aTotal, Date aBillingDate, RestoApp aRestoApp, Table... allTables)
+  public Bill(Order aOrder, RestoApp aRestoApp, Seat... allIssuedForSeats)
   {
-    numberOfPeople = aNumberOfPeople;
-    total = aTotal;
-    billingDate = aBillingDate;
-    billId = nextBillId++;
-    orders = new ArrayList<Order>();
-    tables = new ArrayList<Table>();
-    boolean didAddTables = setTables(allTables);
-    if (!didAddTables)
+    boolean didAddOrder = setOrder(aOrder);
+    if (!didAddOrder)
     {
-      throw new RuntimeException("Unable to create Bill, must have at least 1 tables");
+      throw new RuntimeException("Unable to create bill due to order");
+    }
+    issuedForSeats = new ArrayList<Seat>();
+    boolean didAddIssuedForSeats = setIssuedForSeats(allIssuedForSeats);
+    if (!didAddIssuedForSeats)
+    {
+      throw new RuntimeException("Unable to create Bill, must have at least 1 issuedForSeats");
     }
     boolean didAddRestoApp = setRestoApp(aRestoApp);
     if (!didAddRestoApp)
@@ -61,107 +45,41 @@ public class Bill
   // INTERFACE
   //------------------------
 
-  public boolean setNumberOfPeople(int aNumberOfPeople)
+  public Order getOrder()
   {
-    boolean wasSet = false;
-    numberOfPeople = aNumberOfPeople;
-    wasSet = true;
-    return wasSet;
+    return order;
   }
 
-  public boolean setTotal(double aTotal)
+  public Seat getIssuedForSeat(int index)
   {
-    boolean wasSet = false;
-    total = aTotal;
-    wasSet = true;
-    return wasSet;
+    Seat aIssuedForSeat = issuedForSeats.get(index);
+    return aIssuedForSeat;
   }
 
-  public boolean setBillingDate(Date aBillingDate)
+  /**
+   * only from order.orderItems.seats;
+   */
+  public List<Seat> getIssuedForSeats()
   {
-    boolean wasSet = false;
-    billingDate = aBillingDate;
-    wasSet = true;
-    return wasSet;
+    List<Seat> newIssuedForSeats = Collections.unmodifiableList(issuedForSeats);
+    return newIssuedForSeats;
   }
 
-  public int getNumberOfPeople()
+  public int numberOfIssuedForSeats()
   {
-    return numberOfPeople;
-  }
-
-  public double getTotal()
-  {
-    return total;
-  }
-
-  public Date getBillingDate()
-  {
-    return billingDate;
-  }
-
-  public int getBillId()
-  {
-    return billId;
-  }
-
-  public Order getOrder(int index)
-  {
-    Order aOrder = orders.get(index);
-    return aOrder;
-  }
-
-  public List<Order> getOrders()
-  {
-    List<Order> newOrders = Collections.unmodifiableList(orders);
-    return newOrders;
-  }
-
-  public int numberOfOrders()
-  {
-    int number = orders.size();
+    int number = issuedForSeats.size();
     return number;
   }
 
-  public boolean hasOrders()
+  public boolean hasIssuedForSeats()
   {
-    boolean has = orders.size() > 0;
+    boolean has = issuedForSeats.size() > 0;
     return has;
   }
 
-  public int indexOfOrder(Order aOrder)
+  public int indexOfIssuedForSeat(Seat aIssuedForSeat)
   {
-    int index = orders.indexOf(aOrder);
-    return index;
-  }
-
-  public Table getTable(int index)
-  {
-    Table aTable = tables.get(index);
-    return aTable;
-  }
-
-  public List<Table> getTables()
-  {
-    List<Table> newTables = Collections.unmodifiableList(tables);
-    return newTables;
-  }
-
-  public int numberOfTables()
-  {
-    int number = tables.size();
-    return number;
-  }
-
-  public boolean hasTables()
-  {
-    boolean has = tables.size() > 0;
-    return has;
-  }
-
-  public int indexOfTable(Table aTable)
-  {
-    int index = tables.indexOf(aTable);
+    int index = issuedForSeats.indexOf(aIssuedForSeat);
     return index;
   }
 
@@ -170,228 +88,155 @@ public class Bill
     return restoApp;
   }
 
-  public boolean isNumberOfOrdersValid()
+  public boolean setOrder(Order aOrder)
   {
-    boolean isValid = numberOfOrders() >= minimumNumberOfOrders();
+    boolean wasSet = false;
+    if (aOrder == null)
+    {
+      return wasSet;
+    }
+
+    Order existingOrder = order;
+    order = aOrder;
+    if (existingOrder != null && !existingOrder.equals(aOrder))
+    {
+      existingOrder.removeBill(this);
+    }
+    order.addBill(this);
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean isNumberOfIssuedForSeatsValid()
+  {
+    boolean isValid = numberOfIssuedForSeats() >= minimumNumberOfIssuedForSeats();
     return isValid;
   }
 
-  public static int minimumNumberOfOrders()
+  public static int minimumNumberOfIssuedForSeats()
   {
     return 1;
   }
 
-  public Order addOrder(RestoApp aRestoApp, Table[] allTables, MenuItem[] allMenuItems)
-  {
-    Order aNewOrder = new Order(this, aRestoApp, allTables, allMenuItems);
-    return aNewOrder;
-  }
-
-  public boolean addOrder(Order aOrder)
+  public boolean addIssuedForSeat(Seat aIssuedForSeat)
   {
     boolean wasAdded = false;
-    if (orders.contains(aOrder)) { return false; }
-    Bill existingBill = aOrder.getBill();
-    boolean isNewBill = existingBill != null && !this.equals(existingBill);
-
-    if (isNewBill && existingBill.numberOfOrders() <= minimumNumberOfOrders())
-    {
-      return wasAdded;
-    }
-    if (isNewBill)
-    {
-      aOrder.setBill(this);
-    }
-    else
-    {
-      orders.add(aOrder);
-    }
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removeOrder(Order aOrder)
-  {
-    boolean wasRemoved = false;
-    //Unable to remove aOrder, as it must always have a bill
-    if (this.equals(aOrder.getBill()))
-    {
-      return wasRemoved;
-    }
-
-    //bill already at minimum (1)
-    if (numberOfOrders() <= minimumNumberOfOrders())
-    {
-      return wasRemoved;
-    }
-
-    orders.remove(aOrder);
-    wasRemoved = true;
-    return wasRemoved;
-  }
-
-  public boolean addOrderAt(Order aOrder, int index)
-  {  
-    boolean wasAdded = false;
-    if(addOrder(aOrder))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfOrders()) { index = numberOfOrders() - 1; }
-      orders.remove(aOrder);
-      orders.add(index, aOrder);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveOrderAt(Order aOrder, int index)
-  {
-    boolean wasAdded = false;
-    if(orders.contains(aOrder))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfOrders()) { index = numberOfOrders() - 1; }
-      orders.remove(aOrder);
-      orders.add(index, aOrder);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addOrderAt(aOrder, index);
-    }
-    return wasAdded;
-  }
-
-  public boolean isNumberOfTablesValid()
-  {
-    boolean isValid = numberOfTables() >= minimumNumberOfTables();
-    return isValid;
-  }
-
-  public static int minimumNumberOfTables()
-  {
-    return 1;
-  }
-
-  public boolean addTable(Table aTable)
-  {
-    boolean wasAdded = false;
-    if (tables.contains(aTable)) { return false; }
-    tables.add(aTable);
-    if (aTable.indexOfBill(this) != -1)
+    if (issuedForSeats.contains(aIssuedForSeat)) { return false; }
+    issuedForSeats.add(aIssuedForSeat);
+    if (aIssuedForSeat.indexOfBill(this) != -1)
     {
       wasAdded = true;
     }
     else
     {
-      wasAdded = aTable.addBill(this);
+      wasAdded = aIssuedForSeat.addBill(this);
       if (!wasAdded)
       {
-        tables.remove(aTable);
+        issuedForSeats.remove(aIssuedForSeat);
       }
     }
     return wasAdded;
   }
 
-  public boolean removeTable(Table aTable)
+  public boolean removeIssuedForSeat(Seat aIssuedForSeat)
   {
     boolean wasRemoved = false;
-    if (!tables.contains(aTable))
+    if (!issuedForSeats.contains(aIssuedForSeat))
     {
       return wasRemoved;
     }
 
-    if (numberOfTables() <= minimumNumberOfTables())
+    if (numberOfIssuedForSeats() <= minimumNumberOfIssuedForSeats())
     {
       return wasRemoved;
     }
 
-    int oldIndex = tables.indexOf(aTable);
-    tables.remove(oldIndex);
-    if (aTable.indexOfBill(this) == -1)
+    int oldIndex = issuedForSeats.indexOf(aIssuedForSeat);
+    issuedForSeats.remove(oldIndex);
+    if (aIssuedForSeat.indexOfBill(this) == -1)
     {
       wasRemoved = true;
     }
     else
     {
-      wasRemoved = aTable.removeBill(this);
+      wasRemoved = aIssuedForSeat.removeBill(this);
       if (!wasRemoved)
       {
-        tables.add(oldIndex,aTable);
+        issuedForSeats.add(oldIndex,aIssuedForSeat);
       }
     }
     return wasRemoved;
   }
 
-  public boolean setTables(Table... newTables)
+  public boolean setIssuedForSeats(Seat... newIssuedForSeats)
   {
     boolean wasSet = false;
-    ArrayList<Table> verifiedTables = new ArrayList<Table>();
-    for (Table aTable : newTables)
+    ArrayList<Seat> verifiedIssuedForSeats = new ArrayList<Seat>();
+    for (Seat aIssuedForSeat : newIssuedForSeats)
     {
-      if (verifiedTables.contains(aTable))
+      if (verifiedIssuedForSeats.contains(aIssuedForSeat))
       {
         continue;
       }
-      verifiedTables.add(aTable);
+      verifiedIssuedForSeats.add(aIssuedForSeat);
     }
 
-    if (verifiedTables.size() != newTables.length || verifiedTables.size() < minimumNumberOfTables())
+    if (verifiedIssuedForSeats.size() != newIssuedForSeats.length || verifiedIssuedForSeats.size() < minimumNumberOfIssuedForSeats())
     {
       return wasSet;
     }
 
-    ArrayList<Table> oldTables = new ArrayList<Table>(tables);
-    tables.clear();
-    for (Table aNewTable : verifiedTables)
+    ArrayList<Seat> oldIssuedForSeats = new ArrayList<Seat>(issuedForSeats);
+    issuedForSeats.clear();
+    for (Seat aNewIssuedForSeat : verifiedIssuedForSeats)
     {
-      tables.add(aNewTable);
-      if (oldTables.contains(aNewTable))
+      issuedForSeats.add(aNewIssuedForSeat);
+      if (oldIssuedForSeats.contains(aNewIssuedForSeat))
       {
-        oldTables.remove(aNewTable);
+        oldIssuedForSeats.remove(aNewIssuedForSeat);
       }
       else
       {
-        aNewTable.addBill(this);
+        aNewIssuedForSeat.addBill(this);
       }
     }
 
-    for (Table anOldTable : oldTables)
+    for (Seat anOldIssuedForSeat : oldIssuedForSeats)
     {
-      anOldTable.removeBill(this);
+      anOldIssuedForSeat.removeBill(this);
     }
     wasSet = true;
     return wasSet;
   }
 
-  public boolean addTableAt(Table aTable, int index)
+  public boolean addIssuedForSeatAt(Seat aIssuedForSeat, int index)
   {  
     boolean wasAdded = false;
-    if(addTable(aTable))
+    if(addIssuedForSeat(aIssuedForSeat))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfTables()) { index = numberOfTables() - 1; }
-      tables.remove(aTable);
-      tables.add(index, aTable);
+      if(index > numberOfIssuedForSeats()) { index = numberOfIssuedForSeats() - 1; }
+      issuedForSeats.remove(aIssuedForSeat);
+      issuedForSeats.add(index, aIssuedForSeat);
       wasAdded = true;
     }
     return wasAdded;
   }
 
-  public boolean addOrMoveTableAt(Table aTable, int index)
+  public boolean addOrMoveIssuedForSeatAt(Seat aIssuedForSeat, int index)
   {
     boolean wasAdded = false;
-    if(tables.contains(aTable))
+    if(issuedForSeats.contains(aIssuedForSeat))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfTables()) { index = numberOfTables() - 1; }
-      tables.remove(aTable);
-      tables.add(index, aTable);
+      if(index > numberOfIssuedForSeats()) { index = numberOfIssuedForSeats() - 1; }
+      issuedForSeats.remove(aIssuedForSeat);
+      issuedForSeats.add(index, aIssuedForSeat);
       wasAdded = true;
     } 
     else 
     {
-      wasAdded = addTableAt(aTable, index);
+      wasAdded = addIssuedForSeatAt(aIssuedForSeat, index);
     }
     return wasAdded;
   }
@@ -417,18 +262,17 @@ public class Bill
 
   public void delete()
   {
-    while (orders.size() > 0)
+    Order placeholderOrder = order;
+    this.order = null;
+    if(placeholderOrder != null)
     {
-      Order aOrder = orders.get(orders.size() - 1);
-      aOrder.delete();
-      orders.remove(aOrder);
+      placeholderOrder.removeBill(this);
     }
-    
-    ArrayList<Table> copyOfTables = new ArrayList<Table>(tables);
-    tables.clear();
-    for(Table aTable : copyOfTables)
+    ArrayList<Seat> copyOfIssuedForSeats = new ArrayList<Seat>(issuedForSeats);
+    issuedForSeats.clear();
+    for(Seat aIssuedForSeat : copyOfIssuedForSeats)
     {
-      aTable.removeBill(this);
+      aIssuedForSeat.removeBill(this);
     }
     RestoApp placeholderRestoApp = restoApp;
     this.restoApp = null;
@@ -438,14 +282,4 @@ public class Bill
     }
   }
 
-
-  public String toString()
-  {
-    return super.toString() + "["+
-            "billId" + ":" + getBillId()+ "," +
-            "numberOfPeople" + ":" + getNumberOfPeople()+ "," +
-            "total" + ":" + getTotal()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "billingDate" + "=" + (getBillingDate() != null ? !getBillingDate().equals(this)  ? getBillingDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
-  }
 }

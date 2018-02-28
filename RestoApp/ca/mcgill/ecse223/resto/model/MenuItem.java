@@ -4,44 +4,50 @@
 package ca.mcgill.ecse223.resto.model;
 import java.util.*;
 
-// line 51 "../../../../../main.ump"
-// line 111 "../../../../../main.ump"
+// line 54 "../../../../../RestoApp.ump"
 public class MenuItem
 {
+
+  //------------------------
+  // ENUMERATIONS
+  //------------------------
+
+  public enum ItemCategory { Appetizer, Main, Dessert, AlcoholicBeverage, NonAlcoholicBeverage }
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  private static Map<String, MenuItem> menuitemsByName = new HashMap<String, MenuItem>();
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
   //MenuItem Attributes
-  private String itemName;
-  private double itemPrice;
-  private String itemDescription;
+  private String name;
+  private ItemCategory itemCategory;
 
   //MenuItem Associations
-  private List<Order> orders;
-  private MenuCategory menuCategory;
-  private RestoApp restoApp;
+  private List<PricedMenuItem> pricedMenuItems;
+  private PricedMenuItem currentPricedMenuItem;
+  private Menu menu;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public MenuItem(String aItemName, double aItemPrice, String aItemDescription, MenuCategory aMenuCategory, RestoApp aRestoApp)
+  public MenuItem(String aName, Menu aMenu)
   {
-    itemName = aItemName;
-    itemPrice = aItemPrice;
-    itemDescription = aItemDescription;
-    orders = new ArrayList<Order>();
-    boolean didAddMenuCategory = setMenuCategory(aMenuCategory);
-    if (!didAddMenuCategory)
+    if (!setName(aName))
     {
-      throw new RuntimeException("Unable to create menuItem due to menuCategory");
+      throw new RuntimeException("Cannot create due to duplicate name");
     }
-    boolean didAddRestoApp = setRestoApp(aRestoApp);
-    if (!didAddRestoApp)
+    pricedMenuItems = new ArrayList<PricedMenuItem>();
+    boolean didAddMenu = setMenu(aMenu);
+    if (!didAddMenu)
     {
-      throw new RuntimeException("Unable to create menuItem due to restoApp");
+      throw new RuntimeException("Unable to create menuItem due to menu");
     }
   }
 
@@ -49,231 +55,229 @@ public class MenuItem
   // INTERFACE
   //------------------------
 
-  public boolean setItemName(String aItemName)
+  public boolean setName(String aName)
   {
     boolean wasSet = false;
-    itemName = aItemName;
+    String anOldName = getName();
+    if (hasWithName(aName)) {
+      return wasSet;
+    }
+    name = aName;
+    wasSet = true;
+    if (anOldName != null) {
+      menuitemsByName.remove(anOldName);
+    }
+    menuitemsByName.put(aName, this);
+    return wasSet;
+  }
+
+  public boolean setItemCategory(ItemCategory aItemCategory)
+  {
+    boolean wasSet = false;
+    itemCategory = aItemCategory;
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setItemPrice(double aItemPrice)
+  public String getName()
   {
-    boolean wasSet = false;
-    itemPrice = aItemPrice;
-    wasSet = true;
-    return wasSet;
+    return name;
   }
 
-  public boolean setItemDescription(String aItemDescription)
+  public static MenuItem getWithName(String aName)
   {
-    boolean wasSet = false;
-    itemDescription = aItemDescription;
-    wasSet = true;
-    return wasSet;
+    return menuitemsByName.get(aName);
   }
 
-  public String getItemName()
+  public static boolean hasWithName(String aName)
   {
-    return itemName;
+    return getWithName(aName) != null;
   }
 
-  public double getItemPrice()
+  public ItemCategory getItemCategory()
   {
-    return itemPrice;
+    return itemCategory;
   }
 
-  public String getItemDescription()
+  public PricedMenuItem getPricedMenuItem(int index)
   {
-    return itemDescription;
+    PricedMenuItem aPricedMenuItem = pricedMenuItems.get(index);
+    return aPricedMenuItem;
   }
 
-  public Order getOrder(int index)
+  public List<PricedMenuItem> getPricedMenuItems()
   {
-    Order aOrder = orders.get(index);
-    return aOrder;
+    List<PricedMenuItem> newPricedMenuItems = Collections.unmodifiableList(pricedMenuItems);
+    return newPricedMenuItems;
   }
 
-  public List<Order> getOrders()
+  public int numberOfPricedMenuItems()
   {
-    List<Order> newOrders = Collections.unmodifiableList(orders);
-    return newOrders;
-  }
-
-  public int numberOfOrders()
-  {
-    int number = orders.size();
+    int number = pricedMenuItems.size();
     return number;
   }
 
-  public boolean hasOrders()
+  public boolean hasPricedMenuItems()
   {
-    boolean has = orders.size() > 0;
+    boolean has = pricedMenuItems.size() > 0;
     return has;
   }
 
-  public int indexOfOrder(Order aOrder)
+  public int indexOfPricedMenuItem(PricedMenuItem aPricedMenuItem)
   {
-    int index = orders.indexOf(aOrder);
+    int index = pricedMenuItems.indexOf(aPricedMenuItem);
     return index;
   }
 
-  public MenuCategory getMenuCategory()
+  public PricedMenuItem getCurrentPricedMenuItem()
   {
-    return menuCategory;
+    return currentPricedMenuItem;
   }
 
-  public RestoApp getRestoApp()
+  public boolean hasCurrentPricedMenuItem()
   {
-    return restoApp;
+    boolean has = currentPricedMenuItem != null;
+    return has;
   }
 
-  public static int minimumNumberOfOrders()
+  public Menu getMenu()
   {
-    return 0;
+    return menu;
   }
 
-  public boolean addOrder(Order aOrder)
+  public boolean isNumberOfPricedMenuItemsValid()
+  {
+    boolean isValid = numberOfPricedMenuItems() >= minimumNumberOfPricedMenuItems();
+    return isValid;
+  }
+
+  public static int minimumNumberOfPricedMenuItems()
+  {
+    return 1;
+  }
+
+  public PricedMenuItem addPricedMenuItem(double aPrice, RestoApp aRestoApp)
+  {
+    PricedMenuItem aNewPricedMenuItem = new PricedMenuItem(aPrice, aRestoApp, this);
+    return aNewPricedMenuItem;
+  }
+
+  public boolean addPricedMenuItem(PricedMenuItem aPricedMenuItem)
   {
     boolean wasAdded = false;
-    if (orders.contains(aOrder)) { return false; }
-    orders.add(aOrder);
-    if (aOrder.indexOfMenuItem(this) != -1)
+    if (pricedMenuItems.contains(aPricedMenuItem)) { return false; }
+    MenuItem existingMenuItem = aPricedMenuItem.getMenuItem();
+    boolean isNewMenuItem = existingMenuItem != null && !this.equals(existingMenuItem);
+
+    if (isNewMenuItem && existingMenuItem.numberOfPricedMenuItems() <= minimumNumberOfPricedMenuItems())
     {
-      wasAdded = true;
+      return wasAdded;
+    }
+    if (isNewMenuItem)
+    {
+      aPricedMenuItem.setMenuItem(this);
     }
     else
     {
-      wasAdded = aOrder.addMenuItem(this);
-      if (!wasAdded)
-      {
-        orders.remove(aOrder);
-      }
+      pricedMenuItems.add(aPricedMenuItem);
     }
+    wasAdded = true;
     return wasAdded;
   }
 
-  public boolean removeOrder(Order aOrder)
+  public boolean removePricedMenuItem(PricedMenuItem aPricedMenuItem)
   {
     boolean wasRemoved = false;
-    if (!orders.contains(aOrder))
+    //Unable to remove aPricedMenuItem, as it must always have a menuItem
+    if (this.equals(aPricedMenuItem.getMenuItem()))
     {
       return wasRemoved;
     }
 
-    int oldIndex = orders.indexOf(aOrder);
-    orders.remove(oldIndex);
-    if (aOrder.indexOfMenuItem(this) == -1)
+    //menuItem already at minimum (1)
+    if (numberOfPricedMenuItems() <= minimumNumberOfPricedMenuItems())
     {
-      wasRemoved = true;
+      return wasRemoved;
     }
-    else
-    {
-      wasRemoved = aOrder.removeMenuItem(this);
-      if (!wasRemoved)
-      {
-        orders.add(oldIndex,aOrder);
-      }
-    }
+
+    pricedMenuItems.remove(aPricedMenuItem);
+    wasRemoved = true;
     return wasRemoved;
   }
 
-  public boolean addOrderAt(Order aOrder, int index)
+  public boolean addPricedMenuItemAt(PricedMenuItem aPricedMenuItem, int index)
   {  
     boolean wasAdded = false;
-    if(addOrder(aOrder))
+    if(addPricedMenuItem(aPricedMenuItem))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfOrders()) { index = numberOfOrders() - 1; }
-      orders.remove(aOrder);
-      orders.add(index, aOrder);
+      if(index > numberOfPricedMenuItems()) { index = numberOfPricedMenuItems() - 1; }
+      pricedMenuItems.remove(aPricedMenuItem);
+      pricedMenuItems.add(index, aPricedMenuItem);
       wasAdded = true;
     }
     return wasAdded;
   }
 
-  public boolean addOrMoveOrderAt(Order aOrder, int index)
+  public boolean addOrMovePricedMenuItemAt(PricedMenuItem aPricedMenuItem, int index)
   {
     boolean wasAdded = false;
-    if(orders.contains(aOrder))
+    if(pricedMenuItems.contains(aPricedMenuItem))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfOrders()) { index = numberOfOrders() - 1; }
-      orders.remove(aOrder);
-      orders.add(index, aOrder);
+      if(index > numberOfPricedMenuItems()) { index = numberOfPricedMenuItems() - 1; }
+      pricedMenuItems.remove(aPricedMenuItem);
+      pricedMenuItems.add(index, aPricedMenuItem);
       wasAdded = true;
     } 
     else 
     {
-      wasAdded = addOrderAt(aOrder, index);
+      wasAdded = addPricedMenuItemAt(aPricedMenuItem, index);
     }
     return wasAdded;
   }
 
-  public boolean setMenuCategory(MenuCategory aMenuCategory)
+  public boolean setCurrentPricedMenuItem(PricedMenuItem aNewCurrentPricedMenuItem)
   {
     boolean wasSet = false;
-    if (aMenuCategory == null)
-    {
-      return wasSet;
-    }
-
-    MenuCategory existingMenuCategory = menuCategory;
-    menuCategory = aMenuCategory;
-    if (existingMenuCategory != null && !existingMenuCategory.equals(aMenuCategory))
-    {
-      existingMenuCategory.removeMenuItem(this);
-    }
-    menuCategory.addMenuItem(this);
+    currentPricedMenuItem = aNewCurrentPricedMenuItem;
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setRestoApp(RestoApp aRestoApp)
+  public boolean setMenu(Menu aMenu)
   {
     boolean wasSet = false;
-    if (aRestoApp == null)
+    if (aMenu == null)
     {
       return wasSet;
     }
 
-    RestoApp existingRestoApp = restoApp;
-    restoApp = aRestoApp;
-    if (existingRestoApp != null && !existingRestoApp.equals(aRestoApp))
+    Menu existingMenu = menu;
+    menu = aMenu;
+    if (existingMenu != null && !existingMenu.equals(aMenu))
     {
-      existingRestoApp.removeMenuItem(this);
+      existingMenu.removeMenuItem(this);
     }
-    restoApp.addMenuItem(this);
+    menu.addMenuItem(this);
     wasSet = true;
     return wasSet;
   }
 
   public void delete()
   {
-    ArrayList<Order> copyOfOrders = new ArrayList<Order>(orders);
-    orders.clear();
-    for(Order aOrder : copyOfOrders)
+    menuitemsByName.remove(getName());
+    for(int i=pricedMenuItems.size(); i > 0; i--)
     {
-      if (aOrder.numberOfMenuItems() <= Order.minimumNumberOfMenuItems())
-      {
-        aOrder.delete();
-      }
-      else
-      {
-        aOrder.removeMenuItem(this);
-      }
+      PricedMenuItem aPricedMenuItem = pricedMenuItems.get(i - 1);
+      aPricedMenuItem.delete();
     }
-    MenuCategory placeholderMenuCategory = menuCategory;
-    this.menuCategory = null;
-    if(placeholderMenuCategory != null)
+    currentPricedMenuItem = null;
+    Menu placeholderMenu = menu;
+    this.menu = null;
+    if(placeholderMenu != null)
     {
-      placeholderMenuCategory.removeMenuItem(this);
-    }
-    RestoApp placeholderRestoApp = restoApp;
-    this.restoApp = null;
-    if(placeholderRestoApp != null)
-    {
-      placeholderRestoApp.removeMenuItem(this);
+      placeholderMenu.removeMenuItem(this);
     }
   }
 
@@ -281,10 +285,9 @@ public class MenuItem
   public String toString()
   {
     return super.toString() + "["+
-            "itemName" + ":" + getItemName()+ "," +
-            "itemPrice" + ":" + getItemPrice()+ "," +
-            "itemDescription" + ":" + getItemDescription()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "menuCategory = "+(getMenuCategory()!=null?Integer.toHexString(System.identityHashCode(getMenuCategory())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
+            "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "itemCategory" + "=" + (getItemCategory() != null ? !getItemCategory().equals(this)  ? getItemCategory().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "currentPricedMenuItem = "+(getCurrentPricedMenuItem()!=null?Integer.toHexString(System.identityHashCode(getCurrentPricedMenuItem())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "menu = "+(getMenu()!=null?Integer.toHexString(System.identityHashCode(getMenu())):"null");
   }
 }
