@@ -1,5 +1,6 @@
 package ca.mcgill.ecse223.resto.view;
 
+import java.awt.Color;
 import java.util.HashMap;
 
 import javax.swing.*;
@@ -31,7 +32,9 @@ public class RestoPage {
 	}
 
 	private void initComponents() {
-		// TODO Auto-generated method stub
+		// elements for error message
+		errorMessage = new JLabel();
+		errorMessage.setForeground(Color.RED);
 		
 	}
 	
