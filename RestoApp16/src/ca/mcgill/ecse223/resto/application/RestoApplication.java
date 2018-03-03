@@ -2,6 +2,7 @@ package ca.mcgill.ecse223.resto.application;
 
 import ca.mcgill.ecse223.resto.view.RestoPage;
 import ca.mcgill.ecse223.resto.model.RestoApp;
+import ca.mcgill.ecse223.resto.persistence.PersistenceObjectStream;
 
 public class RestoApplication {
 	
@@ -17,13 +18,14 @@ public class RestoApplication {
 	
 	public static RestoApp getRestoApp() {
 		if (restoApp == null) {
+			//load model
 			restoApp = new RestoApp();
 		}
 		return restoApp;
 	}
 
 	public static void save() {
-		// TODO Auto-generated method stub
+		PersistenceObjectStream.serialize(restoApp);
 		
 	}
 
