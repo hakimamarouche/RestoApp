@@ -14,7 +14,9 @@ public class RestoPage {
 	//table
 	private JTextField tableNumberTextField;
 	private JLabel tableNumberLabel;
+	private JTextField tableXTextField;
 	private JLabel tableXLabel;
+	private JTextField tableYTextField;
 	private JLabel tableYLabel;
 	private JComboBox<String> tableToggleList;
 	private JLabel tableToggleLabel;
@@ -35,6 +37,13 @@ public class RestoPage {
 		// elements for error message
 		errorMessage = new JLabel();
 		errorMessage.setForeground(Color.RED);
+		// elements for table
+		tableNumberTextField = new JTextField();
+		tableNumberLabel = new JLabel();
+		tableXTextField = new JTextField();
+		tableXLabel = new JLabel();
+		tableYTextField = new JTextField();
+		tableYLabel = new JLabel();
 		
 	}
 	
