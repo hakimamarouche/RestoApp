@@ -18,11 +18,13 @@ public class RestoController {
 		}
 		if (foundTable != null) {
 			foundTable.delete();
+			/*
 			try {
 				RestoApplication.save();
 			} catch (RuntimeException e) {
 				throw new InvalidInputException(e.getMessage());
 			}
+			*/
 		}
 	}
 }
