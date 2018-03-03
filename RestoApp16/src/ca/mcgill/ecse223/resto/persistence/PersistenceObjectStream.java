@@ -9,4 +9,9 @@ public class PersistenceObjectStream {
 		
 	}
 
+	public static void setFilename(String filename) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
