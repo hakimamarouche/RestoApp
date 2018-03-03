@@ -1,6 +1,10 @@
 package ca.mcgill.ecse223.resto.view;
 
+import java.util.HashMap;
+
 import javax.swing.*;
+
+import ca.mcgill.ecse223.resto.model.Table;
 
 public class RestoPage {
 	
@@ -14,7 +18,12 @@ public class RestoPage {
 	private JComboBox<String> tableToggleList;
 	private JLabel tableToggleLabel;
 	private JButton deleteTableButton;
-
+	
+	//data elements
+	private String error = null;
+	//Table
+	private HashMap<Integer, Table> tables;
+	
 	public void setVisible(boolean b) {
 		// TODO Auto-generated method stub
 		
