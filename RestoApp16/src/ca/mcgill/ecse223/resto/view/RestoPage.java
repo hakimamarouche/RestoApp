@@ -24,6 +24,22 @@ public class RestoPage {
 	//Table
 	private HashMap<Integer, Table> tables;
 	
+	// Creates new form RestoPage
+	public RestoPage() {
+		initComponents();
+		refreshData();
+	}
+
+	private void initComponents() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	private void refreshData() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public void setVisible(boolean b) {
 		// TODO Auto-generated method stub
 		
