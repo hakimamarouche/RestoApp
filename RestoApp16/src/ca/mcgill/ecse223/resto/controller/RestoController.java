@@ -14,6 +14,11 @@ public class RestoController {
 	public RestoController() {
 		
 	}
+	
+	public static List<Table> getTables() {
+		return RestoApplication.getRestoApp().getTables();
+	}
+	
 	public static void deleteTable(int number) throws InvalidInputException {
 		RestoApp restoApp = RestoApplication.getRestoApp();
 		Table foundTable = null;
