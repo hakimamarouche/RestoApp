@@ -21,7 +21,10 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
+
+import ca.mcgill.ecse223.resto.controller.RestoController;
 /*	from jdatepicker.jar library
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -202,7 +205,29 @@ public class RestoPage extends JFrame {
 	}
 	
 	private void refreshData() {
-		// TODO Auto-generated method stub
+		//error
+		errorMessage.setText(error);
+		if(error == null || error.length() == 0) {
+			//empty the text fields
+			addTableNumberTextField.setText("");
+			addTableXTextField.setText("");
+			addTableYTextField.setText("");
+			addTableNumberOfSeatsTextField.setText("");
+			updateTableXTextField.setText("");
+			updateTableYTextField.setText("");
+			updateTableNumberOfSeatsTextField.setText("");
+			//update table Dropdown
+			tables = new HashMap<Integer, Table>();
+			selectTableDropdown.removeAllItems();
+			Integer index = 0;
+			for (Table table : RestoController.getTables()) {
+				tables.put(index, table);
+				selectTableDropdown.addItem("#" + table.getNumber());
+				index++;
+			}
+			selectedTable = -1;
+			selectTableDropdown.setSelectedIndex(selectedTable);
+		}
 		
 	}
 
