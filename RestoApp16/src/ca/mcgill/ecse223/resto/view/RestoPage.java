@@ -12,7 +12,7 @@ public class RestoPage {
 	//UI elements
 	private JLabel errorMessage;
 	//table
-	private JTextField tableNumberTextField;
+	private JTextField addTableNumberTextField;
 	private JLabel addTableNumberLabel;
 	private JTextField addTableXTextField;
 	private JLabel addTtableXLabel;
@@ -21,7 +21,6 @@ public class RestoPage {
 	private JTextField addTableNumberOfSeatsTextField;
 	private JLabel addTableNumberOfSeatsLabel;
 	private JButton addTableButton;
-	private JLabel addTableLabel;
 	private JComboBox<String> selectTableDropdown;
 	private JLabel selectTableDropdownLabel;
 	private JTextField updateTableXTextField;
@@ -30,8 +29,8 @@ public class RestoPage {
 	private JLabel updateTableYLabel;
 	private JTextField updateTableNumberOfSeatsTextField;
 	private JTextField updateTableNumberOfSeatsLabel;
+	private JButton updateTableButton;
 	private JButton deleteTableButton;
-	private JLabel deleteTableLabel;
 	
 	//data elements
 	private String error = null;
@@ -50,12 +49,16 @@ public class RestoPage {
 		errorMessage = new JLabel();
 		errorMessage.setForeground(Color.RED);
 		// elements for table
-		tableNumberTextField = new JTextField();
+		addTableNumberTextField = new JTextField();
 		addTableNumberLabel = new JLabel();
 		addTableXTextField = new JTextField();
 		addTtableXLabel = new JLabel();
 		addTableYTextField = new JTextField();
 		addTableYLabel = new JLabel();
+		addTableNumberOfSeatsTextField = new JTextField();
+		addTableNumberOfSeatsLabel = new JLabel();
+		addTableButton = new JButton();
+		
 		selectTableDropdown = new JComboBox<String>(new String[0]);
 		selectTableDropdown.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
