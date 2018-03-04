@@ -13,19 +13,31 @@ public class RestoPage {
 	private JLabel errorMessage;
 	//table
 	private JTextField tableNumberTextField;
-	private JLabel tableNumberLabel;
-	private JTextField tableXTextField;
-	private JLabel tableXLabel;
-	private JTextField tableYTextField;
-	private JLabel tableYLabel;
-	private JComboBox<String> tableToggleList;
-	private JLabel tableToggleLabel;
+	private JLabel addTableNumberLabel;
+	private JTextField addTableXTextField;
+	private JLabel addTtableXLabel;
+	private JTextField addTableYTextField;
+	private JLabel addTableYLabel;
+	private JTextField addTableNumberOfSeatsTextField;
+	private JLabel addTableNumberOfSeatsLabel;
+	private JButton addTableButton;
+	private JLabel addTableLabel;
+	private JComboBox<String> selectTableDropdown;
+	private JLabel selectTableDropdownLabel;
+	private JTextField updateTableXTextField;
+	private JLabel updateTableXLabel;
+	private JTextField updateTableYTextField;
+	private JLabel updateTableYLabel;
+	private JTextField updateTableNumberOfSeatsTextField;
+	private JTextField updateTableNumberOfSeatsLabel;
 	private JButton deleteTableButton;
+	private JLabel deleteTableLabel;
 	
 	//data elements
 	private String error = null;
 	//Table
 	private HashMap<Integer, Table> tables;
+	private Integer selectedTable = -1;
 	
 	// Creates new form RestoPage
 	public RestoPage() {
@@ -39,11 +51,18 @@ public class RestoPage {
 		errorMessage.setForeground(Color.RED);
 		// elements for table
 		tableNumberTextField = new JTextField();
-		tableNumberLabel = new JLabel();
-		tableXTextField = new JTextField();
-		tableXLabel = new JLabel();
-		tableYTextField = new JTextField();
-		tableYLabel = new JLabel();
+		addTableNumberLabel = new JLabel();
+		addTableXTextField = new JTextField();
+		addTtableXLabel = new JLabel();
+		addTableYTextField = new JTextField();
+		addTableYLabel = new JLabel();
+		selectTableDropdown = new JComboBox<String>(new String[0]);
+		selectTableDropdown.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				JComboBox<String> cb = (JComboBox<String>) evt.getSource();
+				selectedTable = cb.getSelectedIndex();
+			}
+		});
 		
 	}
 	
