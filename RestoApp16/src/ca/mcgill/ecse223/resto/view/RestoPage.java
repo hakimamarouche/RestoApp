@@ -197,7 +197,7 @@ public class RestoPage extends JFrame {
 									.addComponent(deleteTableButton)
 									)
 							)
-				
+					.addComponent(restoVisualizer)
 				);
 	}
 	
