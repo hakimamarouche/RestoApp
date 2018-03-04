@@ -11,7 +11,7 @@ public class RestoPage {
 	
 	//UI elements
 	private JLabel errorMessage;
-	//table
+	//create table
 	private JTextField addTableNumberTextField;
 	private JLabel addTableNumberLabel;
 	private JTextField addTableXTextField;
@@ -21,6 +21,7 @@ public class RestoPage {
 	private JTextField addTableNumberOfSeatsTextField;
 	private JLabel addTableNumberOfSeatsLabel;
 	private JButton addTableButton;
+	//update or delete table
 	private JComboBox<String> selectTableDropdown;
 	private JLabel selectTableDropdownLabel;
 	private JTextField updateTableXTextField;
@@ -28,7 +29,7 @@ public class RestoPage {
 	private JTextField updateTableYTextField;
 	private JLabel updateTableYLabel;
 	private JTextField updateTableNumberOfSeatsTextField;
-	private JTextField updateTableNumberOfSeatsLabel;
+	private JLabel updateTableNumberOfSeatsLabel;
 	private JButton updateTableButton;
 	private JButton deleteTableButton;
 	
@@ -48,7 +49,7 @@ public class RestoPage {
 		// elements for error message
 		errorMessage = new JLabel();
 		errorMessage.setForeground(Color.RED);
-		// elements for table
+		// elements for creating table
 		addTableNumberTextField = new JTextField();
 		addTableNumberLabel = new JLabel();
 		addTableXTextField = new JTextField();
@@ -58,7 +59,7 @@ public class RestoPage {
 		addTableNumberOfSeatsTextField = new JTextField();
 		addTableNumberOfSeatsLabel = new JLabel();
 		addTableButton = new JButton();
-		
+		//elements for updating or deleting table
 		selectTableDropdown = new JComboBox<String>(new String[0]);
 		selectTableDropdown.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -66,6 +67,15 @@ public class RestoPage {
 				selectedTable = cb.getSelectedIndex();
 			}
 		});
+		selectTableDropdownLabel = new JLabel();
+		updateTableXTextField = new JTextField();
+		updateTableXLabel = new JLabel();
+		updateTableYTextField = new JTextField();
+		updateTableYLabel = new JLabel();
+		updateTableNumberOfSeatsTextField = new JTextField();
+		updateTableNumberOfSeatsLabel = new JLabel();
+		updateTableButton = new JButton();
+		deleteTableButton = new JButton();
 		
 	}
 	
