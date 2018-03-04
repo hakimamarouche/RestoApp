@@ -1,6 +1,7 @@
 package ca.mcgill.ecse223.resto.application;
 
 import ca.mcgill.ecse223.resto.view.RestoPage;
+import ca.mcgill.ecse223.resto.controller.RestoController;
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.persistence.PersistenceObjectStream;
 
@@ -13,6 +14,10 @@ public class RestoApplication {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				new RestoPage().setVisible(true);
+				//System.out.println(RestoController.getItemCategories().get(5));
+				//System.out.println(RestoController.);
+
+				
 			}
 		});
 	}
