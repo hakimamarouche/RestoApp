@@ -122,7 +122,6 @@ public class RestoPage extends JFrame {
 		deleteTableButton = new JButton();
 		
 		//global settings and listeners
-		
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setTitle("Resto App");
 		//labels
