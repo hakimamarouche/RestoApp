@@ -122,8 +122,21 @@ public class RestoPage extends JFrame {
 		deleteTableButton = new JButton();
 		
 		//global settings and listeners
+		
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setTitle("Resto App");
+		//labels
+		addTableLengthLabel.setText("Length:");
+		addTableNumberLabel.setText("Table number:");
+		addTableNumberOfSeatsLabel.setText("# of seats:");
+		addTableWidthLabel.setText("Width");
+		addTableXLabel.setText("X Position:");
+		addTableYLabel.setText("Y Position:");
+		selectTableDropdownLabel.setText("Table:");
+		updateTableNumberOfSeatsLabel.setText("# of seats:");
+		updateTableXLabel.setText("X Position:");
+		updateTableYLabel.setText("Y Position:");
+		//buttons
 		deleteTableButton.setText("Delete");
 		deleteTableButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -143,25 +156,25 @@ public class RestoPage extends JFrame {
 							.addGroup(layout.createParallelGroup()
 									.addGroup(layout.createSequentialGroup()
 											.addComponent(addTableNumberLabel)
-											.addComponent(addTableNumberTextField)
+											.addComponent(addTableNumberTextField, 50, 50, 100)
 											)
 									.addGroup(layout.createSequentialGroup()
 											.addComponent(addTableXLabel)
-											.addComponent(addTableXTextField)
+											.addComponent(addTableXTextField, 50, 50, 100)
 											.addComponent(addTableYLabel)
-											.addComponent(addTableYTextField)
+											.addComponent(addTableYTextField, 50, 50, 100)
 											)
 									.addGroup(layout.createSequentialGroup()
 											.addComponent(addTableWidthLabel)
-											.addComponent(addTableWidthTextField)
+											.addComponent(addTableWidthTextField, 50, 50, 100)
 											.addComponent(addTableLengthLabel)
-											.addComponent(addTableLengthTextField)
+											.addComponent(addTableLengthTextField, 50, 50, 100)
 											)
 									.addGroup(layout.createSequentialGroup()
 											.addComponent(addTableNumberOfSeatsLabel)
-											.addComponent(addTableNumberOfSeatsTextField)
+											.addComponent(addTableNumberOfSeatsTextField, 50, 50, 100)
 											)
-									.addComponent(addTableButton)
+									.addComponent(addTableButton, 110, 110, 220)
 									)
 							.addGroup(layout.createParallelGroup()
 									.addGroup(layout.createSequentialGroup()
@@ -170,19 +183,19 @@ public class RestoPage extends JFrame {
 											)
 									.addGroup(layout.createSequentialGroup()
 											.addComponent(updateTableXLabel)
-											.addComponent(updateTableXTextField)
+											.addComponent(updateTableXTextField, 50, 50, 100)
 											)
 									.addGroup(layout.createSequentialGroup()
 											.addComponent(updateTableYLabel)
-											.addComponent(updateTableYTextField)
+											.addComponent(updateTableYTextField, 50, 50, 100)
 											)
 									.addGroup(layout.createSequentialGroup()
 											.addComponent(updateTableNumberOfSeatsLabel)
-											.addComponent(updateTableNumberOfSeatsTextField)
+											.addComponent(updateTableNumberOfSeatsTextField, 50, 50, 100)
 											)
 									.addGroup(layout.createSequentialGroup()
-											.addComponent(updateTableButton)
-											.addComponent(deleteTableButton)
+											.addComponent(updateTableButton, 110, 110, 220)
+											.addComponent(deleteTableButton, 70, 70, 140)
 											)
 									)
 							)
