@@ -24,6 +24,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
+import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.controller.RestoController;
 /*	from jdatepicker.jar library
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -75,7 +76,6 @@ public class RestoPage extends JFrame {
 	private HashMap<Integer, Table> tables;
 	private Integer selectedTable = -1;
 	
-	
 	// Creates new form RestoPage
 	public RestoPage() {
 		initComponents();
@@ -96,6 +96,10 @@ public class RestoPage extends JFrame {
 		addTableXLabel = new JLabel();
 		addTableYTextField = new JTextField();
 		addTableYLabel = new JLabel();
+		addTableHeightLabel = new JLabel();
+		addTableHeightTextField = new JTextField();
+		addTableWidthLabel = new JLabel();
+		addTableWidthTextField = new JTextField();
 		addTableNumberOfSeatsTextField = new JTextField();
 		addTableNumberOfSeatsLabel = new JLabel();
 		addTableButton = new JButton();
@@ -116,6 +120,16 @@ public class RestoPage extends JFrame {
 		updateTableNumberOfSeatsLabel = new JLabel();
 		updateTableButton = new JButton();
 		deleteTableButton = new JButton();
+		
+		//global settings and listeners
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		setTitle("Resto App");
+		deleteTableButton.setText("Delete");
+		deleteTableButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				deleteTableButtonActionPerformed(evt);
+			}
+		});
 		
 		//layout
 		GroupLayout layout = new GroupLayout(getContentPane());
@@ -241,7 +255,21 @@ public class RestoPage extends JFrame {
 		}
 		pack();
 	}
-
+	
+private void deleteTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
+	error = "";
+	if (selectedTable < 0) {
+		error = "Table needs to be selected for deletion!";
+	}
+	if (error.length() == 0) {
+		try {
+			RestoController.removeTable(tables.get(selectedTable));
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+	}
+}
+	
 	public void setVisible(boolean b) {
 		// TODO Auto-generated method stub
 		
