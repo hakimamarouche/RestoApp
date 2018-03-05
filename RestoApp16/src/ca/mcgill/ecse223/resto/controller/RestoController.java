@@ -3,10 +3,12 @@ package ca.mcgill.ecse223.resto.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.application.RestoApplication;
 import ca.mcgill.ecse223.resto.model.Menu;
 import ca.mcgill.ecse223.resto.model.MenuItem;
 import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
+import ca.mcgill.ecse223.resto.model.Order;
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.model.Table;
 
@@ -19,24 +21,28 @@ public class RestoController {
 		return RestoApplication.getRestoApp().getTables();
 	}
 	
-	public static void deleteTable(int number) throws InvalidInputException {
+	public static void removeTable(int number) throws InvalidInputException {
+		Table foundTable = Table.getWithNumber(number);
+		removeTable(foundTable);
+	}
+	public static void removeTable(Table table) throws InvalidInputException {
+		String error = "";
+		if (table == null) {
+			error = "Table not found.";
+			throw new InvalidInputException(error.trim());
+		}
 		RestoApp restoApp = RestoApplication.getRestoApp();
-		Table foundTable = null;
-		for(Table table : restoApp.getTables()) {
-			if (table.getNumber() == number) {
-				foundTable = table;
+		List<Order> currentOrders = restoApp.getCurrentOrders();
+		for (Order order : currentOrders) {
+			List<Table> tables = order.getTables();
+			boolean inUse = tables.contains(table);
+			if (inUse == true) {
+				error = "Table in use.";
+				throw new InvalidInputException(error.trim());
 			}
 		}
-		if (foundTable != null) {
-			foundTable.delete();
-			/*
-			try {
-				RestoApplication.save();
-			} catch (RuntimeException e) {
-				throw new InvalidInputException(e.getMessage());
-			}
-			*/
-		}
+		restoApp.removeCurrentTable(table);
+		// TODO restoApp.save();
 	}
 	
 	public static List<ItemCategory> getItemCategories(){
