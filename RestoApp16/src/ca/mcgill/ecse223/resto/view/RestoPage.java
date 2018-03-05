@@ -48,8 +48,8 @@ public class RestoPage extends JFrame {
 	private JLabel addTableYLabel;
 	private JTextField addTableWidthTextField;
 	private JLabel addTableWidthLabel;
-	private JTextField addTableHeightTextField;
-	private JLabel addTableHeightLabel;
+	private JTextField addTableLengthTextField;
+	private JLabel addTableLengthLabel;
 	private JTextField addTableNumberOfSeatsTextField;
 	private JLabel addTableNumberOfSeatsLabel;
 	private JButton addTableButton;
@@ -96,8 +96,8 @@ public class RestoPage extends JFrame {
 		addTableXLabel = new JLabel();
 		addTableYTextField = new JTextField();
 		addTableYLabel = new JLabel();
-		addTableHeightLabel = new JLabel();
-		addTableHeightTextField = new JTextField();
+		addTableLengthLabel = new JLabel();
+		addTableLengthTextField = new JTextField();
 		addTableWidthLabel = new JLabel();
 		addTableWidthTextField = new JTextField();
 		addTableNumberOfSeatsTextField = new JTextField();
@@ -154,8 +154,8 @@ public class RestoPage extends JFrame {
 									.addGroup(layout.createSequentialGroup()
 											.addComponent(addTableWidthLabel)
 											.addComponent(addTableWidthTextField)
-											.addComponent(addTableHeightLabel)
-											.addComponent(addTableHeightTextField)
+											.addComponent(addTableLengthLabel)
+											.addComponent(addTableLengthTextField)
 											)
 									.addGroup(layout.createSequentialGroup()
 											.addComponent(addTableNumberOfSeatsLabel)
@@ -201,12 +201,16 @@ public class RestoPage extends JFrame {
 							.addGroup(layout.createParallelGroup()
 									.addComponent(addTableXLabel)
 									.addComponent(addTableXTextField)
+									.addComponent(addTableYLabel)
+									.addComponent(addTableYTextField)
 									.addComponent(updateTableXLabel)
 									.addComponent(updateTableXTextField)
 									)
 							.addGroup(layout.createParallelGroup()
-									.addComponent(addTableYLabel)
-									.addComponent(addTableYTextField)
+									.addComponent(addTableWidthLabel)
+									.addComponent(addTableWidthTextField)
+									.addComponent(addTableLengthLabel)
+									.addComponent(addTableLengthTextField)
 									.addComponent(updateTableYLabel)
 									.addComponent(updateTableYTextField)
 									)
@@ -237,7 +241,7 @@ public class RestoPage extends JFrame {
 			addTableYTextField.setText("");
 			addTableNumberOfSeatsTextField.setText("");
 			addTableWidthTextField.setText("");
-			addTableHeightTextField.setText("");
+			addTableLengthTextField.setText("");
 			updateTableXTextField.setText("");
 			updateTableYTextField.setText("");
 			updateTableNumberOfSeatsTextField.setText("");
@@ -256,25 +260,20 @@ public class RestoPage extends JFrame {
 		pack();
 	}
 	
-private void deleteTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
-	error = "";
-	if (selectedTable < 0) {
-		error = "Table needs to be selected for deletion!";
-	}
-	if (error.length() == 0) {
-		try {
-			RestoController.removeTable(tables.get(selectedTable));
-		} catch (InvalidInputException e) {
-			error = e.getMessage();
+	private void deleteTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
+		error = "";
+		if (selectedTable < 0) {
+			error = "Table needs to be selected for deletion!";
 		}
-	}
-	//update visuals
-	refreshData();
-}
-	
-	public void setVisible(boolean b) {
-		// TODO Auto-generated method stub
-		
+		if (error.length() == 0) {
+			try {
+				RestoController.removeTable(tables.get(selectedTable));
+			} catch (InvalidInputException e) {
+				error = e.getMessage();
+			}
+		}
+		//update visuals
+		refreshData();
 	}
 	
 }
