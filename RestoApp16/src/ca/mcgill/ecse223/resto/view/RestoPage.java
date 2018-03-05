@@ -45,6 +45,10 @@ public class RestoPage extends JFrame {
 	private JLabel addTableXLabel;
 	private JTextField addTableYTextField;
 	private JLabel addTableYLabel;
+	private JTextField addTableWidthTextField;
+	private JLabel addTableWidthLabel;
+	private JTextField addTableHeightTextField;
+	private JLabel addTableHeightLabel;
 	private JTextField addTableNumberOfSeatsTextField;
 	private JLabel addTableNumberOfSeatsLabel;
 	private JButton addTableButton;
@@ -130,10 +134,14 @@ public class RestoPage extends JFrame {
 									.addGroup(layout.createSequentialGroup()
 											.addComponent(addTableXLabel)
 											.addComponent(addTableXTextField)
-											)
-									.addGroup(layout.createSequentialGroup()
 											.addComponent(addTableYLabel)
 											.addComponent(addTableYTextField)
+											)
+									.addGroup(layout.createSequentialGroup()
+											.addComponent(addTableWidthLabel)
+											.addComponent(addTableWidthTextField)
+											.addComponent(addTableHeightLabel)
+											.addComponent(addTableHeightTextField)
 											)
 									.addGroup(layout.createSequentialGroup()
 											.addComponent(addTableNumberOfSeatsLabel)
