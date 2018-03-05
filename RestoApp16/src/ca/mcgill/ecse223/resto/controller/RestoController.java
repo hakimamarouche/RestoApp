@@ -67,7 +67,7 @@ public class RestoController {
 			Seat seat = table.addSeat();
 			table.addCurrentSeat(seat);
 		}
-//		RestoApplication.save();
+		RestoApplication.save();
 	}
 	
 	public static List<Table> getTables() {

@@ -260,6 +260,26 @@ public class RestoPage extends JFrame {
 		pack();
 	}
 	
+	private void addTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
+		// clear error message
+		error = null;
+		
+		// call the controller
+		try {
+			RestoController.createTable(Integer.parseInt(addTableNumberTextField.getText()),
+					Integer.parseInt(addTableXTextField.getText()), 
+					Integer.parseInt(addTableYTextField.getText()), 
+					Integer.parseInt(addTableWidthTextField.getText()), 
+					Integer.parseInt(addTableLengthTextField.getText()), 
+					Integer.parseInt(addTableNumberOfSeatsTextField.getText()));
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		// update visuals
+		refreshData();
+	}
+	
 	private void deleteTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		error = "";
 		if (selectedTable < 0) {
