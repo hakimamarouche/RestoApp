@@ -2,10 +2,12 @@
 /*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
+import java.io.Serializable;
 import java.util.*;
 
-// line 24 "../../../../../RestoApp.ump"
-public class Table
+// line 36 "../../../../../RestoAppPersistence.ump"
+// line 26 "../../../../../RestoApp.ump"
+public class Table implements Serializable
 {
 
   //------------------------
@@ -649,6 +651,14 @@ public class Table
     }
   }
 
+  // line 43 "../../../../../RestoAppPersistence.ump"
+   public static  void reinitializeTable(List<Table> tables){
+    tablesByNumber = new HashMap<Integer, Table>();
+    for (Table table : tables) {
+     tablesByNumber.put(table.getNumber(), table);
+    }
+  }
+
 
   public String toString()
   {
@@ -659,5 +669,13 @@ public class Table
             "width" + ":" + getWidth()+ "," +
             "length" + ":" + getLength()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
-  }
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 40 "../../../../../RestoAppPersistence.ump"
+  private static final long serialVersionUID =  8896099581655989380L ;
+
+  
 }

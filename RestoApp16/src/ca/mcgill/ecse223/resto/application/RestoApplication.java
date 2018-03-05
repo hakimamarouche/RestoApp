@@ -14,9 +14,6 @@ public class RestoApplication {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				new RestoPage().setVisible(true);
-				//System.out.println(RestoController.getItemCategories().get(5));
-				//System.out.println(RestoController.);
-
 				
 			}
 		});
@@ -31,7 +28,7 @@ public class RestoApplication {
 	}
 	/**
 	 * Persistence
-	 * 
+	 */
 	public static void save() {
 		PersistenceObjectStream.serialize(restoApp);
 	}
@@ -47,7 +44,7 @@ public class RestoApplication {
 		}
 		return restoApp;
 	}
-	*/
+	
 	
 	public static void setFilename(String newFilename) {
 		filename = newFilename;
