@@ -268,6 +268,8 @@ private void deleteTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
 			error = e.getMessage();
 		}
 	}
+	//update visuals
+	refreshData();
 }
 	
 	public void setVisible(boolean b) {
