@@ -124,6 +124,22 @@ public class RestoPage extends JFrame {
 		//global settings and listeners
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setTitle("Resto App");
+		
+				
+		// settings and listener for createTable()
+		addTableNumberLabel.setText("Table number:");
+		addTableXLabel.setText("X position:");
+		addTableYLabel.setText("Y Position:");
+		addTableWidthLabel.setText("Table width:");
+		addTableLengthTextField.setText("Table lenght:");
+		addTableNumberOfSeatsTextField.setText("Number of seats:");
+		addTableButton.setText("Add Table");
+		addTableButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				addTableButtonActionPerformed(evt);
+			}
+		});
+		
 		deleteTableButton.setText("Delete");
 		deleteTableButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
