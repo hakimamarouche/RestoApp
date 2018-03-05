@@ -18,6 +18,36 @@ public class RestoController {
 		
 	}
 	
+	public static void moveTable(int number, int x, int y) throws InvalidInputException {
+        
+       Table table = Table.getWithNumber(number);
+        
+       String error = "";
+       int length;
+       int width;
+       if (table == null) {
+            error = "Table not found.";
+            throw new InvalidInputException(error);
+       }
+        
+       RestoApp restoApp = RestoApplication.getRestoApp();
+       width = table.getWidth();
+       length = table.getLength();
+       List<Table> currentTable = restoApp.getTables();
+       for (Table currentTables : currentTable) {
+    	   if ( (x + width) != (currentTables.getX() + currentTables.getWidth()) && (y + length) != (currentTables.getX() + currentTables.getLength()) ) {
+                table.setX(x);
+                table.setY(y);        
+    	   }
+    	   else {
+    		   error = "There is already a table in this location";
+    		   throw new InvalidInputException(error.trim());
+         }
+        
+       }
+    
+    }
+	
 	public static void createTable (int number, int x, int y, int width, int length, int numberOfSeats) throws InvalidInputException {
 		String error = "";
 		if (x < 0 || y < 0) {
