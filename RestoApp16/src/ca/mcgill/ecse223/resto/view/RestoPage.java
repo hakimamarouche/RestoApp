@@ -221,6 +221,8 @@ public class RestoPage extends JFrame {
 			addTableXTextField.setText("");
 			addTableYTextField.setText("");
 			addTableNumberOfSeatsTextField.setText("");
+			addTableWidthTextField.setText("");
+			addTableHeightTextField.setText("");
 			updateTableXTextField.setText("");
 			updateTableYTextField.setText("");
 			updateTableNumberOfSeatsTextField.setText("");
