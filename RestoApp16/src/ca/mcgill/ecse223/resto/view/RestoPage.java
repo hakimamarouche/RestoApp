@@ -210,6 +210,7 @@ public class RestoPage extends JFrame {
 							)
 					.addComponent(restoVisualizer)
 				);
+		pack();
 	}
 	
 	private void refreshData() {
@@ -238,7 +239,7 @@ public class RestoPage extends JFrame {
 			selectedTable = -1;
 			selectTableDropdown.setSelectedIndex(selectedTable);
 		}
-		
+		pack();
 	}
 
 	public void setVisible(boolean b) {
