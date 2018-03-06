@@ -64,6 +64,7 @@ public class RestoPage extends JFrame {
 	private JLabel updateTableNumberOfSeatsLabel;
 	private JButton updateTableButton;
 	private JButton deleteTableButton;
+	private JButton moveTableButton;
 	
 	//data elements
 	
@@ -103,14 +104,9 @@ public class RestoPage extends JFrame {
 		addTableNumberOfSeatsTextField = new JTextField();
 		addTableNumberOfSeatsLabel = new JLabel();
 		addTableButton = new JButton();
-		//elements for updating or deleting table
-		selectTableDropdown = new JComboBox<String>(new String[0]);
-		selectTableDropdown.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				JComboBox<String> cb = (JComboBox<String>) evt.getSource();
-				selectedTable = cb.getSelectedIndex();
-			}
-		});
+		
+
+		
 		selectTableDropdownLabel = new JLabel();
 		updateTableXTextField = new JTextField();
 		updateTableXLabel = new JLabel();
@@ -120,23 +116,38 @@ public class RestoPage extends JFrame {
 		updateTableNumberOfSeatsLabel = new JLabel();
 		updateTableButton = new JButton();
 		deleteTableButton = new JButton();
+		moveTableButton = new JButton();
 		
 		//global settings and listeners
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setTitle("Resto App");
 		
-				
+		//elements settings and listener for moving table
+		moveTableButton.setText("Move table");
+		
+		//elements settings and listener for moving table
+		updateTableButton.setText("Update table");
+
 		// settings and listener for createTable()
 		addTableNumberLabel.setText("Table number:");
 		addTableXLabel.setText("X position:");
 		addTableYLabel.setText("Y Position:");
 		addTableWidthLabel.setText("Table width:");
-		addTableLengthTextField.setText("Table lenght:");
+		addTableLengthTextField.setText("Table length:");
 		addTableNumberOfSeatsTextField.setText("Number of seats:");
 		addTableButton.setText("Add Table");
 		addTableButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				addTableButtonActionPerformed(evt);
+			}
+		});
+		
+		//elements for updating or deleting table
+		selectTableDropdown = new JComboBox<String>(new String[0]);
+		selectTableDropdown.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				JComboBox<String> cb = (JComboBox<String>) evt.getSource();
+				selectedTable = cb.getSelectedIndex();
 			}
 		});
 		
@@ -152,98 +163,73 @@ public class RestoPage extends JFrame {
 		getContentPane().setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
-		layout.setHorizontalGroup(layout.createSequentialGroup()
-				.addGroup(layout.createParallelGroup()
+		
+		
+		layout.setHorizontalGroup(
+			layout.createParallelGroup()
+			.addGroup(layout.createSequentialGroup()
 					.addComponent(errorMessage)
-					.addGroup(layout.createSequentialGroup()
-							.addGroup(layout.createParallelGroup()
-									.addGroup(layout.createSequentialGroup()
-											.addComponent(addTableNumberLabel)
-											.addComponent(addTableNumberTextField)
-											)
-									.addGroup(layout.createSequentialGroup()
-											.addComponent(addTableXLabel)
-											.addComponent(addTableXTextField)
-											.addComponent(addTableYLabel)
-											.addComponent(addTableYTextField)
-											)
-									.addGroup(layout.createSequentialGroup()
-											.addComponent(addTableWidthLabel)
-											.addComponent(addTableWidthTextField)
-											.addComponent(addTableLengthLabel)
-											.addComponent(addTableLengthTextField)
-											)
-									.addGroup(layout.createSequentialGroup()
-											.addComponent(addTableNumberOfSeatsLabel)
-											.addComponent(addTableNumberOfSeatsTextField)
-											)
+					.addGroup(layout.createParallelGroup()
+							.addComponent(addTableNumberLabel, 200, 200, 400)
+							.addComponent(addTableXLabel)
+							.addComponent(addTableYLabel)
+							.addComponent(addTableWidthLabel)
+							.addComponent(addTableLengthLabel)
+							.addComponent(addTableNumberOfSeatsLabel)
+							.addComponent(selectTableDropdownLabel)
+							.addGroup(layout.createSequentialGroup()
 									.addComponent(addTableButton)
-									)
-							.addGroup(layout.createParallelGroup()
-									.addGroup(layout.createSequentialGroup()
-											.addComponent(selectTableDropdownLabel)
-											.addComponent(selectTableDropdown)
-											)
-									.addGroup(layout.createSequentialGroup()
-											.addComponent(updateTableXLabel)
-											.addComponent(updateTableXTextField)
-											)
-									.addGroup(layout.createSequentialGroup()
-											.addComponent(updateTableYLabel)
-											.addComponent(updateTableYTextField)
-											)
-									.addGroup(layout.createSequentialGroup()
-											.addComponent(updateTableNumberOfSeatsLabel)
-											.addComponent(updateTableNumberOfSeatsTextField)
-											)
-									.addGroup(layout.createSequentialGroup()
-											.addComponent(updateTableButton)
-											.addComponent(deleteTableButton)
-											)
-									)
-							)
-				)
-				.addComponent(restoVisualizer)
-			);
-		layout.setVerticalGroup(layout.createParallelGroup()
-					.addGroup(layout.createSequentialGroup()
-							.addComponent(errorMessage)
-							.addGroup(layout.createParallelGroup()
-									.addComponent(addTableNumberLabel)
-									.addComponent(addTableNumberTextField)
-									.addComponent(selectTableDropdownLabel)
-									.addComponent(selectTableDropdown)
-									)
-							.addGroup(layout.createParallelGroup()
-									.addComponent(addTableXLabel)
-									.addComponent(addTableXTextField)
-									.addComponent(addTableYLabel)
-									.addComponent(addTableYTextField)
-									.addComponent(updateTableXLabel)
-									.addComponent(updateTableXTextField)
-									)
-							.addGroup(layout.createParallelGroup()
-									.addComponent(addTableWidthLabel)
-									.addComponent(addTableWidthTextField)
-									.addComponent(addTableLengthLabel)
-									.addComponent(addTableLengthTextField)
-									.addComponent(updateTableYLabel)
-									.addComponent(updateTableYTextField)
-									)
-							.addGroup(layout.createParallelGroup()
-									.addComponent(addTableNumberOfSeatsLabel)
-									.addComponent(addTableNumberOfSeatsTextField)
-									.addComponent(updateTableNumberOfSeatsLabel)
-									.addComponent(updateTableNumberOfSeatsTextField)
-									)
-							.addGroup(layout.createParallelGroup()
-									.addComponent(addTableButton)
+									.addComponent(deleteTableButton)))
+					.addGroup(layout.createParallelGroup()
+							.addComponent(addTableNumberTextField, 200, 200, 400)
+							.addComponent(addTableXTextField, 200, 200, 400)
+							.addComponent(addTableYTextField, 200, 200, 400)
+							.addComponent(addTableWidthTextField)
+							.addComponent(addTableLengthTextField, 200, 200, 400)
+							.addComponent(addTableNumberOfSeatsTextField)
+							.addComponent(selectTableDropdown)
+							.addGroup(layout.createSequentialGroup()
 									.addComponent(updateTableButton)
-									.addComponent(deleteTableButton)
-									)
-							)
-					.addComponent(restoVisualizer)
-				);
+									.addComponent(moveTableButton)))
+					)
+			.addComponent(restoVisualizer)
+			);
+		
+		layout.setVerticalGroup(
+			layout.createSequentialGroup()
+			.addComponent(errorMessage)
+			.addGroup(layout.createParallelGroup()
+					.addComponent(addTableNumberLabel)
+					.addComponent(addTableNumberTextField))
+			.addGroup(layout.createParallelGroup()
+					.addComponent(addTableXLabel)
+					.addComponent(addTableXTextField))
+			.addGroup(layout.createParallelGroup()
+					.addComponent(addTableYLabel)
+					.addComponent(addTableYTextField))
+			.addGroup(layout.createParallelGroup()
+					.addComponent(addTableWidthLabel)
+					.addComponent(addTableWidthTextField))
+			.addGroup(layout.createParallelGroup()
+					.addComponent(addTableLengthLabel)
+					.addComponent(addTableLengthTextField))
+			.addGroup(layout.createParallelGroup()
+					.addComponent(addTableNumberOfSeatsLabel)
+					.addComponent(addTableNumberOfSeatsTextField))
+			.addGroup(layout.createParallelGroup()
+					.addComponent(selectTableDropdownLabel)
+					.addComponent(selectTableDropdown))
+			.addGroup(layout.createParallelGroup()
+					.addComponent(addTableButton)
+					.addComponent(deleteTableButton)
+					.addComponent(updateTableButton)
+					.addComponent(moveTableButton)
+					)
+			.addComponent(restoVisualizer)
+			);
+		
+
+		
 		pack();
 	}
 	
