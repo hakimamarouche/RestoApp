@@ -45,7 +45,7 @@ public class RestoController {
          }
         
        }
-    
+    RestoApplication.save();
     }
 	
 	public static void createTable (int number, int x, int y, int width, int length, int numberOfSeats) throws InvalidInputException {
