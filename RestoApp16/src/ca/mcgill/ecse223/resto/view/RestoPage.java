@@ -65,6 +65,7 @@ public class RestoPage extends JFrame {
 	private JButton updateTableButton;
 	private JButton deleteTableButton;
 	private JButton moveTableButton;
+	private JButton menuButton;
 	
 	//data elements
 	
@@ -117,6 +118,7 @@ public class RestoPage extends JFrame {
 		updateTableButton = new JButton();
 		deleteTableButton = new JButton();
 		moveTableButton = new JButton();
+		menuButton = new JButton();
 		
 		//global settings and listeners
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -151,6 +153,9 @@ public class RestoPage extends JFrame {
 			}
 		});
 		
+		//settings and listener for MenuBLALBla()
+		menuButton.setText("Menu");
+		
 		deleteTableButton.setText("Delete");
 		deleteTableButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -179,7 +184,8 @@ public class RestoPage extends JFrame {
 							.addComponent(selectTableDropdownLabel)
 							.addGroup(layout.createSequentialGroup()
 									.addComponent(addTableButton)
-									.addComponent(deleteTableButton)))
+									.addComponent(deleteTableButton))
+							.addComponent(menuButton))
 					.addGroup(layout.createParallelGroup()
 							.addComponent(addTableNumberTextField, 200, 200, 400)
 							.addComponent(addTableXTextField, 200, 200, 400)
@@ -224,6 +230,9 @@ public class RestoPage extends JFrame {
 					.addComponent(deleteTableButton)
 					.addComponent(updateTableButton)
 					.addComponent(moveTableButton)
+					)
+			.addGroup(layout.createParallelGroup()
+					.addComponent(menuButton)
 					)
 			.addComponent(restoVisualizer)
 			);
