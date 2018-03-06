@@ -125,7 +125,7 @@ public class RestoController {
 			}
 		}
 		restoApp.removeCurrentTable(table);
-		// TODO restoApp.save();
+		RestoApplication.save();
 	}
 	
 		public static void updateTable(int number, int newNumber, int numberOfSeats) throws InvalidInputException {
