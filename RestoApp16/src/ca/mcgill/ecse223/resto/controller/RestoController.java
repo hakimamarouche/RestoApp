@@ -128,6 +128,66 @@ public class RestoController {
 		// TODO restoApp.save();
 	}
 	
+		public static void updateTable(int number, int newNumber, int numberOfSeats) throws InvalidInputException {
+		Table foundTable = Table.getWithNumber(number);
+		updateTable(foundTable, newNumber, numberOfSeats);
+	}
+	
+	
+	public static void updateTable(Table table, int newNumber, int numberOfSeats) throws InvalidInputException {
+		String error = "";
+		if (table == null) {
+			error = "Table not found.";
+			throw new InvalidInputException(error.trim()); 
+		}
+		else if (numberOfSeats < 0) {
+			error = "Invalid number of seats.";
+			throw new InvalidInputException(error.trim());
+		}
+		else if (newNumber < 0) {
+			error = "Invalid table number.";
+			throw new InvalidInputException(error.trim());
+		}
+		
+		RestoApp restoApp = RestoApplication.getRestoApp();
+		List<Order> currentOrders = restoApp.getCurrentOrders();
+		for (Order order : currentOrders) {
+			List<Table> tables = order.getTables();
+			boolean inUse = tables.contains(table);
+			if (inUse == true) {
+				error = "Table in use.";
+				throw new InvalidInputException(error.trim());
+			}
+		}
+		
+		try {
+			table.setNumber(newNumber);
+		}
+		catch (RuntimeException e) {
+			error = e.getMessage();
+			if (error.equals("Cannot create due to duplicate number")) {
+				error = "A table with this number already exists. Please use a different number.";
+			}
+			throw new InvalidInputException(error);
+		}	
+		
+		
+		int n = table.numberOfCurrentSeats();
+		for (int i = 1; i < (numberOfSeats - n); i++) {
+			 Seat seat = table.addSeat();
+			 table.addCurrentSeat(seat);
+		}
+		
+		
+		for (int j = 1; j < (n - numberOfSeats); j++) {
+			 Seat seat = table.getCurrentSeat(0);
+			 table.removeCurrentSeat(seat);
+		}
+
+		RestoApplication.save();
+	
+	}
+	
 	public static List<ItemCategory> getItemCategories(){
 		
 		List <ItemCategory> categorieList = new ArrayList<ItemCategory>();
