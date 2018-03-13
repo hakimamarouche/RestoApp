@@ -101,7 +101,7 @@ public class RestoController {
 	}
 	
 	public static List<Table> getTables() {
-		return RestoApplication.getRestoApp().getTables();
+		return RestoApplication.getRestoApp().getCurrentTables();
 	}
 	
 	public static void removeTable(int number) throws InvalidInputException {
