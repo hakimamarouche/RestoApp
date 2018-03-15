@@ -6,13 +6,14 @@ class Table {
     
     InUse {
       Idle{
-      	available() -> Available;
         orderItem(List<OrderItem> orderItems) -> OrderingItem;
       }
       OrderingItem {
-        orderItem(List<OrderItem> orderItems) -> OrderingItem;
+        orderItem(List<OrderItem> orderItems) -> /{
+        	//Do something
+        } OrderingItem;
         issueBill(Order order, List<Seat> seats) [numberOfOrders() > 1] -> OrderingItem;
-        issueBill() [numberOfOrders() =< 1] -> IssuingBill;
+        issueBill(Order order, List<Seat> seats) [numberOfOrders() =< 1] -> IssuingBill;
       }
       
       IssuingBill {
@@ -21,19 +22,29 @@ class Table {
       		
       	} IssuingBill;
         available() [nbOfBills == 0] -> Available;
+        payBill(Bill bill) [numberofBills() > 1] -> IssuingBill
+        payBill(Bill bill) [numberOfBills() == 0] -> Idle;
       }
-      available() -> Available;
+      
     }
-
+    available() -> /{
+    	if (numberOfOrders != 0) {
+    		throw new RuntimeException("A table having orders cannot be put as available.");
+    	}
+    }
+    } Available;
   }
+  
   
   ReservationStatus {
     NotReserved {
-    	[DateTime == actualDateTime] -> Reserved;
+    	reserve() -> Reserved;
     }
     
     Reserved {
+    	entry / { showNextReservation(); }
+    	unreserve() [!hasReservations()] -> NotReserved;
+    	unreserve() [hasReservations()] -> Reserved;
     }
   }
-
 }
