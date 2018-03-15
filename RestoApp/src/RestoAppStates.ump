@@ -29,10 +29,11 @@ class Table {
   
   ReservationStatus {
     NotReserved {
-    	[DateTime == actualDateTime] -> Reserved;
+    	reserve() [DateTime == actualDateTime] -> Reserved;
     }
     
     Reserved {
+		unreserve() [!hasReservations()] -> NotReserved;
     }
   }
 
