@@ -45,6 +45,7 @@ class Table {
     	entry / { showNextReservation(); }
     	unreserve() [!hasReservations()] -> NotReserved;
     	unreserve() [hasReservations()] -> Reserved;
+
     }
   }
 }
