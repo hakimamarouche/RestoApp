@@ -1,0 +1,36 @@
+class Table {
+  AvailabilityStatus {
+    Available{
+      inUse() -> InUse;RestoAppS
+    }
+    
+    InUse {
+      Idle{
+        orderedItem() -> / {
+        	Order newOrder = 
+        } OrderingItem;
+      }
+      OrderingItem {
+        orderedItem() -> OrderingItem;
+        billIssued() -> IssuingBill;
+      }
+      
+      IssuingBill {
+      	available() [nbOfBills != 0] -> IssuingBill;
+        available() [nbOfBills == 0] -> Available;
+      }
+      available() -> Available;
+    }
+
+  }
+  
+  ReservationStatus {
+    NotReserved {
+    	reserve()
+    }
+    
+    Reserved {
+    }
+  }
+
+}
