@@ -1,22 +1,25 @@
 class Table {
   AvailabilityStatus {
     Available{
-      inUse() -> InUse;RestoAppS
+      inUse() -> InUse;
     }
     
     InUse {
       Idle{
-        orderedItem() -> / {
-        	Order newOrder = 
-        } OrderingItem;
+      	available() -> Available;
+        orderItem(List<OrderItem> orderItems) -> OrderingItem;
       }
       OrderingItem {
-        orderedItem() -> OrderingItem;
-        billIssued() -> IssuingBill;
+        orderItem(List<OrderItem> orderItems) -> OrderingItem;
+        issueBill(Order order, List<Seat> seats) [numberOfOrders() > 1] -> OrderingItem;
+        issueBill() [numberOfOrders() =< 1] -> IssuingBill;
       }
       
       IssuingBill {
-      	available() [nbOfBills != 0] -> IssuingBill;
+      	orderItem() -> OrderingItem;
+      	available() [nbOfBills != 0] -> /{
+      		
+      	} IssuingBill;
         available() [nbOfBills == 0] -> Available;
       }
       available() -> Available;
@@ -26,7 +29,7 @@ class Table {
   
   ReservationStatus {
     NotReserved {
-    	reserve()
+    	[DateTime == actualDateTime] -> Reserved;
     }
     
     Reserved {
