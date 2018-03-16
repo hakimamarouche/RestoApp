@@ -2,8 +2,9 @@ class Table {
   AvailabilityStatus {
     Available {
       inUse() / {
-      	Order order = new Order(new Date(), getRestoApp(), this);
-      	addOrder(Order);
+      	Table[] tables =  {this};
+      	Order order = new Order((java.sql.Date) new Date(), getRestoApp(), tables);
+      	addOrder(order);
       } -> InUse;
     }
     
@@ -18,9 +19,9 @@ class Table {
       
       IssuingBill {
       	orderItem(Seat seat, Order order, PricedMenuItem pricedMenuItem) -> OrderingItem;
-        payBill(Bill bill) [numberofBills() > 1] -> IssuingBill;
-        payBill(Bill bill) [numberOfBills() == 0] -> Idle;
+        payBill(Bill bill) -> IssuingBill;
       }
+      available() -> Available
     } 
   }
    
@@ -31,7 +32,9 @@ class Table {
     }
     
     Reserved {
-    	entry / { showNextReservation(); }
+    	entry / { 
+			// code to show next reservation on display    	
+    	 }
     	unreserve(int reservationNumber) [!hasReservations()] -> NotReserved;
     	unreserve(int reservationNumber) [hasReservations()] -> Reserved;
 
