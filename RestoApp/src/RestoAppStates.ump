@@ -1,50 +1,39 @@
 class Table {
   AvailabilityStatus {
-    Available{
-      inUse() -> InUse;
+    Available {
+      inUse() / {
+      	Order order = new Order(new Date(), getRestoApp(), this);
+      	addOrder(Order);
+      } -> InUse;
     }
     
     InUse {
-      Idle{
-        orderItem(List<OrderItem> orderItems) -> OrderingItem;
-      }
       OrderingItem {
-        orderItem(List<OrderItem> orderItems) -> /{
-        	//Do something
-        } OrderingItem;
-        issueBill(Order order, List<Seat> seats) [numberOfOrders() > 1] -> OrderingItem;
+        orderItem(Seat seat, Order order, PricedMenuItem pricedMenuItem) -> OrderingItem;
+        issueBill(Order order, List<Seat> seats) [numberOfOrders() > 1]/ {
+          removeOrder(order);
+        } -> OrderingItem;
         issueBill(Order order, List<Seat> seats) [numberOfOrders() =< 1] -> IssuingBill;
       }
       
       IssuingBill {
-      	orderItem() -> OrderingItem;
-      	available() [nbOfBills != 0] -> /{
-      		
-      	} IssuingBill;
-        available() [nbOfBills == 0] -> Available;
-        payBill(Bill bill) [numberofBills() > 1] -> IssuingBill
+      	orderItem(Seat seat, Order order, PricedMenuItem pricedMenuItem) -> OrderingItem;
+        payBill(Bill bill) [numberofBills() > 1] -> IssuingBill;
         payBill(Bill bill) [numberOfBills() == 0] -> Idle;
       }
-      
-    }
-    available() -> /{
-    	if (numberOfOrders != 0) {
-    		throw new RuntimeException("A table having orders cannot be put as available.");
-    	}
-    }
-    } Available;
+    } 
   }
-  
+   
   
   ReservationStatus {
     NotReserved {
-    	reserve() -> Reserved;
+    	reserve(Date dateTime, int numberInParty, String contactName, String contactEmailAddress, String contactPhoneNumber) -> Reserved;
     }
     
     Reserved {
     	entry / { showNextReservation(); }
-    	unreserve() [!hasReservations()] -> NotReserved;
-    	unreserve() [hasReservations()] -> Reserved;
+    	unreserve(int reservationNumber) [!hasReservations()] -> NotReserved;
+    	unreserve(int reservationNumber) [hasReservations()] -> Reserved;
 
     }
   }
