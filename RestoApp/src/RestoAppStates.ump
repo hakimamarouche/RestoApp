@@ -55,22 +55,4 @@ class Table {
 
     } 
   }
-   
-  
-  ReservationStatus {
-    NotReserved {
-    	reserve(Date dateTime, int numberInParty, String contactName, String contactEmailAddress, String contactPhoneNumber) -> /{
-    		
-    	} Reserved;
-    }
-    
-    Reserved {
-    	entry / { 
-			// code to show next reservation on display    	
-    	 }
-    	unreserve(int reservationNumber) [!hasReservations()] -> NotReserved;
-    	unreserve(int reservationNumber) [hasReservations()] -> Reserved;
-
-    }
-  }
 }
