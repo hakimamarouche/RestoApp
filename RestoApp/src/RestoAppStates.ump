@@ -22,10 +22,6 @@ class Table {
     	}
     	
     	IssuingBills {
-	    	orderItem(Order order, OrderItem aOrderItem) [getOrder(0).numberOfBills() == 0] -> / {
-	    		order.addOrderItem(aOrderItem);
-	    	} OrderingItems;    
-	    	
 	    	orderItem(Order order, OrderItem aOrderItem) [getOrder(0).numberOfBills() > 0] -> / {
 	    		order.addOrderItem(aOrderItem);
 	    	} IssuingBills;
@@ -38,7 +34,7 @@ class Table {
     	  		aBill.delete();
     		} IssuingBills;	
     		
-    		payBill(Bill aBill) [getOrder(0).numberOfBills() > 1] -> / {
+    		payBill(Bill aBill) [getOrder(0).numberOfBills() < 2] -> / {
     	  		aBill.delete();
     		} ReadyForAvailable;
     	}
@@ -52,7 +48,6 @@ class Table {
         		getRestoApp().removeCurrentOrder(getOrder(0));
       		} Available;
     	}
-
     } 
   }
 }
