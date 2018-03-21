@@ -2,14 +2,27 @@ package ca.mcgill.ecse223.resto.controller;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
 
 import ca.mcgill.ecse223.resto.application.RestoApplication;
 import ca.mcgill.ecse223.resto.model.RestoApp;
 
 public class RestoControllerTest {
 
+	@BeforeClass
+	public static void setUpOnce() {
+		String filename = "testdata.resto";
+		RestoApplication.setFilename(filename);
+		File f = new File(filename);
+		f.delete();
+	}
+	
+	
 	@Before
 	public void setUp() {
 		// clear all data
@@ -34,6 +47,175 @@ public class RestoControllerTest {
 			fail();	
 		}
 		
+		// Check model in memory
+		checkResultTable(number, x, y, width, length, numberOfSeats, r, 1);
+
+	}
+	
+	@Test
+	public void testCreateTableXNegative() {
+		RestoApp r = RestoApplication.getRestoApp();
+		int number = 1;
+		int x = -200;
+		int y = 200;
+		int width = 20;
+		int length = 20;
+		int numberOfSeats = 1;
+
+		String error = null;
+		try {
+			RestoController.createTable(number, x, y, width, length, numberOfSeats);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		// check error
+		assertEquals("The position of te table cannot be chararterised by negative x and y variables.", error);
+		// Check model in memory
+		checkResultTable(number, x, y, width, length, numberOfSeats, r, 0);
+
+	}
+	
+	@Test
+	public void testCreateTableYNegative() {
+		RestoApp r = RestoApplication.getRestoApp();
+		int number = 1;
+		int x = 200;
+		int y = -200;
+		int width = 20;
+		int length = 20;
+		int numberOfSeats = 1;
+
+		String error = null;
+		try {
+			RestoController.createTable(number, x, y, width, length, numberOfSeats);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		// check error
+		assertEquals("The position of te table cannot be chararterised by negative x and y variables.", error);
+		// Check model in memory
+		checkResultTable(number, x, y, width, length, numberOfSeats, r, 0);
+
+	}
+	
+	@Test
+	public void testCreateTableTableNumberNotPositive() {
+		RestoApp r = RestoApplication.getRestoApp();
+		int number = 0;
+		int x = 200;
+		int y = 200;
+		int width = 20;
+		int length = 20;
+		int numberOfSeats = 1;
+
+		String error = null;
+		try {
+			RestoController.createTable(number, x, y, width, length, numberOfSeats);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		// check error
+		assertEquals("The number of a table has to be positive.", error);
+		// Check model in memory
+		checkResultTable(number, x, y, width, length, numberOfSeats, r, 0);
+
+	}
+	
+	@Test
+	public void testCreateTableWidthNotPositive() {
+		RestoApp r = RestoApplication.getRestoApp();
+		int number = 1;
+		int x = 200;
+		int y = 200;
+		int width = 0;
+		int length = 20;
+		int numberOfSeats = 1;
+
+		String error = null;
+		try {
+			RestoController.createTable(number, x, y, width, length, numberOfSeats);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		// check error
+		assertEquals("The width and the length has to be positive.", error);
+		// Check model in memory
+		checkResultTable(number, x, y, width, length, numberOfSeats, r, 0);
+
+	}
+	
+	@Test
+	public void testCreateTableLengthNotPositive() {
+		RestoApp r = RestoApplication.getRestoApp();
+		int number = 1;
+		int x = 200;
+		int y = 200;
+		int width = 20;
+		int length = 0;
+		int numberOfSeats = 1;
+
+		String error = null;
+		try {
+			RestoController.createTable(number, x, y, width, length, numberOfSeats);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		// check error
+		assertEquals("The width and the length has to be positive.", error);
+		// Check model in memory
+		checkResultTable(number, x, y, width, length, numberOfSeats, r, 0);
+
+	}
+
+	@Test
+	public void testCreateTableNumberOfSeatsNotPositive() {
+		RestoApp r = RestoApplication.getRestoApp();
+		int number = 1;
+		int x = 200;
+		int y = 200;
+		int width = 0;
+		int length = 20;
+		int numberOfSeats = 0;
+
+		String error = null;
+		try {
+			RestoController.createTable(number, x, y, width, length, numberOfSeats);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		// check error
+		assertEquals("The number of seats needs to be positive.", error);
+		// Check model in memory
+		checkResultTable(number, x, y, width, length, numberOfSeats, r, 0);
+
+	}
+	
+	@Test
+	public void testCreateTableDuplicateNumber() {
+		RestoApp r = RestoApplication.getRestoApp();
+		int number = 1;
+		int x = 200;
+		int y = 200;
+		int width = 20;
+		int length = 20;
+		int numberOfSeats = 1;
+
+		String error = null;
+		try {
+			RestoController.createTable(number, x, y, width, length, numberOfSeats);
+			RestoController.createTable(number, x, y, width, length, numberOfSeats);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		// check error
+		assertEquals("A table with this number already exists. Please use a different number.", error);
 		// Check model in memory
 		checkResultTable(number, x, y, width, length, numberOfSeats, r, 1);
 
