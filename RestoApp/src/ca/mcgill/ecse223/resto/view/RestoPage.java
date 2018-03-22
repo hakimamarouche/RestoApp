@@ -34,7 +34,7 @@ import org.jdatepicker.impl.SqlDateModel;
 import ca.mcgill.ecse223.resto.model.Table;
 
 public class RestoPage extends JFrame {
-	
+
 	//UI elements
 	private JLabel errorMessage;
 	//restaurant visualization
