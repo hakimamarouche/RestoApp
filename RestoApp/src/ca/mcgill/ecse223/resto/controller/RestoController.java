@@ -255,4 +255,57 @@ public class RestoController {
 			Reservation res = new Reservation(date, time, numberInParty, contactName, contactEmailAddress, contactPhoneNumber, r,currentTablesArray);
 			RestoApplication.save();
 		}
+	
+	public static void startOrder(List<Table> tables) throws InvalidInputException {
+		String error = "";
+		if(tables == null) {
+			error = "Need to select tables";
+			throw new InvalidInputException(error.trim());
+		}
+		RestoApp r = RestoApplication.getRestoApp();
+		List<Table> currentTables = r.getCurrentTables();
+		for (Table table : tables) {
+			boolean current = currentTables.contains(table);
+			if (current == false) {
+				error = "Table: "+table.getNumber()+" does not exist.";
+				throw new InvalidInputException(error.trim());
+			}
+		}
+		boolean orderCreated = false;
+		Order newOrder = null;
+		for(Table table : tables) {
+			if(orderCreated) {
+				table.addToOrder(newOrder);
+			}
+			else {
+				Order lastOrder = null;
+				if(table.numberOfOrders() > 0) {
+					lastOrder = table.getOrder(table.numberOfOrders()-1);
+				}
+				table.startOrder();
+				if (table.numberOfOrders() > 0 && !table.getOrder(table.numberOfOrders()-1).equals(lastOrder)) {
+					orderCreated = true;
+					newOrder = table.getOrder(table.numberOfOrders()-1);
+				}
+			}
+		}
+		r.addCurrentOrder(newOrder);
+		RestoApplication.save();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
