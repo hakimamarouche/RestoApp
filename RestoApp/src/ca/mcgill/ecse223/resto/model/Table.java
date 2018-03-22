@@ -946,10 +946,12 @@ public class Table implements Serializable
   // line 40 "../../../../../RestoApp.ump"
   public Boolean doesOverlaps(Integer x, Integer y, Integer width, Integer length){
     if ((this.x <= x && (this.x + this.width + 2*SEAT_WIDTH) >= x) || 
-    	(this.x <= (x + width + 2*SEAT_WIDTH) && (this.x + this.width + 2*SEAT_WIDTH) >= (x + width + 2*SEAT_WIDTH))) {
+    	(this.x <= (x + width + 2*SEAT_WIDTH) && (this.x + this.width + 2*SEAT_WIDTH) >= (x + width + 2*SEAT_WIDTH)) || 
+    		(x <= this.x && (x + width + 2*SEAT_WIDTH) >= this.x) || 
+    		(x <= (this.x + this.width + 2*SEAT_WIDTH) && (x + width + 2*SEAT_WIDTH) >= (this.x + this.width + 2*SEAT_WIDTH))) {
     		if ((this.y <= y && (this.y + this.length + 2*SEAT_LENGTH) >= y) || 
     		(this.y <= (y + length + 2*SEAT_LENGTH) && (this.y + this.length + 2*SEAT_LENGTH) >= (y + length + 2*SEAT_LENGTH))) {
-    		
+    			return true;
     		}
     	}
     

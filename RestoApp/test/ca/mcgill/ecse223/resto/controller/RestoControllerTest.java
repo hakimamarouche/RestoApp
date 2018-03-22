@@ -205,17 +205,56 @@ public class RestoControllerTest {
 		int width = 20;
 		int length = 20;
 		int numberOfSeats = 1;
+		
+		int number1 = 1;
+		int x1 = 100;
+		int y1 = 100;
+		int width1 = 20;
+		int length1 = 20;
+		int numberOfSeats1 = 1;
 
 		String error = null;
 		try {
 			RestoController.createTable(number, x, y, width, length, numberOfSeats);
-			RestoController.createTable(number, x, y, width, length, numberOfSeats);
+			RestoController.createTable(number1, x1, y1, width1, length1, numberOfSeats1);
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
 		
 		// check error
 		assertEquals("A table with this number already exists. Please use a different number.", error);
+		// Check model in memory
+		checkResultTable(number, x, y, width, length, numberOfSeats, r, 1);
+
+	}
+	
+	@Test
+	public void testCreateTableOverlaps() {
+		RestoApp r = RestoApplication.getRestoApp();
+		int number = 1;
+		int x = 200;
+		int y = 200;
+		int width = 20;
+		int length = 20;
+		int numberOfSeats = 1;
+		
+		int number2 = 2;
+		int x2 = 195;
+		int y2 = 195;
+		int width2 = 20;
+		int length2 = 20;
+		int numberOfSeats2 = 1;
+
+		String error = null;
+		try {
+			RestoController.createTable(number, x, y, width, length, numberOfSeats);
+			RestoController.createTable(number2, x2, y2, width2, length2, numberOfSeats2);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		// check error
+		assertEquals("Cannot create table since it overlaps with other, please change the location or the dimensions", error);
 		// Check model in memory
 		checkResultTable(number, x, y, width, length, numberOfSeats, r, 1);
 
