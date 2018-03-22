@@ -62,22 +62,20 @@ public class RestoController {
 		if (numberOfSeats <= 0) {
 			error = "The number of seats needs to be positive.";
 		}
-		if (error.length() > 0) {
-			throw new InvalidInputException(error.trim());
-		}
 		
 		RestoApp r = RestoApplication.getRestoApp();
 		List<Table> currentTables = r.getCurrentTables();
 		
-//		for (Table currentTable : currentTables) {
-//			try {
-//			}
-//			catch (RuntimeException e) {
-//				if (currentTable.doesOverlap()) {
-//					error = "Tables overlaps";
-//				}
-//			}
-//		}
+		for (Table currentTable : currentTables) {
+			if (currentTable.doesOverlaps(x, y, width, length)) {
+				error = "Cannot create table since it overlaps with other, please change the location or the dimensions";
+			}
+		}
+		
+		if (error.length() > 0) {
+			throw new InvalidInputException(error.trim());
+		}
+		
 		
 		Table table;
 		try {

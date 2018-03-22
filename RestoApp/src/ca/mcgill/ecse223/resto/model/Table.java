@@ -16,6 +16,8 @@ public class Table implements Serializable
   //------------------------
 
   private static Map<Integer, Table> tablesByNumber = new HashMap<Integer, Table>();
+  public static final int SEAT_WIDTH = 5;
+  public static final int SEAT_LENGTH = 5;
 
   //------------------------
   // MEMBER VARIABLES
@@ -939,6 +941,19 @@ public class Table implements Serializable
    private boolean allSeatsBilled(){
     // TODO
       return false;
+  }
+
+  // line 40 "../../../../../RestoApp.ump"
+  public Boolean doesOverlaps(Integer x, Integer y, Integer width, Integer length){
+    if ((this.x <= x && (this.x + this.width + 2*SEAT_WIDTH) >= x) || 
+    	(this.x <= (x + width + 2*SEAT_WIDTH) && (this.x + this.width + 2*SEAT_WIDTH) >= (x + width + 2*SEAT_WIDTH))) {
+    		if ((this.y <= y && (this.y + this.length + 2*SEAT_LENGTH) >= y) || 
+    		(this.y <= (y + length + 2*SEAT_LENGTH) && (this.y + this.length + 2*SEAT_LENGTH) >= (y + length + 2*SEAT_LENGTH))) {
+    		
+    		}
+    	}
+    
+    	return false;
   }
 
 
