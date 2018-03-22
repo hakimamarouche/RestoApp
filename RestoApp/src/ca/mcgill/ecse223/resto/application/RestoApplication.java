@@ -8,9 +8,14 @@ import ca.mcgill.ecse223.resto.persistence.PersistenceObjectStream;
 public class RestoApplication {
 	
 	private static RestoApp restoApp;
-	private static String filename = "menu.resto";
+	private static String filename = "data.resto";
+	/*private static String filename = "menu.resto";*/
 	
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args) {
+		// start UI
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				new RestoPage().setVisible(true);

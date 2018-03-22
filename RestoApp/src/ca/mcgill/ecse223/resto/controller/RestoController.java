@@ -90,12 +90,21 @@ public class RestoController {
 		}
 		
 		r.addCurrentTable(table);
+		r.addTable(table);
 		
 		for (int i = 1 ; i <= numberOfSeats; i++) {
 			Seat seat = table.addSeat();
 			table.addCurrentSeat(seat);
 		}
-		RestoApplication.save();
+		
+		try {
+			RestoApplication.save();
+		}
+		catch (RuntimeException e) {
+			throw new InvalidInputException(e.getMessage());
+		}
+		
+		
 	}
 	
 	public static List<Table> getTables() {
