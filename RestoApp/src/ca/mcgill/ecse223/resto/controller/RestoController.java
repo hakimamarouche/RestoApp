@@ -292,5 +292,41 @@ public class RestoController {
 		r.addCurrentOrder(newOrder);
 		RestoApplication.save();
 	}
+	
+	public static void endOrder(Order order) throws InvalidInputException {
+		String error = "";
+		if (order == null) {
+			error = "Must specify order to end.";
+			throw new InvalidInputException(error.trim());
+		}
+		RestoApp r = RestoApplication.getRestoApp();
+		List<Order> currentOrders = r.getCurrentOrders();
+		boolean current = currentOrders.contains(order);
+		if(current == false) {
+			error = "Order does not exist.";
+			throw new InvalidInputException(error.trim());
+		}
+		List<Table> tables = order.getTables();
+		for(Table table : tables) {
+			if (table.numberOfOrders() > 0 && table.getOrder(table.numberOfOrders()-1).equals(order)) {
+				table.endOrder(order);
+			}
+		}
+		if(allTablesAvailableOrDifferentCurrentOrder(tables,order)) {
+			r.removeCurrentOrder(order);
+		}
+		RestoApplication.save();
+	}
+
+	private static boolean allTablesAvailableOrDifferentCurrentOrder(List<Table> tables, Order order) {
+		boolean result = true;
+		for (Table table : tables) {
+			if (table.getStatus() != Table.Status.Available || table.getOrder(table.numberOfOrders()-1).equals(order)) {
+				result = false;
+				break;
+			}
+		}
+		return result;
+	}
 
 }
