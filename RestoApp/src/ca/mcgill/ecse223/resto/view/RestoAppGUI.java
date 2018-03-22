@@ -24,6 +24,14 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JPopupMenu;
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JMenuItem;
+import javax.swing.JMenu;
+import javax.swing.SwingConstants;
 
 public class RestoAppGUI extends JFrame {
 
@@ -33,6 +41,14 @@ public class RestoAppGUI extends JFrame {
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField textField_3;
+	private JLabel lblName;
+	private JTextPane textPane_1;
+	private JTextPane textPane_2;
+	private JTextPane textPane_3;
+	private JTextPane textPane_4;
+	private JTextPane textPane_5;
+	private JTextPane textPane_6;
+	private JTextPane textPane;
 
 	/**
 	 * Launch the application.
@@ -67,10 +83,32 @@ public class RestoAppGUI extends JFrame {
 	//for creation and initializing components.
 	////////////////////////////////////////////////////////////////////////////////
 	private void initComponentGui() {
-		// TODO Auto-generated method stub
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 974, 514);
+		setBounds(100, 100, 974, 549);
+		
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JMenu mnMenu = new JMenu("Menu Categories");
+		mnMenu.setHorizontalAlignment(SwingConstants.RIGHT);
+		mnMenu.setForeground(new Color(0, 0, 0));
+		menuBar.add(mnMenu);
+		
+		JMenuItem mntmAppetizer = new JMenuItem("Appetizer");
+		mnMenu.add(mntmAppetizer);
+		
+		JMenuItem mntmMain = new JMenuItem("Main");
+		mnMenu.add(mntmMain);
+		
+		JMenuItem mntmDessert = new JMenuItem("Dessert");
+		mnMenu.add(mntmDessert);
+		
+		JMenuItem mntmAlcholo = new JMenuItem("Alcoholic Beverage");
+		mnMenu.add(mntmAlcholo);
+		
+		JMenuItem mntmNoneAlcoholicBeverage = new JMenuItem("None Alcoholic Beverage");
+		mnMenu.add(mntmNoneAlcoholicBeverage);
 		contentPane = new JPanel();
 		contentPane.setToolTipText("dessert\r\nappitizer");
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -78,6 +116,7 @@ public class RestoAppGUI extends JFrame {
 		contentPane.setLayout(null);
 		
 		JButton btnMoveTable = new JButton("Move table");
+		
 		btnMoveTable.setBounds(822, 251, 115, 29);
 		contentPane.add(btnMoveTable);
 		
@@ -91,18 +130,14 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(btnDelete);
 		
 		JButton btnAddTable = new JButton("Add table");
-		btnAddTable.setBounds(604, 322, 115, 29);
+		btnAddTable.setBounds(692, 322, 115, 29);
 		btnAddTable.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
 		contentPane.add(btnAddTable);
 		
-		JButton btnMenu = new JButton("Menu");
-		btnMenu.setBounds(768, 322, 115, 29);
-		contentPane.add(btnMenu);
-		
-		JTextPane textPane = new JTextPane();
+		textPane = new JTextPane();
 		textPane.setBounds(0, 0, 541, 288);
 		contentPane.add(textPane);
 		
@@ -110,27 +145,27 @@ public class RestoAppGUI extends JFrame {
 		btnReservation.setBounds(234, 413, 115, 29);
 		contentPane.add(btnReservation);
 		
-		JTextPane textPane_1 = new JTextPane();
+		textPane_1 = new JTextPane();
 		textPane_1.setBounds(764, 8, 75, 26);
 		contentPane.add(textPane_1);
 		
-		JTextPane textPane_2 = new JTextPane();
+		textPane_2 = new JTextPane();
 		textPane_2.setBounds(764, 39, 75, 26);
 		contentPane.add(textPane_2);
 		
-		JTextPane textPane_3 = new JTextPane();
+		textPane_3 = new JTextPane();
 		textPane_3.setBounds(764, 69, 75, 26);
 		contentPane.add(textPane_3);
 		
-		JTextPane textPane_4 = new JTextPane();
+		textPane_4 = new JTextPane();
 		textPane_4.setBounds(764, 99, 75, 26);
 		contentPane.add(textPane_4);
 		
-		JTextPane textPane_5 = new JTextPane();
+		textPane_5 = new JTextPane();
 		textPane_5.setBounds(764, 129, 75, 26);
 		contentPane.add(textPane_5);
 		
-		JTextPane textPane_6 = new JTextPane();
+		textPane_6 = new JTextPane();
 		textPane_6.setBounds(764, 163, 75, 26);
 		contentPane.add(textPane_6);
 		
@@ -158,9 +193,7 @@ public class RestoAppGUI extends JFrame {
 		lblNumberOfSeats.setBounds(634, 163, 130, 20);
 		contentPane.add(lblNumberOfSeats);
 		
-		JLabel lblName = new JLabel("Name :");
-		lblName.setBounds(0, 304, 69, 20);
-		contentPane.add(lblName);
+		
 		
 		JComboBox comboBox = new JComboBox();
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"select a table", "1", "2", "3", "4", "5", "6", "7"}));
@@ -168,13 +201,18 @@ public class RestoAppGUI extends JFrame {
 		comboBox.setBounds(658, 205, 200, 26);
 		contentPane.add(comboBox);
 		
+		lblName = new JLabel("Name :");
+		lblName.setBounds(10, 304, 69, 20);
+		contentPane.add(lblName);
+		
+		// for the name
 		txtAvdsh = new JTextField();
 		txtAvdsh.setBounds(64, 301, 146, 26);
 		contentPane.add(txtAvdsh);
 		txtAvdsh.setColumns(10);
 		
 		JLabel lblDate = new JLabel("Date :");
-		lblDate.setBounds(0, 346, 59, 20);
+		lblDate.setBounds(20, 346, 43, 20);
 		contentPane.add(lblDate);
 		
 		textField = new JTextField();
@@ -219,5 +257,24 @@ public class RestoAppGUI extends JFrame {
 	private void createEvents() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	
+	private static void addPopup(Component component, final JPopupMenu popup) {
+		component.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			private void showMenu(MouseEvent e) {
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
 	}
 }

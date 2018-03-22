@@ -1,21 +1,15 @@
 package ca.mcgill.ecse223.resto.application;
 
-import ca.mcgill.ecse223.resto.view.RestoPage;
-import ca.mcgill.ecse223.resto.controller.RestoController;
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.persistence.PersistenceObjectStream;
+import ca.mcgill.ecse223.resto.view.RestoPage;
 
 public class RestoApplication {
 	
 	private static RestoApp restoApp;
-	private static String filename = "data.resto";
-	/*private static String filename = "menu.resto";*/
+	private static String filename = "menu.resto";
 	
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
-		// start UI
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				new RestoPage().setVisible(true);
@@ -40,6 +34,7 @@ public class RestoApplication {
 	
 	public static RestoApp load() {
 		PersistenceObjectStream.setFilename(filename);
+		restoApp = (RestoApp) PersistenceObjectStream.deserialize();
 		// model cannot be loaded - create empty RestoApp
 		if (restoApp == null) {
 			restoApp = new RestoApp();

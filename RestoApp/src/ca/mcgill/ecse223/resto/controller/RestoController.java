@@ -1,5 +1,7 @@
 package ca.mcgill.ecse223.resto.controller;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import ca.mcgill.ecse223.resto.model.Menu;
 import ca.mcgill.ecse223.resto.model.MenuItem;
 import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
 import ca.mcgill.ecse223.resto.model.Order;
+import ca.mcgill.ecse223.resto.model.Reservation;
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.model.Seat;
 import ca.mcgill.ecse223.resto.model.Table;
@@ -221,4 +224,118 @@ public class RestoController {
 		return itemsElements;
 	}
 	
+	public static void reserve(Date date, Time time, int numberInParty, String contactName, 
+			String contactEmailAddress, String contactPhoneNumber, List <Table> tables) throws InvalidInputException{
+			
+			String error = "";
+			if (date == null || time == null || contactName == null || contactEmailAddress == null || contactPhoneNumber == null) {
+				error = "Missing reservation input.";
+				throw new InvalidInputException(error.trim());
+			}
+			if (numberInParty <= 0) {
+				error = "Number of people in party must be positive.";
+				throw new InvalidInputException(error.trim());
+			}
+			RestoApp r = RestoApplication.getRestoApp();
+			List <Table> currentTables = r.getCurrentTables();
+			int seatCapacity = 0;
+			for (Table table : currentTables) {
+				boolean current = currentTables.contains(table);
+				if (current == false) {
+					error = "Table: " + table.getNumber() + " does not exist";
+					throw new InvalidInputException(error.trim());
+				}
+				seatCapacity += table.numberOfCurrentSeats();
+				List <Reservation> reservations = table.getReservations();
+				for (Reservation reservation : reservations) {
+					boolean overlaps = reservation.doesOverlap(date, time);
+					if (overlaps) {
+						error = "Reservation overlaps with table: " + table.getNumber();
+						throw new InvalidInputException(error.trim());
+					}
+				}
+			}
+			if (seatCapacity < numberInParty) {
+				error = "Not enough seats for party.";
+				throw new InvalidInputException(error.trim());
+			}
+			Table[] currentTablesArray = new Table[currentTables.size()];
+			currentTables.toArray(currentTablesArray);
+			Reservation res = new Reservation(date, time, numberInParty, contactName, contactEmailAddress, contactPhoneNumber, r,currentTablesArray);
+			RestoApplication.save();
+		}
+	
+	public static void startOrder(List<Table> tables) throws InvalidInputException {
+		String error = "";
+		if(tables == null) {
+			error = "Need to select tables";
+			throw new InvalidInputException(error.trim());
+		}
+		RestoApp r = RestoApplication.getRestoApp();
+		List<Table> currentTables = r.getCurrentTables();
+		for (Table table : tables) {
+			boolean current = currentTables.contains(table);
+			if (current == false) {
+				error = "Table: "+table.getNumber()+" does not exist.";
+				throw new InvalidInputException(error.trim());
+			}
+		}
+		boolean orderCreated = false;
+		Order newOrder = null;
+		for(Table table : tables) {
+			if(orderCreated) {
+				table.addToOrder(newOrder);
+			}
+			else {
+				Order lastOrder = null;
+				if(table.numberOfOrders() > 0) {
+					lastOrder = table.getOrder(table.numberOfOrders()-1);
+				}
+				table.startOrder();
+				if (table.numberOfOrders() > 0 && !table.getOrder(table.numberOfOrders()-1).equals(lastOrder)) {
+					orderCreated = true;
+					newOrder = table.getOrder(table.numberOfOrders()-1);
+				}
+			}
+		}
+		r.addCurrentOrder(newOrder);
+		RestoApplication.save();
+	}
+	
+	public static void endOrder(Order order) throws InvalidInputException {
+		String error = "";
+		if (order == null) {
+			error = "Must specify order to end.";
+			throw new InvalidInputException(error.trim());
+		}
+		RestoApp r = RestoApplication.getRestoApp();
+		List<Order> currentOrders = r.getCurrentOrders();
+		boolean current = currentOrders.contains(order);
+		if(current == false) {
+			error = "Order does not exist.";
+			throw new InvalidInputException(error.trim());
+		}
+		List<Table> tables = order.getTables();
+		for(Table table : tables) {
+			if (table.numberOfOrders() > 0 && table.getOrder(table.numberOfOrders()-1).equals(order)) {
+				table.endOrder(order);
+			}
+		}
+		if(allTablesAvailableOrDifferentCurrentOrder(tables,order)) {
+			r.removeCurrentOrder(order);
+		}
+		RestoApplication.save();
+	}
+
+	private static boolean allTablesAvailableOrDifferentCurrentOrder(List<Table> tables, Order order) {
+		boolean result = true;
+		for (Table table : tables) {
+			if (table.getStatus() != Table.Status.Available || table.getOrder(table.numberOfOrders()-1).equals(order)) {
+				result = false;
+				break;
+			}
+		}
+		return result;
+	}
+
 }
