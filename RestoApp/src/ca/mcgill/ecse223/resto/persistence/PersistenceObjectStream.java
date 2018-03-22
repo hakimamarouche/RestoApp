@@ -1,40 +1,45 @@
 package ca.mcgill.ecse223.resto.persistence;
 
 import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
-
-import ca.mcgill.ecse223.resto.model.MenuItem;
-import ca.mcgill.ecse223.resto.model.RestoApp;
+import java.io.ObjectOutputStream;
 
 public class PersistenceObjectStream {
 
-	public static void serialize(RestoApp restoApp) {
-		// TODO Auto-generated method stub
-		
-		RestoApp app = null;
-		  try {
-		   FileInputStream fileIn = new FileInputStream("C:\\Users\\farou\\OneDrive\\Documents\\Group16\\RestoApp\\src\\menu.resto");
-		   ObjectInputStream in = new ObjectInputStream(fileIn);
-		   app = (RestoApp) in.readObject();
-		   in.close();
-		   fileIn.close();
-		  } catch (IOException ie) {
-		   ie.printStackTrace();
-		  } catch (ClassNotFoundException e) {
-		   e.printStackTrace();
-		  }
-		   for(MenuItem mi : app.getMenu().getMenuItems()) {
-			   
-			   
-			   System.out.println(mi.getName());
-			  }
-		
+	private static String filename = "output.txt";
+
+	public static void serialize(Object object) {
+		FileOutputStream fileOut;
+		try {
+			fileOut = new FileOutputStream(filename);
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);
+			out.writeObject(object);
+			out.close();
+			fileOut.close();
+		} catch (Exception e) {
+			throw new RuntimeException("Could not save data to file '" + filename + "'.");
+		}
+
 	}
 
-	public static void setFilename(String filename) {
-		// TODO Auto-generated method stub
-		
+	public static Object deserialize() {
+		Object o = null;
+		ObjectInputStream in;
+		try {
+			FileInputStream fileIn = new FileInputStream(filename);
+			in = new ObjectInputStream(fileIn);
+			o = in.readObject();
+			in.close();
+			fileIn.close();
+		} catch (Exception e) {
+			o = null;
+		}
+		return o;
+	}
+	
+	public static void setFilename(String newFilename) {
+		filename = newFilename;
 	}
 
 }

@@ -1,9 +1,8 @@
 package ca.mcgill.ecse223.resto.application;
 
-import ca.mcgill.ecse223.resto.view.RestoPage;
-import ca.mcgill.ecse223.resto.controller.RestoController;
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.persistence.PersistenceObjectStream;
+import ca.mcgill.ecse223.resto.view.RestoPage;
 
 public class RestoApplication {
 	
@@ -35,6 +34,7 @@ public class RestoApplication {
 	
 	public static RestoApp load() {
 		PersistenceObjectStream.setFilename(filename);
+		restoApp = (RestoApp) PersistenceObjectStream.deserialize();
 		// model cannot be loaded - create empty RestoApp
 		if (restoApp == null) {
 			restoApp = new RestoApp();
