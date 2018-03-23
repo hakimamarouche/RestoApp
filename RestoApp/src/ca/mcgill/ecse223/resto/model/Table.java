@@ -966,7 +966,9 @@ public class Table implements Serializable
    */
   // line 103 "../../../../../RestoAppTableStateMachine.ump"
    private boolean iIsLastItem(OrderItem i){
-    // TODO
+    for (Order order : this.getOrders()) {
+		   if (order.numberOfOrderItems() == 1 && order.getOrderItem(1) == i) return true;
+	   }
       return false;
   }
 
@@ -974,10 +976,23 @@ public class Table implements Serializable
   /**
    * check that all seats of the table have a bill that belongs to the current order of the table
    */
-  // line 109 "../../../../../RestoAppTableStateMachine.ump"
+  // line 111 "../../../../../RestoAppTableStateMachine.ump"
    private boolean allSeatsBilled(){
-    // TODO
-      return false;
+    for (Seat seat : this.getCurrentSeats()) {
+    	if (seat.numberOfBills() > 0) {
+    		
+    		List<Integer> matches = new ArrayList<>();
+    		
+	    	for (Bill bill : seat.getBills()) {
+	    		for (Order order : getOrders()) {
+	    			if (order == bill.getOrder()) matches.add(1);
+	    		}
+	    	}
+	    	
+	    	if (matches.isEmpty()) return false;
+    	}
+    }
+      return true;
   }
 
   // line 40 "../../../../../RestoApp.ump"
