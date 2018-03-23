@@ -22,9 +22,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.AbstractListModel;
 import javax.swing.JInternalFrame;
 import java.awt.Font;
-import java.awt.Frame;
-import java.awt.Toolkit;
-
 import javax.swing.JMenuBar;
 import javax.swing.JTextPane;
 import javax.swing.JTextArea;
@@ -34,7 +31,6 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPopupMenu;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
@@ -92,12 +88,10 @@ public class RestoAppGUI extends JFrame {
 		errorMessage = new JLabel();
 		errorMessage.setForeground(Color.RED);
 
-		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-		setBounds(0, 0,screen.width,screen.height - 30);
-		setExtendedState(Frame.MAXIMIZED_BOTH);
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Resto App");
-		setBounds(100, 100, 205, 88);
+		setBounds(100, 100, 974, 549);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -130,21 +124,21 @@ public class RestoAppGUI extends JFrame {
 		JButton btnMoveTable = new JButton("Move table");
 		btnMoveTable.setBounds(822, 251, 115, 29);
 		btnMoveTable.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				moveTableButtonActionPerformed(evt);
-			}
-		});
+		public void actionPerformed(java.awt.event.ActionEvent evt) {
+		moveTableButtonActionPerformed(evt);		   			
+		}
+		 });
 		contentPane.add(btnMoveTable);
 		
 		JButton btnUpdateTable = new JButton("Update table");
 		btnUpdateTable.setBounds(692, 251, 115, 29);
 		btnUpdateTable.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		contentPane.add(btnUpdateTable);
 		btnUpdateTable.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				updateTableButtonActionPerformed(evt);
 			}
 		});
-		contentPane.add(btnUpdateTable);
 		
 		JButton btnDelete = new JButton("Delete");
 		btnDelete.setBounds(562, 251, 115, 29);
@@ -202,23 +196,58 @@ public class RestoAppGUI extends JFrame {
 		
 		JLabel lblXPosition = new JLabel("X position:");
 		lblXPosition.setBounds(634, 39, 150, 20);
+		btnMoveTable.addActionListener(new java.awt.event.ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent evt) {
+		updateTableXTextField(evt);
+		}
+		});
+		btnAddTable.addActionListener(new java.awt.event.ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent evt) {
+		updateTableXTextField(evt);
+		}
+		});
 		contentPane.add(lblXPosition);
 		
 		JLabel lblYPosition = new JLabel("Y position:");
 		lblYPosition.setBounds(634, 75, 100, 20);
+		btnMoveTable.addActionListener(new java.awt.event.ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent evt) {
+		updateTableYTextField(evt);
+		}
+		});
+		btnAddTable.addActionListener(new java.awt.event.ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent evt) {
+		updateTableYTextField(evt);
+		}
+		});
 		contentPane.add(lblYPosition);
 		
 		JLabel lblTableWidth = new JLabel("Table width :");
 		lblTableWidth.setBounds(634, 105, 160, 20);
 		contentPane.add(lblTableWidth);
+		btnAddTable.addActionListener(new java.awt.event.ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent evt) {
+		addTableWidthTextField(evt);
+		}
+		});
 		
-		JLabel lblTableHeight = new JLabel("Table height :");
-		lblTableHeight.setBounds(634, 135, 120, 20);
+		JLabel lblTableLength = new JLabel("Table Length :");
+		lblTableLength.setBounds(634, 135, 120, 20);
 		contentPane.add(lblTableHeight);
+		btnAddTable.addActionListener(new java.awt.event.ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent evt) {
+		addTableLengthTextField(evt);
+			}
+		});
 		
 		JLabel lblNumberOfSeats = new JLabel("Number of seats :");
 		lblNumberOfSeats.setBounds(634, 163, 130, 20);
 		contentPane.add(lblNumberOfSeats);
+		btnAddTable.addActionListener(new java.awt.event.ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent evt) {
+		updateTableNumberOfSeatsTextField(evt);
+		}
+		});
 		
 		
 		
@@ -293,9 +322,6 @@ public class RestoAppGUI extends JFrame {
 	}
 	
 	private void refreshData() {
-		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-		setBounds(0, 0,screen.width,screen.height - 30);
-		setExtendedState(Frame.MAXIMIZED_BOTH);
 		//error
 		errorMessage.setText(error);
 		if(error == null || error.length() == 0) {
@@ -365,42 +391,6 @@ public class RestoAppGUI extends JFrame {
 		refreshData();
 	}
 	
-	private void updateTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
-		// clear error message
-		error = null;
-		
-		// call the controller
-		try {
-			RestoController.updateTable(tables.get(selectedTable),
-					Integer.parseInt(tableNumberTextField.getText()),
-					Integer.parseInt(tableNumberOfSeatsTextField.getText()));
-		} catch (InvalidInputException e) {
-			error = e.getMessage();
-		}
-		
-		// update visuals
-		refreshData();
-	}
-	
-	private void moveTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
-		error = "";
-		if (selectedTable < 0) {
-			error = "Table needs to be selected to move";
-		}
-		if (error.length() == 0) {
-			try {
-				RestoController.moveTable(
-						tables.get(selectedTable),
-						Integer.parseInt(tableXPostionTextField.getText()), 
-						Integer.parseInt(tableYPostionTextField.getText()));
-			} 
-			catch (InvalidInputException e) {
-				error = e.getMessage();
-			}
-		}
-		refreshData();
-	}
-	
 	private void deleteTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		error = "";
 		if (selectedTable < 0) {
@@ -414,6 +404,57 @@ public class RestoAppGUI extends JFrame {
 			}
 		}
 		//update visuals
+		refreshData();
+	}
+		private void moveTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
+		error = "";
+		if (selectedTable < 0) {
+			error = "Table needs to be selected to move";
+		}
+		if (error.length() == 0) {
+			try {
+				RestoController.moveTable(tables.get(selectedTable));
+				RestoController.moveTable(updateTableXTextField.getText());
+				RestoController.moveTable(updateTableYTextField.getText());
+			} 
+			catch (InvalidInputException e) {
+				error = e.getMessage();
+			}
+		}
+		refreshData();
+	}
+	private void updateTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
+		
+		error = "";
+		Table table;
+		if (table == null) {		
+				error = "Table not found.";				
+			}
+		
+		int tableNumber = 0;
+		try {
+			tableNumber = Integer.parseInt(addTableNumberTextField.getText());
+		}
+		catch (NumberFormatException e) {
+			error = "Table number needs to be a numerical value";
+		}
+		int nbOfSeats = 0;
+		try {
+			nbOfSeats = Integer.parseInt(addTableNumberOfSeatsTextField.getText());
+		}
+		catch (NumberFormatException e) {
+			error = "Invalid number of seats.";
+		}
+		
+		error.trim();
+		if (error.length() == 0) {
+			try {
+				RestoController.updateTable(table, tableNumber, nbOfSeats);
+			} catch (InvalidInputException e) {
+				error = e.getMessage();
+			}
+		}
+
 		refreshData();
 	}
 	
