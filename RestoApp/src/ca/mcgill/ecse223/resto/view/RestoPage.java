@@ -389,6 +389,40 @@ public class RestoPage extends JFrame {
 		}
 		refreshData();
 	}
+		private void updateTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
+		
+		error = "";
+		Table table;
+		if (table == null) {		
+				error = "Table not found.";				
+			}
+		
+		int tableNumber = 0;
+		try {
+			tableNumber = Integer.parseInt(addTableNumberTextField.getText());
+		}
+		catch (NumberFormatException e) {
+			error = "Table number needs to be a numerical value";
+		}
+		int nbOfSeats = 0;
+		try {
+			nbOfSeats = Integer.parseInt(addTableNumberOfSeatsTextField.getText());
+		}
+		catch (NumberFormatException e) {
+			error = "Invalid number of seats.";
+		}
+		
+		error.trim();
+		if (error.length() == 0) {
+			try {
+				RestoController.updateTable(table, tableNumber, nbOfSeats);
+			} catch (InvalidInputException e) {
+				error = e.getMessage();
+			}
+		}
+
+		refreshData();
+	}
 	
 }
 
