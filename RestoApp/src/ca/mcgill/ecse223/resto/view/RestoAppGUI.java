@@ -133,6 +133,11 @@ public class RestoAppGUI extends JFrame {
 		
 		JButton btnDelete = new JButton("Delete");
 		btnDelete.setBounds(562, 251, 115, 29);
+		btnDelete.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				deleteTableButtonActionPerformed(evt);
+			}
+		});
 		contentPane.add(btnDelete);
 		
 		JButton btnAddTable = new JButton("Add table");
@@ -206,6 +211,12 @@ public class RestoAppGUI extends JFrame {
 		selectTableDropdown.setModel(new DefaultComboBoxModel(new String[] {"select a table", "1", "2", "3", "4", "5", "6", "7"}));
 		selectTableDropdown.setToolTipText("");
 		selectTableDropdown.setBounds(658, 205, 200, 26);
+		selectTableDropdown.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				JComboBox<String> cb = (JComboBox<String>) evt.getSource();
+				selectedTable = cb.getSelectedIndex();
+			}
+		});
 		contentPane.add(selectTableDropdown);
 		
 		lblName = new JLabel("Name :");
@@ -333,6 +344,22 @@ public class RestoAppGUI extends JFrame {
 		}
 		
 		// update visuals
+		refreshData();
+	}
+	
+	private void deleteTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
+		error = "";
+		if (selectedTable < 0) {
+			error = "Table needs to be selected for deletion!";
+		}
+		if (error.length() == 0) {
+			try {
+				RestoController.removeTable(tables.get(selectedTable));
+			} catch (InvalidInputException e) {
+				error = e.getMessage();
+			}
+		}
+		//update visuals
 		refreshData();
 	}
 	
