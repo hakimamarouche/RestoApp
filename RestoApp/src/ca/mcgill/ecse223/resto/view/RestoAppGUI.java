@@ -75,6 +75,8 @@ public class RestoAppGUI extends JFrame {
 	 */
 	public RestoAppGUI()
 	{
+		setSize(new Dimension(400, 400));
+		setExtendedState(Frame.MAXIMIZED_BOTH);
 		initComponentGui();
 		refreshData();
 		
@@ -92,9 +94,6 @@ public class RestoAppGUI extends JFrame {
 		errorMessage = new JLabel();
 		errorMessage.setForeground(Color.RED);
 
-		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-		setBounds(0, 0,screen.width,screen.height - 30);
-		setExtendedState(Frame.MAXIMIZED_BOTH);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Resto App");
 		setBounds(100, 100, 205, 88);
@@ -293,9 +292,6 @@ public class RestoAppGUI extends JFrame {
 	}
 	
 	private void refreshData() {
-		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-		setBounds(0, 0,screen.width,screen.height - 30);
-		setExtendedState(Frame.MAXIMIZED_BOTH);
 		//error
 		errorMessage.setText(error);
 		if(error == null || error.length() == 0) {
