@@ -24,6 +24,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
+import ca.mcgill.ecse.btms.controller.BtmsController;
 import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.controller.RestoController;
 /*	from jdatepicker.jar library
@@ -78,6 +79,8 @@ public class RestoPage extends JFrame {
 	//Table
 	private HashMap<Integer, Table> tables;
 	private Integer selectedTable = -1;
+
+	
 	
 	// Creates new form RestoPage
 	public RestoPage() {
@@ -127,27 +130,82 @@ public class RestoPage extends JFrame {
 		
 		//elements settings and listener for moving table
 		moveTableButton.setText("Move table");
+		moveTableButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				moveTableButtonActionPerformed(evt);		   			
+		}
+		 });
+	
+
 		
 		//elements settings and listener for moving table
 		updateTableButton.setText("Update table");
+		updateTableButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				updateTableButtonActionPerformed(evt);
+			}
+		});
 
 		// settings and listener for createTable()
 		addTableNumberLabel.setText("Table number:");
 		addTableXLabel.setText("X position:");
+		moveTableButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				updateTableXTextField(evt);
+			}
+		});
+		addTableButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				updateTableXTextField(evt);
+			}
+		});
+		
 		addTableYLabel.setText("Y Position:");
+		moveTableButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				updateTableYTextField(evt);
+			}
+		});
+		addTableButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				updateTableYTextField(evt);
+			}
+		});
+		
 		addTableWidthLabel.setText("Table width:");
+		addTableButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				addTableWidthTextField(evt);
+			}
+		});
+		
+		
 		addTableLengthTextField.setText("Table length:");
+		addTableButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				addTableLengthTextField(evt);
+			}
+		});
+		
 		addTableNumberOfSeatsTextField.setText("Number of seats:");
+		addTableButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				updateTableNumberOfSeatsTextField(evt);
+			}
+		});
+		
+		
 		addTableButton.setText("Add Table");
 		addTableButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				addTableButtonActionPerformed(evt);
 			}
-		});
+		});	
 		
-		//elements for updating or deleting table
+		//elements for updating or deleting ta	ble
 		selectTableDropdown = new JComboBox<String>(new String[0]);
 		selectTableDropdown.addActionListener(new java.awt.event.ActionListener() {
+			
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				JComboBox<String> cb = (JComboBox<String>) evt.getSource();
 				selectedTable = cb.getSelectedIndex();
@@ -309,8 +367,28 @@ public class RestoPage extends JFrame {
 				error = e.getMessage();
 			}
 		}
-		//update visuals
+		//update visuals	
+		refreshData();
+	}
+	
+	
+	private void moveTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
+		error = "";
+		if (selectedTable < 0) {
+			error = "Table needs to be selected to move";
+		}
+		if (error.length() == 0) {
+			try {
+				RestoController.moveTable(tables.get(selectedTable));
+				RestoController.moveTable(updateTableXTextField.getText());
+				RestoController.moveTable(updateTableYTextField.getText());
+			} 
+			catch (InvalidInputException e) {
+				error = e.getMessage();
+			}
+		}
 		refreshData();
 	}
 	
 }
+
