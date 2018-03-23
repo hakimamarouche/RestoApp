@@ -23,6 +23,20 @@ class Reservation {
    contactPhoneNumber;
    autounique reservationNumber;
    * reservations -- 1..* Table tables; // only from currentTables
+   
+   //Checks if that time is already picked of another reservation
+   //For the date, only the year, month and day should be entered. If hours are also entered, it will not work.
+   Boolean doesOverlap(Date date, Time time){
+	  
+	  if (date == this.date) {
+		  if (this.time.getTime() - 7200000L < time.getTime() &&
+				  this.time.getTime() + 7200000L > time.getTime()) {
+			  return true;
+		  }
+	  }
+    return false;
+   }
+   
 }
 
 class Table {
@@ -36,6 +50,7 @@ class Table {
    1 <@>- 1..* Seat seats;
    0..1 -> * Seat currentSeats; // subsets seats
    
+   // indicates if a table goes on top of another
     Boolean doesOverlaps(Integer x, Integer y, Integer width , Integer length) {  
     	if ((this.x <= x && (this.x + this.width + 2*SEAT_WIDTH) >= x) || 
     	(this.x <= (x + width + 2*SEAT_WIDTH) && (this.x + this.width + 2*SEAT_WIDTH) >= (x + width + 2*SEAT_WIDTH)) || 
