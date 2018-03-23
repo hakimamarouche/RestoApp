@@ -75,8 +75,7 @@ public class RestoAppGUI extends JFrame {
 	 */
 	public RestoAppGUI()
 	{
-		setSize(new Dimension(400, 400));
-		setExtendedState(Frame.MAXIMIZED_BOTH);
+		setExtendedState(Frame.MAXIMIZED_VERT);
 		initComponentGui();
 		refreshData();
 		
