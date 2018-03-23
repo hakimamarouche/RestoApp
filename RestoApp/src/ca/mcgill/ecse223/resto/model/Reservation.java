@@ -67,14 +67,6 @@ public class Reservation implements Serializable
   // INTERFACE
   //------------------------
 
-  public boolean doesOverlap(Date aDate, Time aTime) {
-	  boolean isOverlap = false;
-	  if(aDate.getTime() > getTime().getTime() - 7200000 && aDate.getTime() < getTime().getTime() + 7200000) {
-		  isOverlap = true;
-	  }
-	  return isOverlap;
-  }
-  
   public boolean setDate(Date aDate)
   {
     boolean wasSet = false;
