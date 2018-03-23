@@ -165,6 +165,11 @@ public class RestoAppGUI extends JFrame {
 		JButton btnReservation = new JButton("Reservation");
 		btnReservation.setBounds(234, 413, 115, 29);
 		contentPane.add(btnReservation);
+		btnReservation.addActionListener(new java.awt.event.ActionListener() {
+		public void actionPerformed(java.awt.event.ActionEvent evt) {
+		addReservationButtonActionPerformed(evt);
+		}
+		});	
 		
 		tableNumberTextField = new JTextPane();
 		tableNumberTextField.setBounds(764, 8, 75, 26);
