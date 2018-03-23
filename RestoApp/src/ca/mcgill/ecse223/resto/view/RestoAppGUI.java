@@ -6,6 +6,11 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import ca.mcgill.ecse223.resto.controller.InvalidInputException;
+import ca.mcgill.ecse223.resto.controller.RestoController;
+import ca.mcgill.ecse223.resto.model.Table;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -28,6 +33,8 @@ import javax.swing.JPopupMenu;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
+
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
@@ -35,36 +42,29 @@ import javax.swing.SwingConstants;
 
 public class RestoAppGUI extends JFrame {
 
+	private JLabel errorMessage;
 	private JPanel contentPane;
-	private JTextField txtAvdsh;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
+	private JTextField reservationNameTextField;
+	private JTextField reservationDateTextField;
+	private JTextField reservationNumberOfPersonTextField;
+	private JTextField reservationPhoneNumberTextField;
+	private JTextField reservationEmailTextField;
 	private JLabel lblName;
-	private JTextPane textPane_1;
-	private JTextPane textPane_2;
-	private JTextPane textPane_3;
-	private JTextPane textPane_4;
-	private JTextPane textPane_5;
-	private JTextPane textPane_6;
-	private JTextPane textPane;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					RestoAppGUI frame = new RestoAppGUI();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	
+	private JTextPane tableNumberTextField;
+	private JTextPane tableXPostionTextField;
+	private JTextPane tableYPostionTextField;
+	private JTextPane tableWidthTextField;
+	private JTextPane tableLengthTextField;
+	private JTextPane tableNumberOfSeatsTextField;
+	private JTextPane java2DRepresentationOfResto;
+	private JComboBox selectTableDropdown;
+	
+	//error
+	private String error = null;
+	//Table
+	private HashMap<Integer, Table> tables;
+	private Integer selectedTable = -1;
 
 	/**
 	 * Create the frame.
@@ -72,7 +72,7 @@ public class RestoAppGUI extends JFrame {
 	public RestoAppGUI()
 	{
 		initComponentGui();
-		createEvents();
+		refreshData();
 		
 	}
 	
@@ -83,8 +83,14 @@ public class RestoAppGUI extends JFrame {
 	//for creation and initializing components.
 	////////////////////////////////////////////////////////////////////////////////
 	private void initComponentGui() {
+		
+		// elements for error message
+		errorMessage = new JLabel();
+		errorMessage.setForeground(Color.RED);
+
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("Resto App");
 		setBounds(100, 100, 974, 549);
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -131,43 +137,44 @@ public class RestoAppGUI extends JFrame {
 		
 		JButton btnAddTable = new JButton("Add table");
 		btnAddTable.setBounds(692, 322, 115, 29);
-		btnAddTable.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		btnAddTable.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				addTableButtonActionPerformed(evt);
 			}
 		});
 		contentPane.add(btnAddTable);
 		
-		textPane = new JTextPane();
-		textPane.setBounds(0, 0, 541, 288);
-		contentPane.add(textPane);
+		java2DRepresentationOfResto = new JTextPane();
+		java2DRepresentationOfResto.setBounds(0, 0, 541, 288);
+		contentPane.add(java2DRepresentationOfResto);
 		
 		JButton btnReservation = new JButton("Reservation");
 		btnReservation.setBounds(234, 413, 115, 29);
 		contentPane.add(btnReservation);
 		
-		textPane_1 = new JTextPane();
-		textPane_1.setBounds(764, 8, 75, 26);
-		contentPane.add(textPane_1);
+		tableNumberTextField = new JTextPane();
+		tableNumberTextField.setBounds(764, 8, 75, 26);
+		contentPane.add(tableNumberTextField);
 		
-		textPane_2 = new JTextPane();
-		textPane_2.setBounds(764, 39, 75, 26);
-		contentPane.add(textPane_2);
+		tableXPostionTextField = new JTextPane();
+		tableXPostionTextField.setBounds(764, 39, 75, 26);
+		contentPane.add(tableXPostionTextField);
 		
-		textPane_3 = new JTextPane();
-		textPane_3.setBounds(764, 69, 75, 26);
-		contentPane.add(textPane_3);
+		tableYPostionTextField = new JTextPane();
+		tableYPostionTextField.setBounds(764, 69, 75, 26);
+		contentPane.add(tableYPostionTextField);
 		
-		textPane_4 = new JTextPane();
-		textPane_4.setBounds(764, 99, 75, 26);
-		contentPane.add(textPane_4);
+		tableWidthTextField = new JTextPane();
+		tableWidthTextField.setBounds(764, 99, 75, 26);
+		contentPane.add(tableWidthTextField);
 		
-		textPane_5 = new JTextPane();
-		textPane_5.setBounds(764, 129, 75, 26);
-		contentPane.add(textPane_5);
+		tableLengthTextField = new JTextPane();
+		tableLengthTextField.setBounds(764, 129, 75, 26);
+		contentPane.add(tableLengthTextField);
 		
-		textPane_6 = new JTextPane();
-		textPane_6.setBounds(764, 163, 75, 26);
-		contentPane.add(textPane_6);
+		tableNumberOfSeatsTextField = new JTextPane();
+		tableNumberOfSeatsTextField.setBounds(764, 163, 75, 26);
+		contentPane.add(tableNumberOfSeatsTextField);
 		
 		JLabel lblTableNumber = new JLabel("Table Number:");
 		lblTableNumber.setBounds(634, 8, 150, 20);
@@ -195,57 +202,57 @@ public class RestoAppGUI extends JFrame {
 		
 		
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"select a table", "1", "2", "3", "4", "5", "6", "7"}));
-		comboBox.setToolTipText("");
-		comboBox.setBounds(658, 205, 200, 26);
-		contentPane.add(comboBox);
+		selectTableDropdown = new JComboBox();
+		selectTableDropdown.setModel(new DefaultComboBoxModel(new String[] {"select a table", "1", "2", "3", "4", "5", "6", "7"}));
+		selectTableDropdown.setToolTipText("");
+		selectTableDropdown.setBounds(658, 205, 200, 26);
+		contentPane.add(selectTableDropdown);
 		
 		lblName = new JLabel("Name :");
 		lblName.setBounds(10, 304, 69, 20);
 		contentPane.add(lblName);
 		
 		// for the name
-		txtAvdsh = new JTextField();
-		txtAvdsh.setBounds(64, 301, 146, 26);
-		contentPane.add(txtAvdsh);
-		txtAvdsh.setColumns(10);
+		reservationNameTextField = new JTextField();
+		reservationNameTextField.setBounds(64, 301, 146, 26);
+		contentPane.add(reservationNameTextField);
+		reservationNameTextField.setColumns(10);
 		
 		JLabel lblDate = new JLabel("Date :");
 		lblDate.setBounds(20, 346, 43, 20);
 		contentPane.add(lblDate);
 		
-		textField = new JTextField();
-		textField.setBounds(64, 343, 146, 26);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		reservationDateTextField = new JTextField();
+		reservationDateTextField.setBounds(64, 343, 146, 26);
+		contentPane.add(reservationDateTextField);
+		reservationDateTextField.setColumns(10);
 		
 		JLabel lblNumberOfPerson = new JLabel("Number of person :");
 		lblNumberOfPerson.setBounds(238, 304, 150, 20);
 		contentPane.add(lblNumberOfPerson);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(403, 301, 75, 26);
-		contentPane.add(textField_1);
-		textField_1.setColumns(10);
+		reservationNumberOfPersonTextField = new JTextField();
+		reservationNumberOfPersonTextField.setBounds(403, 301, 75, 26);
+		contentPane.add(reservationNumberOfPersonTextField);
+		reservationNumberOfPersonTextField.setColumns(10);
 		
 		JLabel lblPhoneNumber = new JLabel("phone number :");
 		lblPhoneNumber.setBounds(234, 346, 120, 20);
 		contentPane.add(lblPhoneNumber);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(360, 343, 146, 26);
-		contentPane.add(textField_2);
-		textField_2.setColumns(10);
+		reservationPhoneNumberTextField = new JTextField();
+		reservationPhoneNumberTextField.setBounds(360, 343, 146, 26);
+		contentPane.add(reservationPhoneNumberTextField);
+		reservationPhoneNumberTextField.setColumns(10);
 		
 		JLabel lblEmailAdress = new JLabel("email adress :");
 		lblEmailAdress.setBounds(10, 385, 107, 20);
 		contentPane.add(lblEmailAdress);
 		
-		textField_3 = new JTextField();
-		textField_3.setBounds(133, 382, 238, 26);
-		contentPane.add(textField_3);
-		textField_3.setColumns(10);
+		reservationEmailTextField = new JTextField();
+		reservationEmailTextField.setBounds(133, 382, 238, 26);
+		contentPane.add(reservationEmailTextField);
+		reservationEmailTextField.setColumns(10);
 	}
 
 
@@ -257,6 +264,37 @@ public class RestoAppGUI extends JFrame {
 	private void createEvents() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private void refreshData() {
+		//error
+		errorMessage.setText(error);
+		if(error == null || error.length() == 0) {
+			//empty the text fields
+			reservationNameTextField.setText("");
+			reservationDateTextField.setText("");
+			reservationNumberOfPersonTextField.setText("");
+			reservationPhoneNumberTextField.setText("");
+			reservationEmailTextField.setText("");
+			tableNumberTextField.setText("");
+			tableXPostionTextField.setText("");
+			tableYPostionTextField.setText("");
+			tableWidthTextField.setText("");
+			tableLengthTextField.setText("");
+			tableNumberOfSeatsTextField.setText("");
+			//update table Dropdown
+			tables = new HashMap<Integer, Table>();
+			selectTableDropdown.removeAllItems();
+			Integer index = 0;
+			for (Table table : RestoController.getTables()) {
+				tables.put(index, table);
+				selectTableDropdown.addItem("#" + table.getNumber());
+				index++;
+			}
+			selectedTable = -1;
+			selectTableDropdown.setSelectedIndex(selectedTable);
+		}
+		pack();
 	}
 	
 	
@@ -277,4 +315,25 @@ public class RestoAppGUI extends JFrame {
 			}
 		});
 	}
+	
+	private void addTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
+		// clear error message
+		error = null;
+		
+		// call the controller
+		try {
+			RestoController.createTable(Integer.parseInt(tableNumberTextField.getText()),
+					Integer.parseInt(tableXPostionTextField.getText()), 
+					Integer.parseInt(tableYPostionTextField.getText()), 
+					Integer.parseInt(tableWidthTextField.getText()), 
+					Integer.parseInt(tableLengthTextField.getText()), 
+					Integer.parseInt(tableNumberOfSeatsTextField.getText()));
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		// update visuals
+		refreshData();
+	}
+	
 }
