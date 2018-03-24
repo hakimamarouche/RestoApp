@@ -21,10 +21,8 @@ public class RestoController {
 		
 	}
 	
-	public static void moveTable(int number, int x, int y) throws InvalidInputException {
-        
-       Table table = Table.getWithNumber(number);
-        
+	public static void moveTable(Table table, int x, int y) throws InvalidInputException {
+
        String error = "";
        int length;
        int width;

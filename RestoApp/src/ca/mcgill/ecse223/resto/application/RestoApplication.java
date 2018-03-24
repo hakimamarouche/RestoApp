@@ -1,7 +1,10 @@
 package ca.mcgill.ecse223.resto.application;
 
+import java.awt.EventQueue;
+
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.persistence.PersistenceObjectStream;
+import ca.mcgill.ecse223.resto.view.RestoAppGUI;
 import ca.mcgill.ecse223.resto.view.RestoPage;
 
 public class RestoApplication {
@@ -10,10 +13,14 @@ public class RestoApplication {
 	private static String filename = "menu.resto";
 	
 	public static void main(String[] args) {
-		java.awt.EventQueue.invokeLater(new Runnable() {
+		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new RestoPage().setVisible(true);
-				
+				try {
+					RestoAppGUI frame = new RestoAppGUI();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 	}
