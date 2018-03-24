@@ -19,6 +19,7 @@ import java.awt.Color;
 import javax.swing.JToggleButton;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
+import javax.swing.SpinnerDateModel;
 import javax.swing.AbstractListModel;
 import javax.swing.JInternalFrame;
 import java.awt.Font;
@@ -37,19 +38,24 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
 import javax.swing.SwingConstants;
+import com.toedter.calendar.JDateChooser;
+import javax.swing.JSpinner;
 
 public class RestoAppGUI extends JFrame {
 
 	private JLabel errorMessage;
 	private JPanel contentPane;
+	private JDateChooser reservationDateChooser;
+	private JSpinner.DateEditor reservationTimePicker;
 	private JTextField reservationNameTextField;
-	private JTextField reservationDateTextField;
 	private JTextField reservationNumberOfPersonTextField;
 	private JTextField reservationPhoneNumberTextField;
 	private JTextField reservationEmailTextField;
@@ -88,14 +94,10 @@ public class RestoAppGUI extends JFrame {
 	//for creation and initializing components.
 	////////////////////////////////////////////////////////////////////////////////
 	private void initComponentGui() {
-		
-		// elements for error message
-		errorMessage = new JLabel();
-		errorMessage.setForeground(Color.RED);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Resto App");
-		setBounds(100, 100, 205, 88);
+		setBounds(100, 100, 972, 550);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -167,6 +169,11 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(java2DRepresentationOfResto);
 		
 		JButton btnReservation = new JButton("Reservation");
+		btnAddTable.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				reserveButtonActionPerformed(evt);
+			}
+		});
 		btnReservation.setBounds(234, 413, 115, 29);
 		contentPane.add(btnReservation);
 		
@@ -246,11 +253,6 @@ public class RestoAppGUI extends JFrame {
 		lblDate.setBounds(20, 346, 43, 20);
 		contentPane.add(lblDate);
 		
-		reservationDateTextField = new JTextField();
-		reservationDateTextField.setBounds(64, 343, 146, 26);
-		contentPane.add(reservationDateTextField);
-		reservationDateTextField.setColumns(10);
-		
 		JLabel lblNumberOfPerson = new JLabel("Number of person :");
 		lblNumberOfPerson.setBounds(238, 304, 150, 20);
 		contentPane.add(lblNumberOfPerson);
@@ -270,13 +272,32 @@ public class RestoAppGUI extends JFrame {
 		reservationPhoneNumberTextField.setColumns(10);
 		
 		JLabel lblEmailAdress = new JLabel("email adress :");
-		lblEmailAdress.setBounds(10, 385, 107, 20);
+		lblEmailAdress.setBounds(234, 385, 107, 20);
 		contentPane.add(lblEmailAdress);
 		
 		reservationEmailTextField = new JTextField();
-		reservationEmailTextField.setBounds(133, 382, 238, 26);
+		reservationEmailTextField.setBounds(331, 382, 238, 26);
 		contentPane.add(reservationEmailTextField);
 		reservationEmailTextField.setColumns(10);
+		
+		errorMessage = new JLabel();
+		errorMessage.setForeground(new Color(255, 0, 0));
+		errorMessage.setBounds(20, 465, 917, 14);
+		contentPane.add(errorMessage);
+		
+		reservationDateChooser = new JDateChooser();
+		reservationDateChooser.getCalendarButton().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		reservationDateChooser.setBounds(64, 341, 146, 28);
+		contentPane.add(reservationDateChooser);
+		
+		SpinnerDateModel sm = new SpinnerDateModel(new Date(), null, null, Calendar.HOUR_OF_DAY);
+		JSpinner reservationTimeSpinner = new JSpinner(sm);
+		reservationTimePicker = new JSpinner.DateEditor(reservationTimeSpinner, "HH:mm");
+		reservationTimePicker.setBounds(64, 385, 146, 23);
+		contentPane.add(reservationTimePicker);
 	}
 
 
@@ -296,7 +317,7 @@ public class RestoAppGUI extends JFrame {
 		if(error == null || error.length() == 0) {
 			//empty the text fields
 			reservationNameTextField.setText("");
-			reservationDateTextField.setText("");
+			//reservationDateTextField.setText("");
 			reservationNumberOfPersonTextField.setText("");
 			reservationPhoneNumberTextField.setText("");
 			reservationEmailTextField.setText("");
@@ -318,7 +339,6 @@ public class RestoAppGUI extends JFrame {
 			selectedTable = -1;
 			selectTableDropdown.setSelectedIndex(selectedTable);
 		}
-		pack();
 	}
 	
 	
@@ -343,7 +363,7 @@ public class RestoAppGUI extends JFrame {
 	private void addTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		// clear error message
 		error = null;
-		
+
 		// call the controller
 		try {
 			RestoController.createTable(Integer.parseInt(tableNumberTextField.getText()),
@@ -355,11 +375,12 @@ public class RestoAppGUI extends JFrame {
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
-		
+
+
 		// update visuals
 		refreshData();
 	}
-	
+
 	private void updateTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		// clear error message
 		error = null;
@@ -412,4 +433,29 @@ public class RestoAppGUI extends JFrame {
 		refreshData();
 	}
 	
+	private void reserveButtonActionPerformed(java.awt.event.ActionEvent evt) {
+		error = null;
+			try {
+				RestoController.reserve(
+						new java.sql.Date(reservationDateChooser.getDate().getTime()),
+						reservationTimePicker.getTim,
+						numberInParty,
+						contactName,
+						contactEmailAddress,
+						contactPhoneNumber,
+						tables);
+				
+				private JDateChooser reservationDateChooser;
+				private JTextField reservationNameTextField;
+				private JTextField reservationNumberOfPersonTextField;
+				private JTextField reservationPhoneNumberTextField;
+				private JTextField reservationEmailTextField;
+				
+			} catch (InvalidInputException e) {
+				error = e.getMessage();
+			}
+			
+		//update visuals
+		refreshData();
+	}
 }
