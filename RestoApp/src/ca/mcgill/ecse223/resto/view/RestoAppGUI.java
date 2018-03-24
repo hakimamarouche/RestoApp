@@ -178,7 +178,7 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(java2DRepresentationOfResto);
 		
 		JButton btnReservation = new JButton("Reservation");
-		btnAddTable.addActionListener(new java.awt.event.ActionListener() {
+		btnReservation.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				reserveButtonActionPerformed(evt);
 			}
