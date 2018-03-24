@@ -309,6 +309,10 @@ public class RestoAppGUI extends JFrame {
 		reservationTimeSpinner.setBounds(64, 377, 146, 29);
 		contentPane.add(reservationTimeSpinner);
 		
+		JLabel lblReservationTime = new JLabel("Time:");
+		lblReservationTime.setBounds(20, 388, 43, 14);
+		contentPane.add(lblReservationTime);
+		
 
 	}
 
@@ -449,10 +453,7 @@ public class RestoAppGUI extends JFrame {
 		error = null;
 			try {
 				Object reservationTime = reservationTimeSpinner.getValue();
-//				if (reservationTime instanceof Time) {
-//
-//				}
-				
+				if (reservationTime instanceof Time) {
 				List<Table> table = new LinkedList<Table>();
 				table.add(tables.get(selectedTable));
 				RestoController.reserve(
@@ -463,6 +464,10 @@ public class RestoAppGUI extends JFrame {
 						reservationEmailTextField.getText(),
 						reservationPhoneNumberTextField.getText(),
 						table);
+				}
+				else {
+					error = "the time should have the following format, HH:mm";
+				}
 
 			} catch (InvalidInputException e) {
 				error = e.getMessage();
