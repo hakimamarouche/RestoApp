@@ -38,9 +38,12 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JMenuItem;
@@ -48,13 +51,19 @@ import javax.swing.JMenu;
 import javax.swing.SwingConstants;
 import com.toedter.calendar.JDateChooser;
 import javax.swing.JSpinner;
+import lu.tudor.santec.jtimechooser.JTimeChooser;
+import lu.tudor.santec.jtimechooser.demo.JTimeChooserDemo;
+import lu.tudor.santec.jtimechooser.TimeUnit;
+import lu.tudor.santec.jtimechooser.TimeChooserModel;
+import com.toedter.components.JSpinField;
 
 public class RestoAppGUI extends JFrame {
 
 	private JLabel errorMessage;
 	private JPanel contentPane;
 	private JDateChooser reservationDateChooser;
-	private JSpinner.DateEditor reservationTimePicker;
+	
+	private JSpinner reservationTimeSpinner;
 	private JTextField reservationNameTextField;
 	private JTextField reservationNumberOfPersonTextField;
 	private JTextField reservationPhoneNumberTextField;
@@ -295,9 +304,12 @@ public class RestoAppGUI extends JFrame {
 		
 		SpinnerDateModel sm = new SpinnerDateModel(new Date(), null, null, Calendar.HOUR_OF_DAY);
 		JSpinner reservationTimeSpinner = new JSpinner(sm);
-		reservationTimePicker = new JSpinner.DateEditor(reservationTimeSpinner, "HH:mm");
-		reservationTimePicker.setBounds(64, 385, 146, 23);
-		contentPane.add(reservationTimePicker);
+		JSpinner.DateEditor te = new JSpinner.DateEditor(reservationTimeSpinner, "HH:mm");
+		reservationTimeSpinner.setEditor(te);
+		reservationTimeSpinner.setBounds(64, 377, 146, 29);
+		contentPane.add(reservationTimeSpinner);
+		
+
 	}
 
 
@@ -436,21 +448,22 @@ public class RestoAppGUI extends JFrame {
 	private void reserveButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		error = null;
 			try {
+				Object reservationTime = reservationTimeSpinner.getValue();
+//				if (reservationTime instanceof Time) {
+//
+//				}
+				
+				List<Table> table = new LinkedList<Table>();
+				table.add(tables.get(selectedTable));
 				RestoController.reserve(
 						new java.sql.Date(reservationDateChooser.getDate().getTime()),
-						reservationTimePicker.getTim,
-						numberInParty,
-						contactName,
-						contactEmailAddress,
-						contactPhoneNumber,
-						tables);
-				
-				private JDateChooser reservationDateChooser;
-				private JTextField reservationNameTextField;
-				private JTextField reservationNumberOfPersonTextField;
-				private JTextField reservationPhoneNumberTextField;
-				private JTextField reservationEmailTextField;
-				
+						(Time)reservationTime,
+						Integer.parseInt(reservationNumberOfPersonTextField.getText()),
+						reservationNameTextField.getText(),
+						reservationEmailTextField.getText(),
+						reservationPhoneNumberTextField.getText(),
+						table);
+
 			} catch (InvalidInputException e) {
 				error = e.getMessage();
 			}
