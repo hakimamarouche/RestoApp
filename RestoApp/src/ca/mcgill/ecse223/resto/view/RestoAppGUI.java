@@ -460,7 +460,6 @@ public class RestoAppGUI extends JFrame {
 	}
 	
 	private void reserveButtonActionPerformed(java.awt.event.ActionEvent evt) {
-		error = null;
 			try {
 				Object reservationTime = reservationTimeSpinner.getValue();
 				if (reservationTime instanceof Date) {
