@@ -39,6 +39,7 @@ import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -259,7 +260,7 @@ public class RestoAppGUI extends JFrame {
 		reservationNameTextField.setColumns(10);
 		
 		JLabel lblDate = new JLabel("Date :");
-		lblDate.setBounds(20, 346, 43, 20);
+		lblDate.setBounds(10, 346, 43, 20);
 		contentPane.add(lblDate);
 		
 		JLabel lblNumberOfPerson = new JLabel("Number of person :");
@@ -302,18 +303,15 @@ public class RestoAppGUI extends JFrame {
 		reservationDateChooser.setBounds(64, 341, 146, 28);
 		contentPane.add(reservationDateChooser);
 		
-		SpinnerDateModel sm = new SpinnerDateModel(new Date(), null, null, Calendar.HOUR_OF_DAY);
-		JSpinner reservationTimeSpinner = new JSpinner(sm);
-		JSpinner.DateEditor te = new JSpinner.DateEditor(reservationTimeSpinner, "HH:mm");
-		reservationTimeSpinner.setEditor(te);
-		reservationTimeSpinner.setBounds(64, 377, 146, 29);
+		JLabel lblTime = new JLabel("Time :");
+		lblTime.setBounds(10, 388, 46, 14);
+		contentPane.add(lblTime);
+		
+		reservationTimeSpinner = new JSpinner();
+		reservationTimeSpinner.setModel(new SpinnerDateModel(new Date(), null, null, Calendar.HOUR_OF_DAY));
+		reservationTimeSpinner.setEditor(new JSpinner.DateEditor(reservationTimeSpinner,"HH:mm"));
+		reservationTimeSpinner.setBounds(64, 382, 146, 26);
 		contentPane.add(reservationTimeSpinner);
-		
-		JLabel lblReservationTime = new JLabel("Time:");
-		lblReservationTime.setBounds(20, 388, 43, 14);
-		contentPane.add(lblReservationTime);
-		
-
 	}
 
 
@@ -453,12 +451,24 @@ public class RestoAppGUI extends JFrame {
 		error = null;
 			try {
 				Object reservationTime = reservationTimeSpinner.getValue();
-				if (reservationTime instanceof Time) {
-				List<Table> table = new LinkedList<Table>();
-				table.add(tables.get(selectedTable));
-				RestoController.reserve(
-						new java.sql.Date(reservationDateChooser.getDate().getTime()),
-						(Time)reservationTime,
+				if (reservationTime instanceof Date) {
+					List<Table> table = new LinkedList<Table>();
+					table.add(tables.get(selectedTable));//expand this later
+					//to format date and time:
+					Date timeDate = (Date) reservationTime;
+					Date dateDate = reservationDateChooser.getDate();
+					Calendar timeCal = Calendar.getInstance();
+					Calendar dateCal = Calendar.getInstance();
+					Calendar mergeCal = dateCal;
+					timeCal.setTime(timeDate);
+					dateCal.setTime(dateDate);
+					mergeCal.set(Calendar.HOUR_OF_DAY, timeCal.get(Calendar.HOUR_OF_DAY));
+					mergeCal.set(Calendar.MINUTE, timeCal.get(Calendar.MINUTE));
+					mergeCal.set(Calendar.SECOND, 0);
+					
+					RestoController.reserve(
+						new java.sql.Date(mergeCal.getTime().getTime()),
+						new java.sql.Time(mergeCal.getTime().getTime()),
 						Integer.parseInt(reservationNumberOfPersonTextField.getText()),
 						reservationNameTextField.getText(),
 						reservationEmailTextField.getText(),
