@@ -7,8 +7,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import ca.mcgill.ecse223.resto.application.RestoApplication;
 import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.controller.RestoController;
+import ca.mcgill.ecse223.resto.model.Reservation;
 import ca.mcgill.ecse223.resto.model.Table;
 
 import javax.swing.JButton;
@@ -40,6 +42,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -83,6 +86,7 @@ public class RestoAppGUI extends JFrame {
 	//error
 	private String error = null;
 	//Table
+	private List<Reservation> reservations;
 	private HashMap<Integer, Table> tables;
 	private Integer selectedTable = -1;
 
@@ -351,7 +355,15 @@ public class RestoAppGUI extends JFrame {
 				index++;
 			}
 			selectedTable = -1;
+			index = 0;
 			selectTableDropdown.setSelectedIndex(selectedTable);
+			reservations = new ArrayList<Reservation>();
+			for(Reservation reservation : RestoApplication.getRestoApp().getReservations()) {
+				reservations.add(reservation);
+				System.out.println("Adding Reservation for date: "+reservation.getDate()+". time: "+reservation.getTime());
+				index++;
+			}
+			
 		}
 	}
 	
