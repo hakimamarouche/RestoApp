@@ -43,6 +43,7 @@ import java.awt.event.MouseEvent;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -61,6 +62,7 @@ import lu.tudor.santec.jtimechooser.TimeUnit;
 import lu.tudor.santec.jtimechooser.TimeChooserModel;
 import com.toedter.components.JSpinField;
 
+@SuppressWarnings("serial")
 public class RestoAppGUI extends JFrame {
 
 	private JLabel errorMessage;
@@ -89,6 +91,7 @@ public class RestoAppGUI extends JFrame {
 	private List<Reservation> reservations;
 	private HashMap<Integer, Table> tables;
 	private Integer selectedTable = -1;
+	private JTextField tablesToReserve;
 
 	/**
 	 * Create the frame.
@@ -188,7 +191,7 @@ public class RestoAppGUI extends JFrame {
 				reserveButtonActionPerformed(evt);
 			}
 		});
-		btnReservation.setBounds(234, 413, 115, 29);
+		btnReservation.setBounds(234, 425, 115, 29);
 		contentPane.add(btnReservation);
 		
 		tableNumberTextField = new JTextPane();
@@ -268,29 +271,29 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(lblDate);
 		
 		JLabel lblNumberOfPerson = new JLabel("Number of person :");
-		lblNumberOfPerson.setBounds(238, 304, 150, 20);
+		lblNumberOfPerson.setBounds(234, 304, 93, 20);
 		contentPane.add(lblNumberOfPerson);
 		
 		reservationNumberOfPersonTextField = new JTextField();
-		reservationNumberOfPersonTextField.setBounds(403, 301, 75, 26);
+		reservationNumberOfPersonTextField.setBounds(395, 299, 146, 26);
 		contentPane.add(reservationNumberOfPersonTextField);
 		reservationNumberOfPersonTextField.setColumns(10);
 		
 		JLabel lblPhoneNumber = new JLabel("phone number :");
-		lblPhoneNumber.setBounds(234, 346, 120, 20);
+		lblPhoneNumber.setBounds(234, 346, 93, 20);
 		contentPane.add(lblPhoneNumber);
 		
 		reservationPhoneNumberTextField = new JTextField();
-		reservationPhoneNumberTextField.setBounds(360, 343, 146, 26);
+		reservationPhoneNumberTextField.setBounds(395, 343, 146, 26);
 		contentPane.add(reservationPhoneNumberTextField);
 		reservationPhoneNumberTextField.setColumns(10);
 		
 		JLabel lblEmailAdress = new JLabel("email adress :");
-		lblEmailAdress.setBounds(234, 385, 107, 20);
+		lblEmailAdress.setBounds(234, 385, 97, 20);
 		contentPane.add(lblEmailAdress);
 		
 		reservationEmailTextField = new JTextField();
-		reservationEmailTextField.setBounds(331, 382, 238, 26);
+		reservationEmailTextField.setBounds(395, 382, 146, 26);
 		contentPane.add(reservationEmailTextField);
 		reservationEmailTextField.setColumns(10);
 		
@@ -316,6 +319,17 @@ public class RestoAppGUI extends JFrame {
 		reservationTimeSpinner.setEditor(new JSpinner.DateEditor(reservationTimeSpinner,"HH:mm"));
 		reservationTimeSpinner.setBounds(64, 382, 146, 26);
 		contentPane.add(reservationTimeSpinner);
+		
+		JLabel lblTables = new JLabel("Tables :");
+		lblTables.setBounds(10, 432, 46, 14);
+		contentPane.add(lblTables);
+		
+		tablesToReserve = new JTextField();
+		tablesToReserve.setToolTipText("Table numbers, seperated by commas");
+		tablesToReserve.setText("1,2,3,4");
+		tablesToReserve.setBounds(64, 425, 146, 24);
+		contentPane.add(tablesToReserve);
+		tablesToReserve.setColumns(10);
 	}
 
 
@@ -463,8 +477,8 @@ public class RestoAppGUI extends JFrame {
 			try {
 				Object reservationTime = reservationTimeSpinner.getValue();
 				if (reservationTime instanceof Date) {
-					List<Table> table = new LinkedList<Table>();
-					table.add(tables.get(selectedTable));//expand this later
+					//List<Table> table = new LinkedList<Table>();
+					//table.add(tables.get(selectedTable));//expand this later
 					//to format date and time:
 					Date timeDate = (Date) reservationTime;
 					Date dateDate = reservationDateChooser.getDate();
@@ -476,15 +490,19 @@ public class RestoAppGUI extends JFrame {
 					mergeCal.set(Calendar.HOUR_OF_DAY, timeCal.get(Calendar.HOUR_OF_DAY));
 					mergeCal.set(Calendar.MINUTE, timeCal.get(Calendar.MINUTE));
 					mergeCal.set(Calendar.SECOND, 0);
+					//to get tables to reserve:
+					
+					List<String> tablesToReserveList = Arrays.asList(tablesToReserve.getText().split("\\s*,\\s*"));
+					
 					
 					RestoController.reserve(
+						tablesToReserveList,
 						new java.sql.Date(mergeCal.getTime().getTime()),
 						new java.sql.Time(mergeCal.getTime().getTime()),
 						Integer.parseInt(reservationNumberOfPersonTextField.getText()),
 						reservationNameTextField.getText(),
 						reservationEmailTextField.getText(),
-						reservationPhoneNumberTextField.getText(),
-						table);
+						reservationPhoneNumberTextField.getText());
 				}
 				else {
 					error = "the time should have the following format, HH:mm";
