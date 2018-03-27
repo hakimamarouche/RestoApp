@@ -375,11 +375,8 @@ public class Reservation implements Serializable
    */
   // line 31 "../../../../../RestoApp.ump"
   public Boolean doesOverlap(Date date, Time time){
-    if (date == this.date) {
-		  if (this.time.getTime() - 7200000L < time.getTime() &&
-				  this.time.getTime() + 7200000L > time.getTime()) {
-			  return true;
-		  }
+	  if(this.time.getTime() - 7200000L < time.getTime() && this.time.getTime() + 7200000L > time.getTime()) {
+		  return true;
 	  }
     return false;
   }
