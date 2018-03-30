@@ -61,6 +61,8 @@ import lu.tudor.santec.jtimechooser.demo.JTimeChooserDemo;
 import lu.tudor.santec.jtimechooser.TimeUnit;
 import lu.tudor.santec.jtimechooser.TimeChooserModel;
 import com.toedter.components.JSpinField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JScrollPane;
 
 @SuppressWarnings("serial")
 public class RestoAppGUI extends JFrame {
@@ -92,6 +94,8 @@ public class RestoAppGUI extends JFrame {
 	private HashMap<Integer, Table> tables;
 	private Integer selectedTable = -1;
 	private JTextField tablesToReserve;
+	private JTextField eventName;
+	private JTable eventTable;
 
 	/**
 	 * Create the frame.
@@ -114,7 +118,7 @@ public class RestoAppGUI extends JFrame {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Resto App");
-		setBounds(100, 100, 972, 550);
+		setBounds(100, 100, 972, 742);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -262,7 +266,7 @@ public class RestoAppGUI extends JFrame {
 		
 		// for the name
 		reservationNameTextField = new JTextField();
-		reservationNameTextField.setBounds(64, 301, 146, 26);
+		reservationNameTextField.setBounds(80, 301, 130, 26);
 		contentPane.add(reservationNameTextField);
 		reservationNameTextField.setColumns(10);
 		
@@ -307,7 +311,7 @@ public class RestoAppGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		reservationDateChooser.setBounds(64, 341, 146, 28);
+		reservationDateChooser.setBounds(80, 341, 130, 28);
 		contentPane.add(reservationDateChooser);
 		
 		JLabel lblTime = new JLabel("Time :");
@@ -317,7 +321,7 @@ public class RestoAppGUI extends JFrame {
 		reservationTimeSpinner = new JSpinner();
 		reservationTimeSpinner.setModel(new SpinnerDateModel(new Date(), null, null, Calendar.HOUR_OF_DAY));
 		reservationTimeSpinner.setEditor(new JSpinner.DateEditor(reservationTimeSpinner,"HH:mm"));
-		reservationTimeSpinner.setBounds(64, 382, 146, 26);
+		reservationTimeSpinner.setBounds(80, 382, 130, 26);
 		contentPane.add(reservationTimeSpinner);
 		
 		JLabel lblTables = new JLabel("Tables :");
@@ -327,9 +331,68 @@ public class RestoAppGUI extends JFrame {
 		tablesToReserve = new JTextField();
 		tablesToReserve.setToolTipText("Table numbers, seperated by commas");
 		tablesToReserve.setText("1,2,3,4");
-		tablesToReserve.setBounds(64, 425, 146, 24);
+		tablesToReserve.setBounds(80, 425, 130, 24);
 		contentPane.add(tablesToReserve);
 		tablesToReserve.setColumns(10);
+		
+		JLabel lblEventName = new JLabel("Event Name:");
+		lblEventName.setBounds(10, 490, 72, 14);
+		contentPane.add(lblEventName);
+		
+		eventName = new JTextField();
+		eventName.setBounds(80, 487, 130, 26);
+		contentPane.add(eventName);
+		eventName.setColumns(10);
+		
+		JLabel lblDescription = new JLabel("Description :");
+		lblDescription.setBounds(10, 533, 60, 14);
+		contentPane.add(lblDescription);
+		
+		JTextArea eventDescription = new JTextArea();
+		eventDescription.setBounds(80, 528, 130, 26);
+		contentPane.add(eventDescription);
+		
+		JLabel lblStartDate = new JLabel("Start Date :");
+		lblStartDate.setBounds(234, 490, 150, 14);
+		contentPane.add(lblStartDate);
+		
+		JLabel lblEndDate = new JLabel("End Date :");
+		lblEndDate.setBounds(234, 533, 93, 14);
+		contentPane.add(lblEndDate);
+		
+		JDateChooser eventStartDateChooser = new JDateChooser();
+		eventStartDateChooser.setBounds(308, 490, 115, 26);
+		contentPane.add(eventStartDateChooser);
+		
+		JDateChooser eventEndDateChooser = new JDateChooser();
+		eventEndDateChooser.setBounds(308, 528, 115, 26);
+		contentPane.add(eventEndDateChooser);
+		
+		JButton btnAddEvent = new JButton("Add Event");
+		btnAddEvent.setBounds(433, 490, 108, 64);
+		contentPane.add(btnAddEvent);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 565, 541, 106);
+		contentPane.add(scrollPane);
+		
+		eventTable = new JTable();
+		scrollPane.setViewportView(eventTable);
+		eventTable.setToolTipText("Events");
+		eventTable.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Name", "Description", "Start Date", "End Date"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				Object.class, String.class, Object.class, Object.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+		});
 	}
 
 
