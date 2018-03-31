@@ -7,8 +7,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import ca.mcgill.ecse223.resto.application.RestoApplication;
 import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.controller.RestoController;
+import ca.mcgill.ecse223.resto.model.Reservation;
 import ca.mcgill.ecse223.resto.model.Table;
 
 import javax.swing.JButton;
@@ -39,6 +41,9 @@ import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -56,7 +61,10 @@ import lu.tudor.santec.jtimechooser.demo.JTimeChooserDemo;
 import lu.tudor.santec.jtimechooser.TimeUnit;
 import lu.tudor.santec.jtimechooser.TimeChooserModel;
 import com.toedter.components.JSpinField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JScrollPane;
 
+@SuppressWarnings("serial")
 public class RestoAppGUI extends JFrame {
 
 	private JLabel errorMessage;
@@ -82,8 +90,12 @@ public class RestoAppGUI extends JFrame {
 	//error
 	private String error = null;
 	//Table
+	private List<Reservation> reservations;
 	private HashMap<Integer, Table> tables;
 	private Integer selectedTable = -1;
+	private JTextField tablesToReserve;
+	private JTextField eventName;
+	private JTable eventTable;
 
 	/**
 	 * Create the frame.
@@ -106,7 +118,7 @@ public class RestoAppGUI extends JFrame {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Resto App");
-		setBounds(100, 100, 972, 550);
+		setBounds(100, 100, 972, 742);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -183,7 +195,7 @@ public class RestoAppGUI extends JFrame {
 				reserveButtonActionPerformed(evt);
 			}
 		});
-		btnReservation.setBounds(234, 413, 115, 29);
+		btnReservation.setBounds(234, 425, 115, 29);
 		contentPane.add(btnReservation);
 		
 		tableNumberTextField = new JTextPane();
@@ -254,38 +266,38 @@ public class RestoAppGUI extends JFrame {
 		
 		// for the name
 		reservationNameTextField = new JTextField();
-		reservationNameTextField.setBounds(64, 301, 146, 26);
+		reservationNameTextField.setBounds(80, 301, 130, 26);
 		contentPane.add(reservationNameTextField);
 		reservationNameTextField.setColumns(10);
 		
 		JLabel lblDate = new JLabel("Date :");
-		lblDate.setBounds(20, 346, 43, 20);
+		lblDate.setBounds(10, 346, 43, 20);
 		contentPane.add(lblDate);
 		
 		JLabel lblNumberOfPerson = new JLabel("Number of person :");
-		lblNumberOfPerson.setBounds(238, 304, 150, 20);
+		lblNumberOfPerson.setBounds(234, 304, 93, 20);
 		contentPane.add(lblNumberOfPerson);
 		
 		reservationNumberOfPersonTextField = new JTextField();
-		reservationNumberOfPersonTextField.setBounds(403, 301, 75, 26);
+		reservationNumberOfPersonTextField.setBounds(395, 299, 146, 26);
 		contentPane.add(reservationNumberOfPersonTextField);
 		reservationNumberOfPersonTextField.setColumns(10);
 		
 		JLabel lblPhoneNumber = new JLabel("phone number :");
-		lblPhoneNumber.setBounds(234, 346, 120, 20);
+		lblPhoneNumber.setBounds(234, 346, 93, 20);
 		contentPane.add(lblPhoneNumber);
 		
 		reservationPhoneNumberTextField = new JTextField();
-		reservationPhoneNumberTextField.setBounds(360, 343, 146, 26);
+		reservationPhoneNumberTextField.setBounds(395, 343, 146, 26);
 		contentPane.add(reservationPhoneNumberTextField);
 		reservationPhoneNumberTextField.setColumns(10);
 		
 		JLabel lblEmailAdress = new JLabel("email adress :");
-		lblEmailAdress.setBounds(234, 385, 107, 20);
+		lblEmailAdress.setBounds(234, 385, 97, 20);
 		contentPane.add(lblEmailAdress);
 		
 		reservationEmailTextField = new JTextField();
-		reservationEmailTextField.setBounds(331, 382, 238, 26);
+		reservationEmailTextField.setBounds(395, 382, 146, 26);
 		contentPane.add(reservationEmailTextField);
 		reservationEmailTextField.setColumns(10);
 		
@@ -299,21 +311,88 @@ public class RestoAppGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		reservationDateChooser.setBounds(64, 341, 146, 28);
+		reservationDateChooser.setBounds(80, 341, 130, 28);
 		contentPane.add(reservationDateChooser);
 		
-		SpinnerDateModel sm = new SpinnerDateModel(new Date(), null, null, Calendar.HOUR_OF_DAY);
-		JSpinner reservationTimeSpinner = new JSpinner(sm);
-		JSpinner.DateEditor te = new JSpinner.DateEditor(reservationTimeSpinner, "HH:mm");
-		reservationTimeSpinner.setEditor(te);
-		reservationTimeSpinner.setBounds(64, 377, 146, 29);
+		JLabel lblTime = new JLabel("Time :");
+		lblTime.setBounds(10, 388, 46, 14);
+		contentPane.add(lblTime);
+		
+		reservationTimeSpinner = new JSpinner();
+		reservationTimeSpinner.setModel(new SpinnerDateModel(new Date(), null, null, Calendar.HOUR_OF_DAY));
+		reservationTimeSpinner.setEditor(new JSpinner.DateEditor(reservationTimeSpinner,"HH:mm"));
+		reservationTimeSpinner.setBounds(80, 382, 130, 26);
 		contentPane.add(reservationTimeSpinner);
 		
-		JLabel lblReservationTime = new JLabel("Time:");
-		lblReservationTime.setBounds(20, 388, 43, 14);
-		contentPane.add(lblReservationTime);
+		JLabel lblTables = new JLabel("Tables :");
+		lblTables.setBounds(10, 432, 46, 14);
+		contentPane.add(lblTables);
 		
-
+		tablesToReserve = new JTextField();
+		tablesToReserve.setToolTipText("Table numbers, seperated by commas");
+		tablesToReserve.setText("1,2,3,4");
+		tablesToReserve.setBounds(80, 425, 130, 24);
+		contentPane.add(tablesToReserve);
+		tablesToReserve.setColumns(10);
+		
+		JLabel lblEventName = new JLabel("Event Name:");
+		lblEventName.setBounds(10, 490, 72, 14);
+		contentPane.add(lblEventName);
+		
+		eventName = new JTextField();
+		eventName.setBounds(80, 487, 130, 26);
+		contentPane.add(eventName);
+		eventName.setColumns(10);
+		
+		JLabel lblDescription = new JLabel("Description :");
+		lblDescription.setBounds(10, 533, 60, 14);
+		contentPane.add(lblDescription);
+		
+		JTextArea eventDescription = new JTextArea();
+		eventDescription.setBounds(80, 528, 130, 26);
+		contentPane.add(eventDescription);
+		
+		JLabel lblStartDate = new JLabel("Start Date :");
+		lblStartDate.setBounds(234, 490, 150, 14);
+		contentPane.add(lblStartDate);
+		
+		JLabel lblEndDate = new JLabel("End Date :");
+		lblEndDate.setBounds(234, 533, 93, 14);
+		contentPane.add(lblEndDate);
+		
+		JDateChooser eventStartDateChooser = new JDateChooser();
+		eventStartDateChooser.setBounds(308, 490, 115, 26);
+		contentPane.add(eventStartDateChooser);
+		
+		JDateChooser eventEndDateChooser = new JDateChooser();
+		eventEndDateChooser.setBounds(308, 528, 115, 26);
+		contentPane.add(eventEndDateChooser);
+		
+		JButton btnAddEvent = new JButton("Add Event");
+		btnAddEvent.setBounds(433, 490, 108, 64);
+		contentPane.add(btnAddEvent);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 565, 541, 106);
+		contentPane.add(scrollPane);
+		
+		eventTable = new JTable();
+		scrollPane.setViewportView(eventTable);
+		eventTable.setToolTipText("Events");
+		eventTable.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Name", "Description", "Start Date", "End Date"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				Object.class, String.class, Object.class, Object.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+		});
 	}
 
 
@@ -353,7 +432,15 @@ public class RestoAppGUI extends JFrame {
 				index++;
 			}
 			selectedTable = -1;
+			index = 0;
 			selectTableDropdown.setSelectedIndex(selectedTable);
+			reservations = new ArrayList<Reservation>();
+			for(Reservation reservation : RestoApplication.getRestoApp().getReservations()) {
+				reservations.add(reservation);
+				System.out.println("Adding Reservation for date: "+reservation.getDate()+". time: "+reservation.getTime());
+				index++;
+			}
+			
 		}
 	}
 	
@@ -450,20 +537,35 @@ public class RestoAppGUI extends JFrame {
 	}
 	
 	private void reserveButtonActionPerformed(java.awt.event.ActionEvent evt) {
-		error = null;
 			try {
 				Object reservationTime = reservationTimeSpinner.getValue();
-				if (reservationTime instanceof Time) {
-				List<Table> table = new LinkedList<Table>();
-				table.add(tables.get(selectedTable));
-				RestoController.reserve(
-						new java.sql.Date(reservationDateChooser.getDate().getTime()),
-						(Time)reservationTime,
+				if (reservationTime instanceof Date) {
+					//List<Table> table = new LinkedList<Table>();
+					//table.add(tables.get(selectedTable));//expand this later
+					//to format date and time:
+					Date timeDate = (Date) reservationTime;
+					Date dateDate = reservationDateChooser.getDate();
+					Calendar timeCal = Calendar.getInstance();
+					Calendar dateCal = Calendar.getInstance();
+					Calendar mergeCal = dateCal;
+					timeCal.setTime(timeDate);
+					dateCal.setTime(dateDate);
+					mergeCal.set(Calendar.HOUR_OF_DAY, timeCal.get(Calendar.HOUR_OF_DAY));
+					mergeCal.set(Calendar.MINUTE, timeCal.get(Calendar.MINUTE));
+					mergeCal.set(Calendar.SECOND, 0);
+					//to get tables to reserve:
+					
+					List<String> tablesToReserveList = Arrays.asList(tablesToReserve.getText().split("\\s*,\\s*"));
+					
+					
+					RestoController.reserve(
+						tablesToReserveList,
+						new java.sql.Date(mergeCal.getTime().getTime()),
+						new java.sql.Time(mergeCal.getTime().getTime()),
 						Integer.parseInt(reservationNumberOfPersonTextField.getText()),
 						reservationNameTextField.getText(),
 						reservationEmailTextField.getText(),
-						reservationPhoneNumberTextField.getText(),
-						table);
+						reservationPhoneNumberTextField.getText());
 				}
 				else {
 					error = "the time should have the following format, HH:mm";

@@ -222,10 +222,26 @@ public class RestoController {
 		return itemsElements;
 	}
 	
+	public static void reserve(List <String> tables, Date date, Time time, int numberInParty, String contactName, 
+			String contactEmailAddress, String contactPhoneNumber) throws InvalidInputException{
+		List<Table> tableList = new ArrayList<Table>();
+		for(String tableNumberStr : tables) {
+			int tableNumberInt = Integer.parseInt(tableNumberStr);
+			tableList.add(Table.getWithNumber(tableNumberInt));
+		}
+		reserve(date, time, numberInParty, contactName, contactEmailAddress, contactPhoneNumber, tableList);
+	}
+	
 	public static void reserve(Date date, Time time, int numberInParty, String contactName, 
 			String contactEmailAddress, String contactPhoneNumber, List <Table> tables) throws InvalidInputException{
 			
 			String error = "";
+			for(Table table : tables) {
+				if(table == null) {
+					error = "One of these tables does not exist";
+					throw new InvalidInputException(error.trim());
+				}
+			}
 			if (date == null || time == null || contactName == null || contactEmailAddress == null || contactPhoneNumber == null) {
 				error = "Missing reservation input.";
 				throw new InvalidInputException(error.trim());
@@ -237,7 +253,7 @@ public class RestoController {
 			RestoApp r = RestoApplication.getRestoApp();
 			List <Table> currentTables = r.getCurrentTables();
 			int seatCapacity = 0;
-			for (Table table : currentTables) {
+			for (Table table : tables) {
 				boolean current = currentTables.contains(table);
 				if (current == false) {
 					error = "Table: " + table.getNumber() + " does not exist";
@@ -260,6 +276,10 @@ public class RestoController {
 			Table[] currentTablesArray = new Table[currentTables.size()];
 			currentTables.toArray(currentTablesArray);
 			Reservation res = new Reservation(date, time, numberInParty, contactName, contactEmailAddress, contactPhoneNumber, r,currentTablesArray);
+			System.out.println("Added reservation for tables: ");
+			for (Table table : currentTablesArray) {
+				System.out.print(table.getNumber());
+			}
 			RestoApplication.save();
 		}
 	
