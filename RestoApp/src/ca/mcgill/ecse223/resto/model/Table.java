@@ -7,7 +7,7 @@ import java.util.*;
 
 // line 36 "../../../../../RestoAppPersistence.ump"
 // line 1 "../../../../../RestoAppTableStateMachine.ump"
-// line 42 "../../../../../RestoApp.ump"
+// line 47 "../../../../../RestoApp.ump"
 public class Table implements Serializable
 {
 
@@ -999,7 +999,7 @@ public class Table implements Serializable
   /**
    * indicates if a table goes on top of another
    */
-  // line 55 "../../../../../RestoApp.ump"
+  // line 60 "../../../../../RestoApp.ump"
   public Boolean doesOverlaps(Integer x, Integer y, Integer width, Integer length){
     if ((this.x <= x && (this.x + this.width + 2*SEAT_WIDTH) >= x) || 
     	(this.x <= (x + width + 2*SEAT_WIDTH) && (this.x + this.width + 2*SEAT_WIDTH) >= (x + width + 2*SEAT_WIDTH)) || 
