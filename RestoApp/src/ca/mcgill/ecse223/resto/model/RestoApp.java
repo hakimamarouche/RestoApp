@@ -25,6 +25,7 @@ public class RestoApp implements Serializable
   private Menu menu;
   private List<PricedMenuItem> pricedMenuItems;
   private List<Bill> bills;
+  private List<Event> events;
 
   //------------------------
   // CONSTRUCTOR
@@ -44,6 +45,7 @@ public class RestoApp implements Serializable
     menu = aMenu;
     pricedMenuItems = new ArrayList<PricedMenuItem>();
     bills = new ArrayList<Bill>();
+    events = new ArrayList<Event>();
   }
 
   public RestoApp()
@@ -56,6 +58,7 @@ public class RestoApp implements Serializable
     menu = new Menu(this);
     pricedMenuItems = new ArrayList<PricedMenuItem>();
     bills = new ArrayList<Bill>();
+    events = new ArrayList<Event>();
   }
 
   //------------------------
@@ -283,6 +286,36 @@ public class RestoApp implements Serializable
   public int indexOfBill(Bill aBill)
   {
     int index = bills.indexOf(aBill);
+    return index;
+  }
+
+  public Event getEvent(int index)
+  {
+    Event aEvent = events.get(index);
+    return aEvent;
+  }
+
+  public List<Event> getEvents()
+  {
+    List<Event> newEvents = Collections.unmodifiableList(events);
+    return newEvents;
+  }
+
+  public int numberOfEvents()
+  {
+    int number = events.size();
+    return number;
+  }
+
+  public boolean hasEvents()
+  {
+    boolean has = events.size() > 0;
+    return has;
+  }
+
+  public int indexOfEvent(Event aEvent)
+  {
+    int index = events.indexOf(aEvent);
     return index;
   }
 
@@ -760,6 +793,78 @@ public class RestoApp implements Serializable
     return wasAdded;
   }
 
+  public static int minimumNumberOfEvents()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToOne */
+  public Event addEvent(String aNameOfEvent, String aDescription, Date aStartDate, Date aEndDate)
+  {
+    return new Event(aNameOfEvent, aDescription, aStartDate, aEndDate, this);
+  }
+
+  public boolean addEvent(Event aEvent)
+  {
+    boolean wasAdded = false;
+    if (events.contains(aEvent)) { return false; }
+    RestoApp existingRestoApp = aEvent.getRestoApp();
+    boolean isNewRestoApp = existingRestoApp != null && !this.equals(existingRestoApp);
+    if (isNewRestoApp)
+    {
+      aEvent.setRestoApp(this);
+    }
+    else
+    {
+      events.add(aEvent);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeEvent(Event aEvent)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aEvent, as it must always have a restoApp
+    if (!this.equals(aEvent.getRestoApp()))
+    {
+      events.remove(aEvent);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addEventAt(Event aEvent, int index)
+  {  
+    boolean wasAdded = false;
+    if(addEvent(aEvent))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfEvents()) { index = numberOfEvents() - 1; }
+      events.remove(aEvent);
+      events.add(index, aEvent);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveEventAt(Event aEvent, int index)
+  {
+    boolean wasAdded = false;
+    if(events.contains(aEvent))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfEvents()) { index = numberOfEvents() - 1; }
+      events.remove(aEvent);
+      events.add(index, aEvent);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addEventAt(aEvent, index);
+    }
+    return wasAdded;
+  }
+
   public void delete()
   {
     while (reservations.size() > 0)
@@ -803,6 +908,13 @@ public class RestoApp implements Serializable
       Bill aBill = bills.get(bills.size() - 1);
       aBill.delete();
       bills.remove(aBill);
+    }
+    
+    while (events.size() > 0)
+    {
+      Event aEvent = events.get(events.size() - 1);
+      aEvent.delete();
+      events.remove(aEvent);
     }
     
   }

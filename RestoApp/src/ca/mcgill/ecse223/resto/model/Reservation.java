@@ -8,7 +8,7 @@ import java.sql.Time;
 import java.util.*;
 
 // line 17 "../../../../../RestoAppPersistence.ump"
-// line 17 "../../../../../RestoApp.ump"
+// line 26 "../../../../../RestoApp.ump"
 public class Reservation implements Serializable
 {
 
@@ -370,15 +370,15 @@ public class Reservation implements Serializable
 
 
   /**
-   * Checks if that time is already picked of another reservation
-   * For the date, only the year, month and day should be entered. If hours are also entered, it will not work.
+   * Checks if a time overlaps with this reservation.
    */
-  // line 31 "../../../../../RestoApp.ump"
+  // line 38 "../../../../../RestoApp.ump"
   public Boolean doesOverlap(Date date, Time time){
-	  if(this.time.getTime() - 7200000L < time.getTime() && this.time.getTime() + 7200000L > time.getTime()) {
+    //both time.getTime() and date.getTime() return the same value. Therefore, only one getTime is needed...
+		if(this.time.getTime() - 7200000L < time.getTime() && this.time.getTime() + 7200000L > time.getTime()) {
 		  return true;
-	  }
-    return false;
+	  	}
+   		return false;
   }
 
 
