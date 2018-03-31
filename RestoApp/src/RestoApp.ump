@@ -20,7 +20,7 @@ class Event {
 	description;
 	Date startDate;
 	Date endDate;
-	autounique eventId
+	autounique eventId;
 }
 
 class Reservation {

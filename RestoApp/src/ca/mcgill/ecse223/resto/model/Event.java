@@ -9,6 +9,12 @@ public class Event
 {
 
   //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  private static int nextEventId = 1;
+
+  //------------------------
   // MEMBER VARIABLES
   //------------------------
 
@@ -17,6 +23,9 @@ public class Event
   private String description;
   private Date startDate;
   private Date endDate;
+
+  //Autounique Attributes
+  private int eventId;
 
   //Event Associations
   private RestoApp restoApp;
@@ -31,6 +40,7 @@ public class Event
     description = aDescription;
     startDate = aStartDate;
     endDate = aEndDate;
+    eventId = nextEventId++;
     boolean didAddRestoApp = setRestoApp(aRestoApp);
     if (!didAddRestoApp)
     {
@@ -94,6 +104,11 @@ public class Event
     return endDate;
   }
 
+  public int getEventId()
+  {
+    return eventId;
+  }
+
   public RestoApp getRestoApp()
   {
     return restoApp;
@@ -132,17 +147,11 @@ public class Event
   public String toString()
   {
     return super.toString() + "["+
+            "eventId" + ":" + getEventId()+ "," +
             "nameOfEvent" + ":" + getNameOfEvent()+ "," +
             "description" + ":" + getDescription()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "startDate" + "=" + (getStartDate() != null ? !getStartDate().equals(this)  ? getStartDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "endDate" + "=" + (getEndDate() != null ? !getEndDate().equals(this)  ? getEndDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  
-  // line 23 ../../../../../RestoApp.ump
-  autounique eventId
-  
+  }
 }
