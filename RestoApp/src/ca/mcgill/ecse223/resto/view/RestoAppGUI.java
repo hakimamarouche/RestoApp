@@ -63,6 +63,7 @@ import lu.tudor.santec.jtimechooser.TimeChooserModel;
 import com.toedter.components.JSpinField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
+import javax.swing.border.BevelBorder;
 
 @SuppressWarnings("serial")
 public class RestoAppGUI extends JFrame {
@@ -96,6 +97,8 @@ public class RestoAppGUI extends JFrame {
 	private JTextField tablesToReserve;
 	private JTextField eventName;
 	private JTable eventTable;
+	//Table Visualization
+	TableVisualizer tableVisualization;
 
 	/**
 	 * Create the frame.
@@ -393,6 +396,11 @@ public class RestoAppGUI extends JFrame {
 				return columnTypes[columnIndex];
 			}
 		});
+		
+		tableVisualization = new TableVisualizer();
+		tableVisualization.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		tableVisualization.setBounds(562, 369, 384, 302);
+		contentPane.add(tableVisualization);
 	}
 
 
@@ -437,10 +445,10 @@ public class RestoAppGUI extends JFrame {
 			reservations = new ArrayList<Reservation>();
 			for(Reservation reservation : RestoApplication.getRestoApp().getReservations()) {
 				reservations.add(reservation);
-				System.out.println("Adding Reservation for date: "+reservation.getDate()+". time: "+reservation.getTime());
+				//System.out.println("Adding Reservation for date: "+reservation.getDate()+". time: "+reservation.getTime());
 				index++;
 			}
-			
+			tableVisualization.addTables(tables);
 		}
 	}
 	
@@ -486,7 +494,7 @@ public class RestoAppGUI extends JFrame {
 
 	private void updateTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		// clear error message
-		error = null;
+		error = "";
 		
 		// call the controller
 		try {
