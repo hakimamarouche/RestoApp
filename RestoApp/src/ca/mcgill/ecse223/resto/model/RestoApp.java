@@ -925,6 +925,7 @@ public class RestoApp implements Serializable
     Reservation.reinitializeReservationID(this.getReservations());
     Table.reinitializeTable(this.getTables());
     MenuItem.reinitializeMenuItem(this.getMenu().getMenuItems());
+    Event.reinitializeEventID(this.getEvents());
   }
   
   //------------------------

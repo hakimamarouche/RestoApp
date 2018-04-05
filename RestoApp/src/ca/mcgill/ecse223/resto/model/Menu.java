@@ -5,7 +5,7 @@ package ca.mcgill.ecse223.resto.model;
 import java.io.Serializable;
 import java.util.*;
 
-// line 100 "../../../../../RestoAppPersistence.ump"
+// line 101 "../../../../../RestoAppPersistence.ump"
 // line 93 "../../../../../RestoApp.ump"
 public class Menu implements Serializable
 {
@@ -170,7 +170,7 @@ public class Menu implements Serializable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 104 "../../../../../RestoAppPersistence.ump"
+  // line 105 "../../../../../RestoAppPersistence.ump"
   private static final long serialVersionUID= -7403802774454467836L ;
 
   
