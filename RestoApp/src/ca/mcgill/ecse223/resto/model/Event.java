@@ -2,10 +2,14 @@
 /*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
+import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Time;
+import java.util.*;
 
+// line 33 "../../../../../RestoAppPersistence.ump"
 // line 18 "../../../../../RestoApp.ump"
-public class Event
+public class Event extends Reservation implements Serializable
 {
 
   //------------------------
@@ -34,8 +38,9 @@ public class Event
   // CONSTRUCTOR
   //------------------------
 
-  public Event(String aNameOfEvent, String aDescription, Date aStartDate, Date aEndDate, RestoApp aRestoApp)
+  public Event(Date aDate, Time aTime, int aNumberInParty, String aContactName, String aContactEmailAddress, String aContactPhoneNumber, RestoApp aRestoApp, String aNameOfEvent, String aDescription, Date aStartDate, Date aEndDate, Table... allTables)
   {
+    super(aDate, aTime, aNumberInParty, aContactName, aContactEmailAddress, aContactPhoneNumber, aRestoApp, allTables);
     nameOfEvent = aNameOfEvent;
     description = aDescription;
     startDate = aStartDate;
@@ -141,6 +146,18 @@ public class Event
     {
       placeholderRestoApp.removeEvent(this);
     }
+    super.delete();
+  }
+
+  // line 40 "../../../../../RestoAppPersistence.ump"
+   public static  void reinitializeEventID(List<Event> events){
+    int nextEventNumber = 0;
+		for(Event event : events){
+			if(event.getEventId() > nextEventNumber){
+				nextEventNumber = event.getEventId();
+			}
+		}
+		nextEventNumber++;
   }
 
 
@@ -153,5 +170,13 @@ public class Event
             "  " + "startDate" + "=" + (getStartDate() != null ? !getStartDate().equals(this)  ? getStartDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "endDate" + "=" + (getEndDate() != null ? !getEndDate().equals(this)  ? getEndDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
-  }
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 37 "../../../../../RestoAppPersistence.ump"
+  private static final long serialVersionUID = 123123123123123L ;
+
+  
 }

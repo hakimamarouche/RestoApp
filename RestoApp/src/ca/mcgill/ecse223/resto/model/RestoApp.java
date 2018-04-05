@@ -798,9 +798,9 @@ public class RestoApp implements Serializable
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Event addEvent(String aNameOfEvent, String aDescription, Date aStartDate, Date aEndDate)
+  public Event addEvent(Date aDate, Time aTime, int aNumberInParty, String aContactName, String aContactEmailAddress, String aContactPhoneNumber, String aNameOfEvent, String aDescription, Date aStartDate, Date aEndDate, Table... allTables)
   {
-    return new Event(aNameOfEvent, aDescription, aStartDate, aEndDate, this);
+    return new Event(aDate, aTime, aNumberInParty, aContactName, aContactEmailAddress, aContactPhoneNumber, this, aNameOfEvent, aDescription, aStartDate, aEndDate, allTables);
   }
 
   public boolean addEvent(Event aEvent)

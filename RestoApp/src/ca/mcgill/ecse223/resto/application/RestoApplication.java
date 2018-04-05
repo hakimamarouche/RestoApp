@@ -10,7 +10,7 @@ import ca.mcgill.ecse223.resto.view.RestoPage;
 public class RestoApplication {
 	
 	private static RestoApp restoApp;
-	private static String filename = "menu.resto";
+	private static String filename = "data.resto";
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -28,7 +28,7 @@ public class RestoApplication {
 	public static RestoApp getRestoApp() {
 		if (restoApp == null) {
 			//load model
-			restoApp = new RestoApp();
+			restoApp = load();
 		}
 		return restoApp;
 	}
