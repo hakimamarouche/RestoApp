@@ -36,6 +36,7 @@ public class TableVisualizer extends JPanel {
 				int tableHeight = table.getLength() + table.getLength()/2;
 				g2d.setColor(Color.BLACK);
 				g2d.drawRect(tableX, tableY, tableWidth, tableHeight);
+				g2d.drawString(Integer.toString(table.getNumber()), table.getX(), table.getY()+8);
 			}
 			
 		}
