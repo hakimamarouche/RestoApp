@@ -29,7 +29,20 @@ public class RestoController {
 			throw new InvalidInputException(error.trim());
 		}
 		RestoApp r = RestoApplication.getRestoApp();
-		
+		Event newEvent = new Event(nameOfEvent, description, startDate, endDate, r);
+		r.addEvent(newEvent);
+		RestoApplication.save();
+	}
+	
+	public static void removeEvent(Event event) throws InvalidInputException {
+		String error = "";
+		if(event == null) {
+			error = "Must select event in the table";
+			throw new InvalidInputException(error.trim());
+		}
+		RestoApp r = RestoApplication.getRestoApp();
+		r.removeEvent(event);
+		RestoApplication.save();
 	}
 	
 	public static void moveTable(Table table, int x, int y) throws InvalidInputException {
