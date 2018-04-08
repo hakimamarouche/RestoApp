@@ -22,6 +22,15 @@ public class RestoController {
 		
 	}
 	
+	public static List<Event> getEvents() {
+		RestoApp r = RestoApplication.getRestoApp();
+			try {
+				return r.getEvents();
+			} catch (Exception e) {
+				return null;
+			}
+	}
+	
 	public static void createEvent(String nameOfEvent, String description, Date startDate, Date endDate) throws InvalidInputException {
 		String error = "";
 		if(nameOfEvent == null || description == null || startDate == null || endDate == null) {

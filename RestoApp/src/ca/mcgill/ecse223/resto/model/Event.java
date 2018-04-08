@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.*;
 import java.sql.Date;
 
-// line 39 "../../../../../RestoAppPersistence.ump"
+// line 40 "../../../../../RestoAppPersistence.ump"
 // line 104 "../../../../../RestoApp.ump"
 public class Event implements Serializable
 {
@@ -146,7 +146,7 @@ public class Event implements Serializable
     }
   }
 
-  // line 47 "../../../../../RestoAppPersistence.ump"
+  // line 48 "../../../../../RestoAppPersistence.ump"
    public static  void reinitializeEventID(List<Event> events){
     int nextEventNumber = 0;
 		for(Event event : events){
@@ -172,7 +172,7 @@ public class Event implements Serializable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 44 "../../../../../RestoAppPersistence.ump"
+  // line 45 "../../../../../RestoAppPersistence.ump"
   private static final long serialVersionUID = 123123123123123L ;
 
   

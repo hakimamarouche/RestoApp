@@ -7,7 +7,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.*;
 
-// line 22 "../../../../../RestoAppPersistence.ump"
+// line 23 "../../../../../RestoAppPersistence.ump"
 // line 18 "../../../../../RestoApp.ump"
 public class Reservation implements Serializable
 {
@@ -357,7 +357,7 @@ public class Reservation implements Serializable
     }
   }
 
-  // line 29 "../../../../../RestoAppPersistence.ump"
+  // line 30 "../../../../../RestoAppPersistence.ump"
    public static  void reinitializeReservationID(List<Reservation> reservations){
     nextReservationNumber = 0; 
     for (Reservation reservation : reservations) {
@@ -398,7 +398,7 @@ public class Reservation implements Serializable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 26 "../../../../../RestoAppPersistence.ump"
+  // line 27 "../../../../../RestoAppPersistence.ump"
   private static final long serialVersionUID= 2315072607928790501L ;
 
   

@@ -929,6 +929,7 @@ public class RestoApp implements Serializable
 		Event.reinitializeEventID(this.getEvents());
 	} catch (Exception e) {
 		System.out.println("No events created yet.");
+		events = new ArrayList<Event>();
 	}
   }
   
