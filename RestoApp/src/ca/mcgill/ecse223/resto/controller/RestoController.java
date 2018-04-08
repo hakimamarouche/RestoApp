@@ -49,8 +49,7 @@ public class RestoController {
 			error = "Must select event in the table";
 			throw new InvalidInputException(error.trim());
 		}
-		RestoApp r = RestoApplication.getRestoApp();
-		r.removeEvent(event);
+		event.delete();
 		RestoApplication.save();
 	}
 	

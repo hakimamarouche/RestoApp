@@ -334,16 +334,16 @@ public class RestoAppGUI extends JFrame {
 		tablesToReserve.setColumns(10);
 		
 		JLabel lblEventName = new JLabel("Event Name:");
-		lblEventName.setBounds(10, 490, 72, 14);
+		lblEventName.setBounds(10, 496, 83, 14);
 		contentPane.add(lblEventName);
 		
 		eventName = new JTextField();
-		eventName.setBounds(80, 487, 130, 26);
+		eventName.setBounds(94, 490, 130, 26);
 		contentPane.add(eventName);
 		eventName.setColumns(10);
 		
 		JLabel lblDescription = new JLabel("Description :");
-		lblDescription.setBounds(10, 533, 60, 14);
+		lblDescription.setBounds(10, 533, 83, 14);
 		contentPane.add(lblDescription);
 		
 		JLabel lblStartDate = new JLabel("Start Date :");
@@ -539,12 +539,17 @@ public class RestoAppGUI extends JFrame {
 		scrollPane_5.setViewportView(nonAlcoholicBeverageTable);
 		
 		JButton btnDeleteEvent = new JButton("Delete Event");
+		btnDeleteEvent.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				deleteEventActionPerformed(arg0);
+			}
+		});
 		btnDeleteEvent.setBounds(433, 529, 108, 25);
 		contentPane.add(btnDeleteEvent);
 		
 		eventDescription = new JTextField();
 		eventDescription.setColumns(10);
-		eventDescription.setBounds(80, 524, 130, 26);
+		eventDescription.setBounds(94, 527, 130, 26);
 		contentPane.add(eventDescription);
 	}
 
@@ -632,6 +637,14 @@ public class RestoAppGUI extends JFrame {
 			events = new HashMap<Integer, Event>();
 			int index = 0;
 			for(Event event : restoEvents) {
+				if(event.getEndDate().getTime() < new Date().getTime()) {
+					try {
+						RestoController.removeEvent(event);
+					} catch (InvalidInputException e) {
+						System.out.println("Could not remove event.");
+					}
+					continue;
+				}
 				Object[] newData = {event.getNameOfEvent(), event.getDescription(), df.format(event.getStartDate()), df.format(event.getEndDate())};
 				model.addRow(newData);
 				events.put(index, event);
@@ -858,5 +871,20 @@ public class RestoAppGUI extends JFrame {
 			error = e.getMessage();
 		}
 		//System.out.println(df.format(eventStartDateChooser.getDate()));
+	}
+	
+	private void deleteEventActionPerformed(ActionEvent evt) {
+		int selectedEventRow = eventTable.getSelectedRow();
+		//System.out.println(selectedEventRow);
+		if (selectedEventRow != -1) {
+			Event selectedEvent = events.get(selectedEventRow);
+			try {
+				RestoController.removeEvent(selectedEvent);
+			} catch (InvalidInputException e) {
+				error = e.getMessage();
+			}
+		}
+		
+		refreshData();
 	}
 }
