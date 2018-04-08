@@ -3,13 +3,12 @@
 
 package ca.mcgill.ecse223.resto.model;
 import java.io.Serializable;
-import java.sql.Date;
-import java.sql.Time;
 import java.util.*;
+import java.sql.Date;
 
-// line 34 "../../../../../RestoAppPersistence.ump"
-// line 18 "../../../../../RestoApp.ump"
-public class Event extends Reservation implements Serializable
+// line 39 "../../../../../RestoAppPersistence.ump"
+// line 104 "../../../../../RestoApp.ump"
+public class Event implements Serializable
 {
 
   //------------------------
@@ -38,9 +37,8 @@ public class Event extends Reservation implements Serializable
   // CONSTRUCTOR
   //------------------------
 
-  public Event(Date aDate, Time aTime, int aNumberInParty, String aContactName, String aContactEmailAddress, String aContactPhoneNumber, RestoApp aRestoApp, String aNameOfEvent, String aDescription, Date aStartDate, Date aEndDate, Table... allTables)
+  public Event(String aNameOfEvent, String aDescription, Date aStartDate, Date aEndDate, RestoApp aRestoApp)
   {
-    super(aDate, aTime, aNumberInParty, aContactName, aContactEmailAddress, aContactPhoneNumber, aRestoApp, allTables);
     nameOfEvent = aNameOfEvent;
     description = aDescription;
     startDate = aStartDate;
@@ -146,10 +144,9 @@ public class Event extends Reservation implements Serializable
     {
       placeholderRestoApp.removeEvent(this);
     }
-    super.delete();
   }
 
-  // line 41 "../../../../../RestoAppPersistence.ump"
+  // line 47 "../../../../../RestoAppPersistence.ump"
    public static  void reinitializeEventID(List<Event> events){
     int nextEventNumber = 0;
 		for(Event event : events){
@@ -175,7 +172,7 @@ public class Event extends Reservation implements Serializable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 38 "../../../../../RestoAppPersistence.ump"
+  // line 44 "../../../../../RestoAppPersistence.ump"
   private static final long serialVersionUID = 123123123123123L ;
 
   

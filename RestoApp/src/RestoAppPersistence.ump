@@ -34,9 +34,11 @@ class Reservation {
     }
     nextReservationNumber++;
   }
+}
 	
 class Event {
 	depend java.io.Serializable;
+	depend java.util.*;
 
 	isA Serializable;
 	private static final long serialVersionUID = 123123123123123L;
@@ -51,8 +53,7 @@ class Event {
 		nextEventNumber++;
 	}
 }
-	
-}
+
 class Table  {
 	depend java.io.Serializable;
 

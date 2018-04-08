@@ -7,8 +7,8 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.*;
 
-// line 18 "../../../../../RestoAppPersistence.ump"
-// line 26 "../../../../../RestoApp.ump"
+// line 22 "../../../../../RestoAppPersistence.ump"
+// line 18 "../../../../../RestoApp.ump"
 public class Reservation implements Serializable
 {
 
@@ -357,7 +357,7 @@ public class Reservation implements Serializable
     }
   }
 
-  // line 25 "../../../../../RestoAppPersistence.ump"
+  // line 29 "../../../../../RestoAppPersistence.ump"
    public static  void reinitializeReservationID(List<Reservation> reservations){
     nextReservationNumber = 0; 
     for (Reservation reservation : reservations) {
@@ -372,7 +372,7 @@ public class Reservation implements Serializable
   /**
    * Checks if a time overlaps with this reservation.
    */
-  // line 38 "../../../../../RestoApp.ump"
+  // line 30 "../../../../../RestoApp.ump"
   public Boolean doesOverlap(Date date, Time time){
     //both time.getTime() and date.getTime() return the same value. Therefore, only one getTime is needed...
 		if(this.time.getTime() - 7200000L < time.getTime() && this.time.getTime() + 7200000L > time.getTime()) {
@@ -398,7 +398,7 @@ public class Reservation implements Serializable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 22 "../../../../../RestoAppPersistence.ump"
+  // line 26 "../../../../../RestoAppPersistence.ump"
   private static final long serialVersionUID= 2315072607928790501L ;
 
   

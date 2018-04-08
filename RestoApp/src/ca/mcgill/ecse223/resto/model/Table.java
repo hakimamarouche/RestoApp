@@ -5,9 +5,9 @@ package ca.mcgill.ecse223.resto.model;
 import java.io.Serializable;
 import java.util.*;
 
-// line 52 "../../../../../RestoAppPersistence.ump"
+// line 57 "../../../../../RestoAppPersistence.ump"
 // line 1 "../../../../../RestoAppTableStateMachine.ump"
-// line 47 "../../../../../RestoApp.ump"
+// line 39 "../../../../../RestoApp.ump"
 public class Table implements Serializable
 {
 
@@ -942,7 +942,7 @@ public class Table implements Serializable
     }
   }
 
-  // line 59 "../../../../../RestoAppPersistence.ump"
+  // line 64 "../../../../../RestoAppPersistence.ump"
    public static  void reinitializeTable(List<Table> tables){
     tablesByNumber = new HashMap<Integer, Table>();
     for (Table table : tables) {
@@ -999,7 +999,7 @@ public class Table implements Serializable
   /**
    * indicates if a table goes on top of another
    */
-  // line 60 "../../../../../RestoApp.ump"
+  // line 52 "../../../../../RestoApp.ump"
   public Boolean doesOverlaps(Integer x, Integer y, Integer width, Integer length){
     if ((this.x <= x && (this.x + this.width + 2*SEAT_WIDTH) >= x) || 
     	(this.x <= (x + width + 2*SEAT_WIDTH) && (this.x + this.width + 2*SEAT_WIDTH) >= (x + width + 2*SEAT_WIDTH)) || 
@@ -1031,7 +1031,7 @@ public class Table implements Serializable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 56 "../../../../../RestoAppPersistence.ump"
+  // line 61 "../../../../../RestoAppPersistence.ump"
   private static final long serialVersionUID =  8896099581655989380L ;
 
   
