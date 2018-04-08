@@ -113,6 +113,7 @@ public class RestoAppGUI extends JFrame {
 	private JTable dessertTable;
 	private JTable alcoholicBeverageTable;
 	private JTable nonAlcoholicBeverageTable;
+	private JTextField eventDescription;
 
 	/**
 	 * Create the frame.
@@ -171,7 +172,7 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(btnDelete);
 		
 		JButton btnAddTable = new JButton("Add table");
-		btnAddTable.setBounds(692, 322, 115, 29);
+		btnAddTable.setBounds(692, 291, 115, 29);
 		btnAddTable.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				addTableButtonActionPerformed(evt);
@@ -265,7 +266,7 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(lblDate);
 		
 		JLabel lblNumberOfPerson = new JLabel("Number of person :");
-		lblNumberOfPerson.setBounds(234, 304, 93, 20);
+		lblNumberOfPerson.setBounds(234, 304, 151, 20);
 		contentPane.add(lblNumberOfPerson);
 		
 		reservationNumberOfPersonTextField = new JTextField();
@@ -274,7 +275,7 @@ public class RestoAppGUI extends JFrame {
 		reservationNumberOfPersonTextField.setColumns(10);
 		
 		JLabel lblPhoneNumber = new JLabel("phone number :");
-		lblPhoneNumber.setBounds(234, 346, 93, 20);
+		lblPhoneNumber.setBounds(234, 346, 151, 20);
 		contentPane.add(lblPhoneNumber);
 		
 		reservationPhoneNumberTextField = new JTextField();
@@ -283,7 +284,7 @@ public class RestoAppGUI extends JFrame {
 		reservationPhoneNumberTextField.setColumns(10);
 		
 		JLabel lblEmailAdress = new JLabel("email adress :");
-		lblEmailAdress.setBounds(234, 385, 97, 20);
+		lblEmailAdress.setBounds(234, 385, 151, 20);
 		contentPane.add(lblEmailAdress);
 		
 		reservationEmailTextField = new JTextField();
@@ -338,10 +339,6 @@ public class RestoAppGUI extends JFrame {
 		lblDescription.setBounds(10, 533, 60, 14);
 		contentPane.add(lblDescription);
 		
-		JTextArea eventDescription = new JTextArea();
-		eventDescription.setBounds(80, 528, 130, 26);
-		contentPane.add(eventDescription);
-		
 		JLabel lblStartDate = new JLabel("Start Date :");
 		lblStartDate.setBounds(234, 490, 150, 14);
 		contentPane.add(lblStartDate);
@@ -359,7 +356,7 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(eventEndDateChooser);
 		
 		JButton btnAddEvent = new JButton("Add Event");
-		btnAddEvent.setBounds(433, 490, 108, 64);
+		btnAddEvent.setBounds(433, 490, 108, 26);
 		contentPane.add(btnAddEvent);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -522,6 +519,15 @@ public class RestoAppGUI extends JFrame {
 			}
 		});
 		scrollPane_5.setViewportView(nonAlcoholicBeverageTable);
+		
+		JButton btnDeleteEvent = new JButton("Delete Event");
+		btnDeleteEvent.setBounds(433, 529, 108, 25);
+		contentPane.add(btnDeleteEvent);
+		
+		eventDescription = new JTextField();
+		eventDescription.setColumns(10);
+		eventDescription.setBounds(80, 524, 130, 26);
+		contentPane.add(eventDescription);
 	}
 
 

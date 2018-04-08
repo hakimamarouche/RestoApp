@@ -7,6 +7,7 @@ import java.util.List;
 
 import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.application.RestoApplication;
+import ca.mcgill.ecse223.resto.model.Event;
 import ca.mcgill.ecse223.resto.model.Menu;
 import ca.mcgill.ecse223.resto.model.MenuItem;
 import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
@@ -18,6 +19,16 @@ import ca.mcgill.ecse223.resto.model.Table;
 
 public class RestoController {
 	public RestoController() {
+		
+	}
+	
+	public static void createEvent(String nameOfEvent, String description, Date startDate, Date endDate) throws InvalidInputException {
+		String error = "";
+		if(nameOfEvent == null || description == null || startDate == null || endDate == null) {
+			error = "Missing event information";
+			throw new InvalidInputException(error.trim());
+		}
+		RestoApp r = RestoApplication.getRestoApp();
 		
 	}
 	
