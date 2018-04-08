@@ -12,6 +12,8 @@ import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.controller.RestoController;
 import ca.mcgill.ecse223.resto.model.Reservation;
 import ca.mcgill.ecse223.resto.model.Table;
+import ca.mcgill.ecse223.resto.model.MenuItem;
+import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -62,8 +64,10 @@ import lu.tudor.santec.jtimechooser.TimeUnit;
 import lu.tudor.santec.jtimechooser.TimeChooserModel;
 import com.toedter.components.JSpinField;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.JScrollPane;
 import javax.swing.border.BevelBorder;
+import javax.swing.JTabbedPane;
 
 @SuppressWarnings("serial")
 public class RestoAppGUI extends JFrame {
@@ -85,20 +89,30 @@ public class RestoAppGUI extends JFrame {
 	private JTextPane tableWidthTextField;
 	private JTextPane tableLengthTextField;
 	private JTextPane tableNumberOfSeatsTextField;
-	private JTextPane java2DRepresentationOfResto;
 	private JComboBox selectTableDropdown;
 	
 	//error
 	private String error = null;
-	//Table
-	private List<Reservation> reservations;
+	//Data
+	private HashMap<Integer, Reservation> reservations;
 	private HashMap<Integer, Table> tables;
+	private HashMap<Integer, MenuItem> nonAlcoholicBeverages;
+	private HashMap<Integer, MenuItem> alcoholicBeverages;
+	private HashMap<Integer, MenuItem> desserts;
+	private HashMap<Integer, MenuItem> mainDishes;
+	private HashMap<Integer, MenuItem> appetizers;
+	//Table
 	private Integer selectedTable = -1;
 	private JTextField tablesToReserve;
 	private JTextField eventName;
 	private JTable eventTable;
 	//Table Visualization
 	TableVisualizer tableVisualization;
+	private JTable appetizerTable;
+	private JTable mainTable;
+	private JTable dessertTable;
+	private JTable alcoholicBeverageTable;
+	private JTable nonAlcoholicBeverageTable;
 
 	/**
 	 * Create the frame.
@@ -122,31 +136,8 @@ public class RestoAppGUI extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Resto App");
 		setBounds(100, 100, 972, 742);
-		
-		JMenuBar menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
-		
-		JMenu mnMenu = new JMenu("Menu Categories");
-		mnMenu.setHorizontalAlignment(SwingConstants.RIGHT);
-		mnMenu.setForeground(new Color(0, 0, 0));
-		menuBar.add(mnMenu);
-		
-		JMenuItem mntmAppetizer = new JMenuItem("Appetizer");
-		mnMenu.add(mntmAppetizer);
-		
-		JMenuItem mntmMain = new JMenuItem("Main");
-		mnMenu.add(mntmMain);
-		
-		JMenuItem mntmDessert = new JMenuItem("Dessert");
-		mnMenu.add(mntmDessert);
-		
-		JMenuItem mntmAlcholo = new JMenuItem("Alcoholic Beverage");
-		mnMenu.add(mntmAlcholo);
-		
-		JMenuItem mntmNoneAlcoholicBeverage = new JMenuItem("None Alcoholic Beverage");
-		mnMenu.add(mntmNoneAlcoholicBeverage);
 		contentPane = new JPanel();
-		contentPane.setToolTipText("dessert\r\nappitizer");
+		contentPane.setToolTipText("");
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -187,10 +178,6 @@ public class RestoAppGUI extends JFrame {
 			}
 		});
 		contentPane.add(btnAddTable);
-		
-		java2DRepresentationOfResto = new JTextPane();
-		java2DRepresentationOfResto.setBounds(0, 0, 541, 288);
-		contentPane.add(java2DRepresentationOfResto);
 		
 		JButton btnReservation = new JButton("Reservation");
 		btnReservation.addActionListener(new java.awt.event.ActionListener() {
@@ -401,6 +388,140 @@ public class RestoAppGUI extends JFrame {
 		tableVisualization.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		tableVisualization.setBounds(562, 369, 384, 302);
 		contentPane.add(tableVisualization);
+		
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setBounds(10, 8, 531, 273);
+		contentPane.add(tabbedPane);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		tabbedPane.addTab("Appetizer", null, scrollPane_1, null);
+		
+		appetizerTable = new JTable();
+		appetizerTable.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Name", "Price"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				String.class, Double.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+			boolean[] columnEditables = new boolean[] {
+				false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		scrollPane_1.setViewportView(appetizerTable);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		tabbedPane.addTab("Main", null, scrollPane_2, null);
+		
+		mainTable = new JTable();
+		mainTable.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Name", "Price"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				String.class, Double.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+			boolean[] columnEditables = new boolean[] {
+				false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		scrollPane_2.setViewportView(mainTable);
+		
+		JScrollPane scrollPane_3 = new JScrollPane();
+		tabbedPane.addTab("Dessert", null, scrollPane_3, null);
+		
+		dessertTable = new JTable();
+		dessertTable.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Name", "Price"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				String.class, Double.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+			boolean[] columnEditables = new boolean[] {
+				false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		scrollPane_3.setViewportView(dessertTable);
+		
+		JScrollPane scrollPane_4 = new JScrollPane();
+		tabbedPane.addTab("Alcoholic Beverage", null, scrollPane_4, null);
+		
+		alcoholicBeverageTable = new JTable();
+		alcoholicBeverageTable.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Name", "Price"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				String.class, Double.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+			boolean[] columnEditables = new boolean[] {
+				false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		scrollPane_4.setViewportView(alcoholicBeverageTable);
+		
+		JScrollPane scrollPane_5 = new JScrollPane();
+		tabbedPane.addTab("Non-Alcoholic Beverage", null, scrollPane_5, null);
+		
+		nonAlcoholicBeverageTable = new JTable();
+		nonAlcoholicBeverageTable.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Name", "Price"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				String.class, Double.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+			boolean[] columnEditables = new boolean[] {
+				false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		scrollPane_5.setViewportView(nonAlcoholicBeverageTable);
 	}
 
 
@@ -440,19 +561,125 @@ public class RestoAppGUI extends JFrame {
 				index++;
 			}
 			selectedTable = -1;
-			index = 0;
 			selectTableDropdown.setSelectedIndex(selectedTable);
-			reservations = new ArrayList<Reservation>();
+			//update reservations:
+			index = 0;
+			reservations = new HashMap<Integer, Reservation>();
 			for(Reservation reservation : RestoApplication.getRestoApp().getReservations()) {
-				reservations.add(reservation);
+				reservations.put(index, reservation);
 				//System.out.println("Adding Reservation for date: "+reservation.getDate()+". time: "+reservation.getTime());
 				index++;
 			}
+			index = 0;
+			//update Tables:
 			tableVisualization.addTables(tables);
+			//test
+			/*
+			ArrayList<MenuItem> items = (ArrayList<MenuItem>) RestoController.getMenuItems(MenuItem.ItemCategory.Main);
+			for(MenuItem item : items) {
+				System.out.println(item.getName() + ", priced items: " + item.numberOfPricedMenuItems() + ", current price: " + 
+						item.getCurrentPricedMenuItem().getPrice()	
+						);
+			}*/
+			/*DefaultTableModel model = (DefaultTableModel) appetizerTable.getModel();
+			Object[] newData = {"testfood", 5};
+			model.addRow(newData);
+			System.out.print(model.getValueAt(0, 0));
+			model.removeRow(0);
+			System.out.print(model.getValueAt(0, 0));*/
+			
+			ArrayList<MenuItem> AppetizerItems = (ArrayList<MenuItem>) RestoController.getMenuItems(MenuItem.ItemCategory.Appetizer);
+			ArrayList<MenuItem> mainItems = (ArrayList<MenuItem>) RestoController.getMenuItems(MenuItem.ItemCategory.Main);
+			ArrayList<MenuItem> dessertItems = (ArrayList<MenuItem>) RestoController.getMenuItems(MenuItem.ItemCategory.Dessert);
+			ArrayList<MenuItem> alcoholicItems = (ArrayList<MenuItem>) RestoController.getMenuItems(MenuItem.ItemCategory.AlcoholicBeverage);
+			ArrayList<MenuItem> nonAlcoholicItems = (ArrayList<MenuItem>) RestoController.getMenuItems(MenuItem.ItemCategory.NonAlcoholicBeverage);
+			//Clear JTables:
+			((DefaultTableModel)appetizerTable.getModel()).setRowCount(0);
+			((DefaultTableModel)mainTable.getModel()).setRowCount(0);
+			((DefaultTableModel)dessertTable.getModel()).setRowCount(0);
+			((DefaultTableModel)alcoholicBeverageTable.getModel()).setRowCount(0);
+			((DefaultTableModel)nonAlcoholicBeverageTable.getModel()).setRowCount(0);
+			//populate JTables:
+			populateAppetizerTable(AppetizerItems);
+			populateMainTable(mainItems);
+			populateDessertTable(dessertItems);
+			populateAlcoholicBeverageTable(alcoholicItems);
+			populateNonAlcoholicBeverageTable(nonAlcoholicItems);
 		}
 	}
 	
 	
+	private void populateNonAlcoholicBeverageTable(ArrayList<MenuItem> nonAlcoholicItems) {
+		DefaultTableModel model = (DefaultTableModel) nonAlcoholicBeverageTable.getModel();
+		nonAlcoholicBeverages = new HashMap<Integer, MenuItem>();
+		int index = 0;
+		for(MenuItem item : nonAlcoholicItems) {
+			Object[] newData = {item.getName(), item.getCurrentPricedMenuItem().getPrice()};
+			model.addRow(newData);
+			nonAlcoholicBeverages.put(index, item);
+			index++;
+		}
+		
+	}
+
+
+
+	private void populateAlcoholicBeverageTable(ArrayList<MenuItem> alcoholicItems) {
+		DefaultTableModel model = (DefaultTableModel) alcoholicBeverageTable.getModel();
+		alcoholicBeverages = new HashMap<Integer, MenuItem>();
+		int index = 0;
+		for(MenuItem item : alcoholicItems) {
+			Object[] newData = {item.getName(), item.getCurrentPricedMenuItem().getPrice()};
+			model.addRow(newData);
+			alcoholicBeverages.put(index, item);
+			index++;
+		}
+	}
+
+
+
+	private void populateDessertTable(ArrayList<MenuItem> dessertItems) {
+		DefaultTableModel model = (DefaultTableModel) dessertTable.getModel();
+		desserts = new HashMap<Integer, MenuItem>();
+		int index = 0;
+		for(MenuItem item : dessertItems) {
+			Object[] newData = {item.getName(), item.getCurrentPricedMenuItem().getPrice()};
+			model.addRow(newData);
+			desserts.put(index, item);
+			index++;
+		}
+	}
+
+
+
+	private void populateMainTable(ArrayList<MenuItem> mainItems) {
+		DefaultTableModel model = (DefaultTableModel) mainTable.getModel();
+		mainDishes = new HashMap<Integer, MenuItem>();
+		int index = 0;
+		for(MenuItem item : mainItems) {
+			Object[] newData = {item.getName(), item.getCurrentPricedMenuItem().getPrice()};
+			model.addRow(newData);
+			mainDishes.put(index, item);
+			index++;
+		}		
+	}
+
+
+
+	private void populateAppetizerTable(ArrayList<MenuItem> appetizerItems) {
+			DefaultTableModel model = (DefaultTableModel) appetizerTable.getModel();
+			appetizers = new HashMap<Integer, MenuItem>();
+			int index = 0;
+			for(MenuItem item : appetizerItems) {
+				Object[] newData = {item.getName(), item.getCurrentPricedMenuItem().getPrice()};
+				model.addRow(newData);
+				appetizers.put(index, item);
+				index++;
+			}
+	}
+
+
+
 	private static void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
