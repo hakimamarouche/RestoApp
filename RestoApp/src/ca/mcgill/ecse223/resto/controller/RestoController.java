@@ -12,6 +12,7 @@ import ca.mcgill.ecse223.resto.model.Menu;
 import ca.mcgill.ecse223.resto.model.MenuItem;
 import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
 import ca.mcgill.ecse223.resto.model.Order;
+import ca.mcgill.ecse223.resto.model.PricedMenuItem;
 import ca.mcgill.ecse223.resto.model.Reservation;
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.model.Seat;
@@ -387,5 +388,48 @@ public class RestoController {
 		}
 		return result;
 	}
-
+	
+	public static void addMenuItem(String name, ItemCategory category, double price) throws InvalidInputException {
+		String error = "";
+		if (name == null || name == "") {
+			error = "The name is empty";
+			throw new InvalidInputException(error.trim());
+		}
+		if (category == null) {
+			error = "No menu category was chosen";
+			throw new InvalidInputException(error.trim());
+		}
+		if (price <= 0) {
+			error = "the price entered is not positive";
+			throw new InvalidInputException(error.trim());
+		}
+		
+		RestoApp r = RestoApplication.getRestoApp();
+		Menu menu = r.getMenu();
+		
+		MenuItem menuItem;
+		try {
+			menuItem = new MenuItem(name, menu);
+		}
+		catch (RuntimeException e) {
+			error = e.getMessage();
+			if (error.equals("Cannot create due to duplicate name")) {
+				error = "A menu item with this name already exists. Please use a different name.";
+			}
+			throw new InvalidInputException(error);
+		}
+		
+		menuItem.setItemCategory(category);
+		PricedMenuItem pmi = menuItem.addPricedMenuItem(price, r);
+		menuItem.setCurrentPricedMenuItem(pmi);
+		
+		try {
+			RestoApplication.save();
+		}
+		catch (RuntimeException e) {
+			throw new InvalidInputException(e.getMessage());
+		}
+	}
 }
+
+

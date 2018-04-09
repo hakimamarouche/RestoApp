@@ -120,6 +120,8 @@ public class RestoAppGUI extends JFrame {
 	private JTable dessertTable;
 	private JTable alcoholicBeverageTable;
 	private JTable nonAlcoholicBeverageTable;
+	private JTextField txtMenuItemName;
+	private JTextField txtMenuItemPrice;
 	
 
 	/**
@@ -226,51 +228,51 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(btnReservation);
 		
 		tableNumberTextField = new JTextPane();
-		tableNumberTextField.setBounds(764, 8, 75, 26);
+		tableNumberTextField.setBounds(657, 59, 65, 20);
 		contentPane.add(tableNumberTextField);
 		
 		tableXPostionTextField = new JTextPane();
-		tableXPostionTextField.setBounds(764, 39, 75, 26);
+		tableXPostionTextField.setBounds(657, 83, 65, 20);
 		contentPane.add(tableXPostionTextField);
 		
 		tableYPostionTextField = new JTextPane();
-		tableYPostionTextField.setBounds(764, 69, 75, 26);
+		tableYPostionTextField.setBounds(657, 108, 65, 20);
 		contentPane.add(tableYPostionTextField);
 		
 		tableWidthTextField = new JTextPane();
-		tableWidthTextField.setBounds(764, 99, 75, 26);
+		tableWidthTextField.setBounds(657, 133, 65, 20);
 		contentPane.add(tableWidthTextField);
 		
 		tableLengthTextField = new JTextPane();
-		tableLengthTextField.setBounds(764, 129, 75, 26);
+		tableLengthTextField.setBounds(657, 158, 65, 20);
 		contentPane.add(tableLengthTextField);
 		
 		tableNumberOfSeatsTextField = new JTextPane();
-		tableNumberOfSeatsTextField.setBounds(764, 163, 75, 26);
+		tableNumberOfSeatsTextField.setBounds(657, 183, 65, 20);
 		contentPane.add(tableNumberOfSeatsTextField);
 		
 		JLabel lblTableNumber = new JLabel("Table Number:");
-		lblTableNumber.setBounds(634, 8, 150, 20);
+		lblTableNumber.setBounds(562, 59, 91, 20);
 		contentPane.add(lblTableNumber);
 		
 		JLabel lblXPosition = new JLabel("X position:");
-		lblXPosition.setBounds(634, 39, 150, 20);
+		lblXPosition.setBounds(587, 83, 59, 20);
 		contentPane.add(lblXPosition);
 		
 		JLabel lblYPosition = new JLabel("Y position:");
-		lblYPosition.setBounds(634, 75, 100, 20);
+		lblYPosition.setBounds(587, 108, 59, 20);
 		contentPane.add(lblYPosition);
 		
 		JLabel lblTableWidth = new JLabel("Table width :");
-		lblTableWidth.setBounds(634, 105, 160, 20);
+		lblTableWidth.setBounds(575, 133, 71, 20);
 		contentPane.add(lblTableWidth);
 		
 		JLabel lblTableHeight = new JLabel("Table height :");
-		lblTableHeight.setBounds(634, 135, 120, 20);
+		lblTableHeight.setBounds(571, 158, 75, 20);
 		contentPane.add(lblTableHeight);
 		
 		JLabel lblNumberOfSeats = new JLabel("Number of seats :");
-		lblNumberOfSeats.setBounds(634, 163, 130, 20);
+		lblNumberOfSeats.setBounds(545, 183, 108, 20);
 		contentPane.add(lblNumberOfSeats);
 		
 		
@@ -278,7 +280,7 @@ public class RestoAppGUI extends JFrame {
 		selectTableDropdown = new JComboBox();
 		selectTableDropdown.setModel(new DefaultComboBoxModel(new String[] {"select a table", "1", "2", "3", "4", "5", "6", "7"}));
 		selectTableDropdown.setToolTipText("");
-		selectTableDropdown.setBounds(658, 205, 200, 26);
+		selectTableDropdown.setBounds(657, 214, 65, 26);
 		selectTableDropdown.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				JComboBox<String> cb = (JComboBox<String>) evt.getSource();
@@ -330,7 +332,7 @@ public class RestoAppGUI extends JFrame {
 		
 		errorMessage = new JLabel();
 		errorMessage.setForeground(new Color(255, 0, 0));
-		errorMessage.setBounds(20, 465, 917, 14);
+		errorMessage.setBounds(548, 0, 398, 38);
 		contentPane.add(errorMessage);
 		
 		reservationDateChooser = new JDateChooser();
@@ -582,6 +584,46 @@ public class RestoAppGUI extends JFrame {
 		eventDescription.setColumns(10);
 		eventDescription.setBounds(94, 527, 130, 26);
 		contentPane.add(eventDescription);
+		
+		JButton btnAddMenuItem = new JButton("Add Menu Item");
+		btnAddMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+		btnAddMenuItem.setBounds(562, 291, 115, 29);
+		contentPane.add(btnAddMenuItem);
+		
+		txtMenuItemName = new JTextField();
+		txtMenuItemName.setToolTipText("");
+		txtMenuItemName.setBounds(857, 59, 86, 20);
+		contentPane.add(txtMenuItemName);
+		txtMenuItemName.setColumns(10);
+		
+		JLabel lblMenuItemName = new JLabel("Menu Item name:");
+		lblMenuItemName.setBounds(756, 59, 99, 14);
+		contentPane.add(lblMenuItemName);
+		
+		JLabel lblMenuItemPrice = new JLabel("Menu Item Price:");
+		lblMenuItemPrice.setBounds(756, 85, 99, 14);
+		contentPane.add(lblMenuItemPrice);
+		
+		txtMenuItemPrice = new JTextField();
+		txtMenuItemPrice.setBounds(857, 83, 86, 20);
+		contentPane.add(txtMenuItemPrice);
+		txtMenuItemPrice.setColumns(10);
+		
+		JComboBox selectMenuCategoryDropDown = new JComboBox();
+		selectMenuCategoryDropDown.setBounds(857, 108, 86, 20);
+		contentPane.add(selectMenuCategoryDropDown);
+		
+		JLabel lblSelectATable = new JLabel("Select a table:");
+		lblSelectATable.setBounds(562, 214, 91, 26);
+		contentPane.add(lblSelectATable);
+		
+		JLabel lblMenuCategory = new JLabel("Menu Category:");
+		lblMenuCategory.setBounds(756, 108, 99, 20);
+		contentPane.add(lblMenuCategory);
 	}
 
 
