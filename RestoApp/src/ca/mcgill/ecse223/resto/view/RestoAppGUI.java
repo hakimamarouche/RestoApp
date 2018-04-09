@@ -96,6 +96,8 @@ public class RestoAppGUI extends JFrame {
 	private JTextField tablesToReserve;
 	private JTextField eventName;
 	private JTable eventTable;
+	private JTable menuTable;
+	
 
 	/**
 	 * Create the frame.
@@ -130,6 +132,11 @@ public class RestoAppGUI extends JFrame {
 		
 		JMenuItem mntmAppetizer = new JMenuItem("Appetizer");
 		mnMenu.add(mntmAppetizer);
+		mnMenu.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				
+			}
+		});
 		
 		JMenuItem mntmMain = new JMenuItem("Main");
 		mnMenu.add(mntmMain);
@@ -391,6 +398,32 @@ public class RestoAppGUI extends JFrame {
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
+			}
+		});
+		
+		JButton btnIssueBill = new JButton("Issue Bill");
+		btnIssueBill.setBounds(562, 384, 89, 23);
+		contentPane.add(btnIssueBill);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(599, 490, 357, 181);
+		contentPane.add(scrollPane_1);
+		
+		menuTable = new JTable();
+		scrollPane_1.setViewportView(menuTable);
+		menuTable.setToolTipText("menu Items");
+		menuTable.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Name", "Price"
+			}
+		) {
+			Class[] columnTypes1 = new Class[] {
+				String.class, Integer.class
+			};
+			public Class getColumnClass(int columnIndex1) {
+				return columnTypes1[columnIndex1];
 			}
 		});
 	}
