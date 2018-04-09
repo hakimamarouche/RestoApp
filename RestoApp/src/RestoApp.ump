@@ -15,14 +15,6 @@ class RestoApp {
    1 <@>- * Event events;
 }
 
-class Event {
-	nameOfEvent;
-	description;
-	Date startDate;
-	Date endDate;
-	autounique eventId;
-}
-
 class Reservation {
    Date date;
    Time time;
@@ -109,4 +101,11 @@ class PricedMenuItem {
 class Bill {
    * bills -- 1 Order order; // order.bills.issuedForSeats = order.orderItems.seats
    * bills -- 1..* Seat issuedForSeats; // only from order.orderItems.seats;
+}class Event
+{
+  nameOfEvent;
+  description;
+  Date startDate;
+  Date endDate;
+  autounique eventId;
 }

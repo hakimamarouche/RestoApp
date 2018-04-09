@@ -2,10 +2,13 @@
 /*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
+import java.io.Serializable;
+import java.util.*;
 import java.sql.Date;
 
-// line 18 "../../../../../RestoApp.ump"
-public class Event
+// line 40 "../../../../../RestoAppPersistence.ump"
+// line 104 "../../../../../RestoApp.ump"
+public class Event implements Serializable
 {
 
   //------------------------
@@ -143,6 +146,17 @@ public class Event
     }
   }
 
+  // line 48 "../../../../../RestoAppPersistence.ump"
+   public static  void reinitializeEventID(List<Event> events){
+    int nextEventNumber = 0;
+		for(Event event : events){
+			if(event.getEventId() > nextEventNumber){
+				nextEventNumber = event.getEventId();
+			}
+		}
+		nextEventNumber++;
+  }
+
 
   public String toString()
   {
@@ -153,5 +167,13 @@ public class Event
             "  " + "startDate" + "=" + (getStartDate() != null ? !getStartDate().equals(this)  ? getStartDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "endDate" + "=" + (getEndDate() != null ? !getEndDate().equals(this)  ? getEndDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
-  }
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 45 "../../../../../RestoAppPersistence.ump"
+  private static final long serialVersionUID = 123123123123123L ;
+
+  
 }

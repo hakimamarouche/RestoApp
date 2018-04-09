@@ -11,6 +11,12 @@ class RestoApp  {
     Reservation.reinitializeReservationID(this.getReservations());
     Table.reinitializeTable(this.getTables());
     MenuItem.reinitializeMenuItem(this.getMenu().getMenuItems());
+    try {
+		Event.reinitializeEventID(this.getEvents());
+	} catch (Exception e) {
+		System.out.println("No events created yet.");
+		events = new ArrayList<Event>();
+	}
   }
 }
 
@@ -29,10 +35,26 @@ class Reservation {
     }
     nextReservationNumber++;
   }
-	
-	
-	
 }
+	
+class Event {
+	depend java.io.Serializable;
+	depend java.util.*;
+
+	isA Serializable;
+	private static final long serialVersionUID = 123123123123123L;
+
+	public static void reinitializeEventID(List<Event> events){
+		int nextEventNumber = 0;
+		for(Event event : events){
+			if(event.getEventId() > nextEventNumber){
+				nextEventNumber = event.getEventId();
+			}
+		}
+		nextEventNumber++;
+	}
+}
+
 class Table  {
 	depend java.io.Serializable;
 

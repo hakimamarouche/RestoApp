@@ -7,6 +7,7 @@ import java.util.List;
 
 import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.application.RestoApplication;
+import ca.mcgill.ecse223.resto.model.Event;
 import ca.mcgill.ecse223.resto.model.Menu;
 import ca.mcgill.ecse223.resto.model.MenuItem;
 import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
@@ -19,6 +20,37 @@ import ca.mcgill.ecse223.resto.model.Table;
 public class RestoController {
 	public RestoController() {
 		
+	}
+	
+	public static List<Event> getEvents() {
+		RestoApp r = RestoApplication.getRestoApp();
+			try {
+				return r.getEvents();
+			} catch (Exception e) {
+				return null;
+			}
+	}
+	
+	public static void createEvent(String nameOfEvent, String description, Date startDate, Date endDate) throws InvalidInputException {
+		String error = "";
+		if(nameOfEvent == null || description == null || startDate == null || endDate == null) {
+			error = "Missing event information";
+			throw new InvalidInputException(error.trim());
+		}
+		RestoApp r = RestoApplication.getRestoApp();
+		Event newEvent = new Event(nameOfEvent, description, startDate, endDate, r);
+		r.addEvent(newEvent);
+		RestoApplication.save();
+	}
+	
+	public static void removeEvent(Event event) throws InvalidInputException {
+		String error = "";
+		if(event == null) {
+			error = "Must select event in the table";
+			throw new InvalidInputException(error.trim());
+		}
+		event.delete();
+		RestoApplication.save();
 	}
 	
 	public static void moveTable(Table table, int x, int y) throws InvalidInputException {

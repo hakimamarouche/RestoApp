@@ -28,7 +28,7 @@ public class RestoApplication {
 	public static RestoApp getRestoApp() {
 		if (restoApp == null) {
 			//load model
-			restoApp = new RestoApp();
+			restoApp = load();
 		}
 		return restoApp;
 	}
@@ -44,6 +44,7 @@ public class RestoApplication {
 		restoApp = (RestoApp) PersistenceObjectStream.deserialize();
 		// model cannot be loaded - create empty RestoApp
 		if (restoApp == null) {
+			System.out.println("RestoApp is null.");
 			restoApp = new RestoApp();
 		}
 		else {

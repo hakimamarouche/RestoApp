@@ -12,6 +12,9 @@ import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.controller.RestoController;
 import ca.mcgill.ecse223.resto.model.Reservation;
 import ca.mcgill.ecse223.resto.model.Table;
+import ca.mcgill.ecse223.resto.model.Event;
+import ca.mcgill.ecse223.resto.model.MenuItem;
+import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -62,7 +65,10 @@ import lu.tudor.santec.jtimechooser.TimeUnit;
 import lu.tudor.santec.jtimechooser.TimeChooserModel;
 import com.toedter.components.JSpinField;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.JScrollPane;
+import javax.swing.border.BevelBorder;
+import javax.swing.JTabbedPane;
 
 @SuppressWarnings("serial")
 public class RestoAppGUI extends JFrame {
@@ -70,33 +76,50 @@ public class RestoAppGUI extends JFrame {
 	private JLabel errorMessage;
 	private JPanel contentPane;
 	private JDateChooser reservationDateChooser;
-	
+	//Reservations
 	private JSpinner reservationTimeSpinner;
 	private JTextField reservationNameTextField;
 	private JTextField reservationNumberOfPersonTextField;
 	private JTextField reservationPhoneNumberTextField;
 	private JTextField reservationEmailTextField;
 	private JLabel lblName;
-	
+	//Adding or editing tables
 	private JTextPane tableNumberTextField;
 	private JTextPane tableXPostionTextField;
 	private JTextPane tableYPostionTextField;
 	private JTextPane tableWidthTextField;
 	private JTextPane tableLengthTextField;
 	private JTextPane tableNumberOfSeatsTextField;
-	private JTextPane java2DRepresentationOfResto;
 	private JComboBox selectTableDropdown;
+	//Events
+	private JDateChooser eventStartDateChooser;
+	private JDateChooser eventEndDateChooser;
+	private JTextField eventDescription;
+	private JTextField eventName;
+	private JTable eventTable;
 	
 	//error
 	private String error = null;
-	//Table
-	private List<Reservation> reservations;
+	//Data
+	private HashMap<Integer, Reservation> reservations;
 	private HashMap<Integer, Table> tables;
+	private HashMap<Integer, MenuItem> nonAlcoholicBeverages;
+	private HashMap<Integer, MenuItem> alcoholicBeverages;
+	private HashMap<Integer, MenuItem> desserts;
+	private HashMap<Integer, MenuItem> mainDishes;
+	private HashMap<Integer, MenuItem> appetizers;
+	private HashMap<Integer, Event> events;
+	//Table
 	private Integer selectedTable = -1;
 	private JTextField tablesToReserve;
-	private JTextField eventName;
-	private JTable eventTable;
-	private JTable menuTable;
+	
+	//Table Visualization
+	TableVisualizer tableVisualization;
+	private JTable appetizerTable;
+	private JTable mainTable;
+	private JTable dessertTable;
+	private JTable alcoholicBeverageTable;
+	private JTable nonAlcoholicBeverageTable;
 	
 
 	/**
@@ -149,8 +172,9 @@ public class RestoAppGUI extends JFrame {
 		
 		JMenuItem mntmNoneAlcoholicBeverage = new JMenuItem("None Alcoholic Beverage");
 		mnMenu.add(mntmNoneAlcoholicBeverage);
+
 		contentPane = new JPanel();
-		contentPane.setToolTipText("dessert\r\nappitizer");
+		contentPane.setToolTipText("");
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -184,17 +208,13 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(btnDelete);
 		
 		JButton btnAddTable = new JButton("Add table");
-		btnAddTable.setBounds(692, 322, 115, 29);
+		btnAddTable.setBounds(692, 291, 115, 29);
 		btnAddTable.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				addTableButtonActionPerformed(evt);
 			}
 		});
 		contentPane.add(btnAddTable);
-		
-		java2DRepresentationOfResto = new JTextPane();
-		java2DRepresentationOfResto.setBounds(0, 0, 541, 288);
-		contentPane.add(java2DRepresentationOfResto);
 		
 		JButton btnReservation = new JButton("Reservation");
 		btnReservation.addActionListener(new java.awt.event.ActionListener() {
@@ -282,7 +302,7 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(lblDate);
 		
 		JLabel lblNumberOfPerson = new JLabel("Number of person :");
-		lblNumberOfPerson.setBounds(234, 304, 93, 20);
+		lblNumberOfPerson.setBounds(234, 304, 151, 20);
 		contentPane.add(lblNumberOfPerson);
 		
 		reservationNumberOfPersonTextField = new JTextField();
@@ -291,7 +311,7 @@ public class RestoAppGUI extends JFrame {
 		reservationNumberOfPersonTextField.setColumns(10);
 		
 		JLabel lblPhoneNumber = new JLabel("phone number :");
-		lblPhoneNumber.setBounds(234, 346, 93, 20);
+		lblPhoneNumber.setBounds(234, 346, 151, 20);
 		contentPane.add(lblPhoneNumber);
 		
 		reservationPhoneNumberTextField = new JTextField();
@@ -300,7 +320,7 @@ public class RestoAppGUI extends JFrame {
 		reservationPhoneNumberTextField.setColumns(10);
 		
 		JLabel lblEmailAdress = new JLabel("email adress :");
-		lblEmailAdress.setBounds(234, 385, 97, 20);
+		lblEmailAdress.setBounds(234, 385, 151, 20);
 		contentPane.add(lblEmailAdress);
 		
 		reservationEmailTextField = new JTextField();
@@ -343,21 +363,17 @@ public class RestoAppGUI extends JFrame {
 		tablesToReserve.setColumns(10);
 		
 		JLabel lblEventName = new JLabel("Event Name:");
-		lblEventName.setBounds(10, 490, 72, 14);
+		lblEventName.setBounds(10, 496, 83, 14);
 		contentPane.add(lblEventName);
 		
 		eventName = new JTextField();
-		eventName.setBounds(80, 487, 130, 26);
+		eventName.setBounds(94, 490, 130, 26);
 		contentPane.add(eventName);
 		eventName.setColumns(10);
 		
 		JLabel lblDescription = new JLabel("Description :");
-		lblDescription.setBounds(10, 533, 60, 14);
+		lblDescription.setBounds(10, 533, 83, 14);
 		contentPane.add(lblDescription);
-		
-		JTextArea eventDescription = new JTextArea();
-		eventDescription.setBounds(80, 528, 130, 26);
-		contentPane.add(eventDescription);
 		
 		JLabel lblStartDate = new JLabel("Start Date :");
 		lblStartDate.setBounds(234, 490, 150, 14);
@@ -367,16 +383,21 @@ public class RestoAppGUI extends JFrame {
 		lblEndDate.setBounds(234, 533, 93, 14);
 		contentPane.add(lblEndDate);
 		
-		JDateChooser eventStartDateChooser = new JDateChooser();
+		eventStartDateChooser = new JDateChooser();
 		eventStartDateChooser.setBounds(308, 490, 115, 26);
 		contentPane.add(eventStartDateChooser);
 		
-		JDateChooser eventEndDateChooser = new JDateChooser();
+		eventEndDateChooser = new JDateChooser();
 		eventEndDateChooser.setBounds(308, 528, 115, 26);
 		contentPane.add(eventEndDateChooser);
 		
 		JButton btnAddEvent = new JButton("Add Event");
-		btnAddEvent.setBounds(433, 490, 108, 64);
+		btnAddEvent.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				addEventActionPerformed(evt);
+			}
+		});
+		btnAddEvent.setBounds(433, 490, 108, 26);
 		contentPane.add(btnAddEvent);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -394,38 +415,173 @@ public class RestoAppGUI extends JFrame {
 			}
 		) {
 			Class[] columnTypes = new Class[] {
-				Object.class, String.class, Object.class, Object.class
+				String.class, String.class, String.class, String.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
+			boolean[] columnEditables = new boolean[] {
+				false, false, false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
 		});
 		
-		JButton btnIssueBill = new JButton("Issue Bill");
-		btnIssueBill.setBounds(562, 384, 89, 23);
-		contentPane.add(btnIssueBill);
+		tableVisualization = new TableVisualizer();
+		tableVisualization.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		tableVisualization.setBounds(562, 369, 384, 302);
+		contentPane.add(tableVisualization);
+		
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setBounds(10, 8, 531, 273);
+		contentPane.add(tabbedPane);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(599, 490, 357, 181);
-		contentPane.add(scrollPane_1);
+		tabbedPane.addTab("Appetizer", null, scrollPane_1, null);
 		
-		menuTable = new JTable();
-		scrollPane_1.setViewportView(menuTable);
-		menuTable.setToolTipText("menu Items");
-		menuTable.setModel(new DefaultTableModel(
+		appetizerTable = new JTable();
+		appetizerTable.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
 				"Name", "Price"
 			}
 		) {
-			Class[] columnTypes1 = new Class[] {
-				String.class, Integer.class
+			Class[] columnTypes = new Class[] {
+				String.class, Double.class
 			};
-			public Class getColumnClass(int columnIndex1) {
-				return columnTypes1[columnIndex1];
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+			boolean[] columnEditables = new boolean[] {
+				false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
 			}
 		});
+		
+		scrollPane_1.setViewportView(appetizerTable);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		tabbedPane.addTab("Main", null, scrollPane_2, null);
+		
+		mainTable = new JTable();
+		mainTable.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Name", "Price"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				String.class, Double.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+			boolean[] columnEditables = new boolean[] {
+				false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		scrollPane_2.setViewportView(mainTable);
+		
+		JScrollPane scrollPane_3 = new JScrollPane();
+		tabbedPane.addTab("Dessert", null, scrollPane_3, null);
+		
+		dessertTable = new JTable();
+		dessertTable.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Name", "Price"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				String.class, Double.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+			boolean[] columnEditables = new boolean[] {
+				false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		scrollPane_3.setViewportView(dessertTable);
+		
+		JScrollPane scrollPane_4 = new JScrollPane();
+		tabbedPane.addTab("Alcoholic Beverage", null, scrollPane_4, null);
+		
+		alcoholicBeverageTable = new JTable();
+		alcoholicBeverageTable.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Name", "Price"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				String.class, Double.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+			boolean[] columnEditables = new boolean[] {
+				false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		scrollPane_4.setViewportView(alcoholicBeverageTable);
+		
+		JScrollPane scrollPane_5 = new JScrollPane();
+		tabbedPane.addTab("Non-Alcoholic Beverage", null, scrollPane_5, null);
+		
+		nonAlcoholicBeverageTable = new JTable();
+		nonAlcoholicBeverageTable.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Name", "Price"
+			}
+		) {
+
+			Class[] columnTypes = new Class[] {
+				String.class, Double.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+			boolean[] columnEditables = new boolean[] {
+				false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		scrollPane_5.setViewportView(nonAlcoholicBeverageTable);
+		
+		JButton btnDeleteEvent = new JButton("Delete Event");
+		btnDeleteEvent.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				deleteEventActionPerformed(arg0);
+			}
+		});
+		btnDeleteEvent.setBounds(433, 529, 108, 25);
+		contentPane.add(btnDeleteEvent);
+		
+		eventDescription = new JTextField();
+		eventDescription.setColumns(10);
+		eventDescription.setBounds(94, 527, 130, 26);
+		contentPane.add(eventDescription);
 	}
 
 
@@ -465,19 +621,142 @@ public class RestoAppGUI extends JFrame {
 				index++;
 			}
 			selectedTable = -1;
-			index = 0;
 			selectTableDropdown.setSelectedIndex(selectedTable);
-			reservations = new ArrayList<Reservation>();
+			//update reservations:
+			index = 0;
+			reservations = new HashMap<Integer, Reservation>();
 			for(Reservation reservation : RestoApplication.getRestoApp().getReservations()) {
-				reservations.add(reservation);
-				System.out.println("Adding Reservation for date: "+reservation.getDate()+". time: "+reservation.getTime());
+				reservations.put(index, reservation);
+				//System.out.println("Adding Reservation for date: "+reservation.getDate()+". time: "+reservation.getTime());
 				index++;
 			}
-			
+			index = 0;
+			//update Tables:
+			tableVisualization.addTables(tables);
+			//Menu Display:			
+			ArrayList<MenuItem> AppetizerItems = (ArrayList<MenuItem>) RestoController.getMenuItems(MenuItem.ItemCategory.Appetizer);
+			ArrayList<MenuItem> mainItems = (ArrayList<MenuItem>) RestoController.getMenuItems(MenuItem.ItemCategory.Main);
+			ArrayList<MenuItem> dessertItems = (ArrayList<MenuItem>) RestoController.getMenuItems(MenuItem.ItemCategory.Dessert);
+			ArrayList<MenuItem> alcoholicItems = (ArrayList<MenuItem>) RestoController.getMenuItems(MenuItem.ItemCategory.AlcoholicBeverage);
+			ArrayList<MenuItem> nonAlcoholicItems = (ArrayList<MenuItem>) RestoController.getMenuItems(MenuItem.ItemCategory.NonAlcoholicBeverage);
+			//Clear Menu JTables:
+			((DefaultTableModel)appetizerTable.getModel()).setRowCount(0);
+			((DefaultTableModel)mainTable.getModel()).setRowCount(0);
+			((DefaultTableModel)dessertTable.getModel()).setRowCount(0);
+			((DefaultTableModel)alcoholicBeverageTable.getModel()).setRowCount(0);
+			((DefaultTableModel)nonAlcoholicBeverageTable.getModel()).setRowCount(0);
+			//populate Menu JTables:
+			populateAppetizerTable(AppetizerItems);
+			populateMainTable(mainItems);
+			populateDessertTable(dessertItems);
+			populateAlcoholicBeverageTable(alcoholicItems);
+			populateNonAlcoholicBeverageTable(nonAlcoholicItems);
+			//Events Display:
+			List<Event> restoEvents = RestoController.getEvents();
+			//Clear Event JTable:
+			((DefaultTableModel)eventTable.getModel()).setRowCount(0);
+			//populate Event JTable:
+			populateEventTable(restoEvents);
 		}
 	}
 	
 	
+	private void populateEventTable(List<Event> restoEvents) {
+		if(restoEvents != null) {
+			SimpleDateFormat df = new SimpleDateFormat("E, MMM-d-YYY");
+			DefaultTableModel model = (DefaultTableModel) eventTable.getModel();
+			events = new HashMap<Integer, Event>();
+			int index = 0;
+			for(Event event : restoEvents) {
+				if(event.getEndDate().getTime() < new Date().getTime()) {
+					try {
+						RestoController.removeEvent(event);
+					} catch (InvalidInputException e) {
+						System.out.println("Could not remove event.");
+					}
+					continue;
+				}
+				Object[] newData = {event.getNameOfEvent(), event.getDescription(), df.format(event.getStartDate()), df.format(event.getEndDate())};
+				model.addRow(newData);
+				events.put(index, event);
+				index++;
+			}
+		}
+	}
+
+
+
+	private void populateNonAlcoholicBeverageTable(ArrayList<MenuItem> nonAlcoholicItems) {
+		DefaultTableModel model = (DefaultTableModel) nonAlcoholicBeverageTable.getModel();
+		nonAlcoholicBeverages = new HashMap<Integer, MenuItem>();
+		int index = 0;
+		for(MenuItem item : nonAlcoholicItems) {
+			Object[] newData = {item.getName(), item.getCurrentPricedMenuItem().getPrice()};
+			model.addRow(newData);
+			nonAlcoholicBeverages.put(index, item);
+			index++;
+		}
+		
+	}
+
+
+
+	private void populateAlcoholicBeverageTable(ArrayList<MenuItem> alcoholicItems) {
+		DefaultTableModel model = (DefaultTableModel) alcoholicBeverageTable.getModel();
+		alcoholicBeverages = new HashMap<Integer, MenuItem>();
+		int index = 0;
+		for(MenuItem item : alcoholicItems) {
+			Object[] newData = {item.getName(), item.getCurrentPricedMenuItem().getPrice()};
+			model.addRow(newData);
+			alcoholicBeverages.put(index, item);
+			index++;
+		}
+	}
+
+
+
+	private void populateDessertTable(ArrayList<MenuItem> dessertItems) {
+		DefaultTableModel model = (DefaultTableModel) dessertTable.getModel();
+		desserts = new HashMap<Integer, MenuItem>();
+		int index = 0;
+		for(MenuItem item : dessertItems) {
+			Object[] newData = {item.getName(), item.getCurrentPricedMenuItem().getPrice()};
+			model.addRow(newData);
+			desserts.put(index, item);
+			index++;
+		}
+	}
+
+
+
+	private void populateMainTable(ArrayList<MenuItem> mainItems) {
+		DefaultTableModel model = (DefaultTableModel) mainTable.getModel();
+		mainDishes = new HashMap<Integer, MenuItem>();
+		int index = 0;
+		for(MenuItem item : mainItems) {
+			Object[] newData = {item.getName(), item.getCurrentPricedMenuItem().getPrice()};
+			model.addRow(newData);
+			mainDishes.put(index, item);
+			index++;
+		}		
+	}
+
+
+
+	private void populateAppetizerTable(ArrayList<MenuItem> appetizerItems) {
+			DefaultTableModel model = (DefaultTableModel) appetizerTable.getModel();
+			appetizers = new HashMap<Integer, MenuItem>();
+			int index = 0;
+			for(MenuItem item : appetizerItems) {
+				Object[] newData = {item.getName(), item.getCurrentPricedMenuItem().getPrice()};
+				model.addRow(newData);
+				appetizers.put(index, item);
+				index++;
+			}
+	}
+
+
+
 	private static void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
@@ -519,7 +798,7 @@ public class RestoAppGUI extends JFrame {
 
 	private void updateTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		// clear error message
-		error = null;
+		error = "";
 		
 		// call the controller
 		try {
@@ -609,6 +888,34 @@ public class RestoAppGUI extends JFrame {
 			}
 			
 		//update visuals
+		refreshData();
+	}
+	
+	private void addEventActionPerformed(ActionEvent evt) {
+		try {
+			RestoController.createEvent(eventName.getText(), 
+										eventDescription.getText(), 
+										new java.sql.Date(eventStartDateChooser.getDate().getTime()), 
+										new java.sql.Date(eventEndDateChooser.getDate().getTime()));
+			refreshData();
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		//System.out.println(df.format(eventStartDateChooser.getDate()));
+	}
+	
+	private void deleteEventActionPerformed(ActionEvent evt) {
+		int selectedEventRow = eventTable.getSelectedRow();
+		//System.out.println(selectedEventRow);
+		if (selectedEventRow != -1) {
+			Event selectedEvent = events.get(selectedEventRow);
+			try {
+				RestoController.removeEvent(selectedEvent);
+			} catch (InvalidInputException e) {
+				error = e.getMessage();
+			}
+		}
+		
 		refreshData();
 	}
 }
