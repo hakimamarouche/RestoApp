@@ -11,7 +11,9 @@ import ca.mcgill.ecse223.resto.model.Event;
 import ca.mcgill.ecse223.resto.model.Menu;
 import ca.mcgill.ecse223.resto.model.MenuItem;
 import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
+import ca.mcgill.ecse223.resto.model.Table.Status;
 import ca.mcgill.ecse223.resto.model.Order;
+import ca.mcgill.ecse223.resto.model.OrderItem;
 import ca.mcgill.ecse223.resto.model.PricedMenuItem;
 import ca.mcgill.ecse223.resto.model.Reservation;
 import ca.mcgill.ecse223.resto.model.RestoApp;
@@ -429,6 +431,60 @@ public class RestoController {
 		catch (RuntimeException e) {
 			throw new InvalidInputException(e.getMessage());
 		}
+	}
+	
+	public static List<OrderItem> getOrderItems(Table table) throws InvalidInputException{
+		Order lastOrder;
+		String error = "";
+		if (table == null) {
+			error = "error: Table not found.";
+			throw new InvalidInputException(error.trim());
+		}
+		RestoApp restoApp = RestoApplication.getRestoApp();
+		List<Table> currentTables = restoApp.getCurrentTables();
+
+		boolean current = currentTables.contains(table);
+		
+		if(current == false) {
+			error = "error: The table is available";
+			throw new InvalidInputException(error.trim());
+		}
+		Status status = table.getStatus();
+		
+		if(status == Status.Available) {
+			error = "error: The table is available";
+			throw new InvalidInputException(error.trim());
+		}
+		
+		lastOrder = null;
+		
+		if(table.numberOfOrders() > 0) {
+			lastOrder = table.getOrder(table.numberOfOrders()-1);
+		}
+		
+		else {
+			error = "The table has no order";
+			throw new InvalidInputException(error.trim());
+		}
+		
+		List<Seat> currentSeats = table.getCurrentSeats();
+		
+		List<OrderItem> result = new ArrayList<OrderItem>();
+		
+		for(Seat seat : currentSeats ) {
+			List<OrderItem> orderitems = seat.getOrderItems();
+			
+			for(OrderItem orderitem : orderitems ) {
+				Order order = orderitem.getOrder();
+				
+				if(lastOrder.equals(order) && !result.contains(orderitem)) {
+					result.add(orderitem);
+				}
+				
+			}
+		}
+		
+		return result;
 	}
 }
 
