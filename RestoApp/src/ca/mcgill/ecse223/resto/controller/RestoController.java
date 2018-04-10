@@ -393,16 +393,16 @@ public class RestoController {
 	
 	public static void addMenuItem(String name, ItemCategory category, double price) throws InvalidInputException {
 		String error = "";
-		if (name == null || name == "") {
-			error = "The name is empty";
+		if (name == null || name.isEmpty() || name.trim().isEmpty()) {
+			error = "The name is empty!";
 			throw new InvalidInputException(error.trim());
 		}
 		if (category == null) {
-			error = "No menu category was chosen";
+			error = "No menu category was chosen!";
 			throw new InvalidInputException(error.trim());
 		}
 		if (price <= 0) {
-			error = "the price entered is not positive";
+			error = "The price entered is not positive!";
 			throw new InvalidInputException(error.trim());
 		}
 		

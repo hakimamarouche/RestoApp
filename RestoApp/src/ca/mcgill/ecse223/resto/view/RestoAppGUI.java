@@ -97,6 +97,8 @@ public class RestoAppGUI extends JFrame {
 	private JTextField eventDescription;
 	private JTextField eventName;
 	private JTable eventTable;
+	//menu Items
+	private JComboBox<ItemCategory> selectMenuCategoryDropDown;
 	
 	//error
 	private String error = null;
@@ -112,7 +114,8 @@ public class RestoAppGUI extends JFrame {
 	//Table
 	private Integer selectedTable = -1;
 	private JTextField tablesToReserve;
-	
+	//Menu category
+	private Integer selectedCategory = -1;
 	//Table Visualization
 	TableVisualizer tableVisualization;
 	private JTable appetizerTable;
@@ -278,8 +281,6 @@ public class RestoAppGUI extends JFrame {
 		
 		
 		selectTableDropdown = new JComboBox();
-		selectTableDropdown.setModel(new DefaultComboBoxModel(new String[] {"select a table", "1", "2", "3", "4", "5", "6", "7"}));
-		selectTableDropdown.setToolTipText("");
 		selectTableDropdown.setBounds(657, 214, 65, 26);
 		selectTableDropdown.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -332,7 +333,7 @@ public class RestoAppGUI extends JFrame {
 		
 		errorMessage = new JLabel();
 		errorMessage.setForeground(new Color(255, 0, 0));
-		errorMessage.setBounds(548, 0, 398, 38);
+		errorMessage.setBounds(548, 0, 398, 48);
 		contentPane.add(errorMessage);
 		
 		reservationDateChooser = new JDateChooser();
@@ -585,12 +586,14 @@ public class RestoAppGUI extends JFrame {
 		eventDescription.setBounds(94, 527, 130, 26);
 		contentPane.add(eventDescription);
 		
-		JButton btnAddMenuItem = new JButton("Add Menu Item");
+		JButton btnAddMenuItem = new JButton("Add menu item");
+		btnAddMenuItem.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnAddMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
+			public void actionPerformed(ActionEvent evt) {
+				addMenuItemButtonActionPerformed(evt);
 			}
 		});
+		
 		btnAddMenuItem.setBounds(562, 291, 115, 29);
 		contentPane.add(btnAddMenuItem);
 		
@@ -613,7 +616,7 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(txtMenuItemPrice);
 		txtMenuItemPrice.setColumns(10);
 		
-		JComboBox selectMenuCategoryDropDown = new JComboBox();
+		selectMenuCategoryDropDown = new JComboBox();
 		selectMenuCategoryDropDown.setBounds(857, 108, 86, 20);
 		contentPane.add(selectMenuCategoryDropDown);
 		
@@ -664,6 +667,17 @@ public class RestoAppGUI extends JFrame {
 			}
 			selectedTable = -1;
 			selectTableDropdown.setSelectedIndex(selectedTable);
+			
+			//update MenuItemCategoryDropDown
+			selectMenuCategoryDropDown.removeAllItems();
+			index = 0;
+			for (ItemCategory itemCategory : ItemCategory.values())  {
+				selectMenuCategoryDropDown.addItem(itemCategory);
+				index++;
+			}
+			selectedCategory = -1;
+			selectMenuCategoryDropDown.setSelectedIndex(selectedCategory);
+			
 			//update reservations:
 			index = 0;
 			reservations = new HashMap<Integer, Reservation>();
@@ -958,6 +972,23 @@ public class RestoAppGUI extends JFrame {
 			}
 		}
 		
+		refreshData();
+	}
+
+	private void addMenuItemButtonActionPerformed(ActionEvent evt) {
+		// clear error message
+		error = null;
+
+		// call the controller
+		try {
+			RestoController.addMenuItem(
+					txtMenuItemName.getText(), 
+					(ItemCategory)selectMenuCategoryDropDown.getSelectedItem(), 
+					Double.parseDouble(txtMenuItemPrice.getText()));
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		// update visuals
 		refreshData();
 	}
 }
