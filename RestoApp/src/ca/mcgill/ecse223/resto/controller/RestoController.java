@@ -486,6 +486,72 @@ public class RestoController {
 		
 		return result;
 	}
+	
+	
+public static void cancelOrderItem(OrderItem orderItem) throws InvalidInputException{
+		
+		String error = "";
+		if (orderItem == null) {
+			error = "no ordered Item selected";
+			throw new InvalidInputException(error.trim());
+		}
+		
+
+		 	
+		List<Seat> seats= orderItem.getSeats();
+		Order order = orderItem.getOrder();
+		List<Table> tables = new ArrayList<Table>();
+		
+		for (Seat seat : seats) {
+			Table table = seat.getTable();
+			
+			Order lastOrder=null;
+			
+			if(table.numberOfOrders()>0) {
+				lastOrder= table.getOrder(table.numberOfOrders()-1);
+			} else {
+				error=" Order doesn't exist";
+				throw new InvalidInputException(error.trim());
+			}
+		
+			if (lastOrder.equals(order) && !tables.contains(table)) {
+				tables.add(table);
+			}
+			
+		}
+		for( Table table :tables) {
+			table.cancelOrderItem(orderItem);
+		}
+		RestoApplication.save();
+	}
+
+
+
+
+public static void cancelOrder(Table table) throws InvalidInputException {
+		
+		String error = "";
+		if (table == null) {
+			error = "no table selected";
+			throw new InvalidInputException(error.trim());
+		}	
+			RestoApp r = RestoApplication.getRestoApp();
+			List<Table> currentTables= r.getCurrentTables();
+		
+			boolean current = currentTables.contains(table);
+			if(current == false) {
+				error = "table does not exist.";
+				throw new InvalidInputException(error.trim());
+			}else {
+			
+				table.cancelOrder();
+			}
+			RestoApplication.save();
+			
+		
+	}
+	
+	
 }
 
 
