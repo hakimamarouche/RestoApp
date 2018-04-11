@@ -433,6 +433,33 @@ public class RestoController {
 		}
 	}
 	
+	public static void removeMenuItem(MenuItem menuItem) throws InvalidInputException {
+		String error = "";
+		if (menuItem == null ) {
+			error = "No menu item was selected!";
+			throw new InvalidInputException(error.trim());
+		}
+		
+		/*boolean current = menuItem.hasCurrentPricedMenuItem();
+		if (current) {
+			error = "this menu item is not current!";
+		}*/
+		
+		menuItem.setCurrentPricedMenuItem(null);
+		
+		/*if (error.length() > 0) {
+			throw new InvalidInputException(error.trim());
+		}*/
+		
+		try {
+			RestoApplication.save();
+		}
+		catch (RuntimeException e) {
+			throw new InvalidInputException(e.getMessage());
+		}
+		
+	}
+	
 	public static List<OrderItem> getOrderItems(Table table) throws InvalidInputException{
 		Order lastOrder;
 		String error = "";

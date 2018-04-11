@@ -125,6 +125,7 @@ public class RestoAppGUI extends JFrame {
 	private JTable nonAlcoholicBeverageTable;
 	private JTextField txtMenuItemName;
 	private JTextField txtMenuItemPrice;
+	protected Object menuItemSelected;
 	
 
 	/**
@@ -444,6 +445,12 @@ public class RestoAppGUI extends JFrame {
 		tabbedPane.addTab("Appetizer", null, scrollPane_1, null);
 		
 		appetizerTable = new JTable();
+		appetizerTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				menuItemSelected = appetizers.get(appetizerTable.getSelectedRow());
+			}
+		});
 		appetizerTable.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -471,6 +478,12 @@ public class RestoAppGUI extends JFrame {
 		tabbedPane.addTab("Main", null, scrollPane_2, null);
 		
 		mainTable = new JTable();
+		mainTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				menuItemSelected = mainDishes.get(mainTable.getSelectedRow());
+			}
+		});
 		mainTable.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -497,6 +510,12 @@ public class RestoAppGUI extends JFrame {
 		tabbedPane.addTab("Dessert", null, scrollPane_3, null);
 		
 		dessertTable = new JTable();
+		dessertTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				menuItemSelected = desserts.get(dessertTable.getSelectedRow());
+			}
+		});
 		dessertTable.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -523,6 +542,12 @@ public class RestoAppGUI extends JFrame {
 		tabbedPane.addTab("Alcoholic Beverage", null, scrollPane_4, null);
 		
 		alcoholicBeverageTable = new JTable();
+		alcoholicBeverageTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				menuItemSelected = alcoholicBeverages.get(alcoholicBeverageTable.getSelectedRow());
+			}
+		});
 		alcoholicBeverageTable.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -549,6 +574,12 @@ public class RestoAppGUI extends JFrame {
 		tabbedPane.addTab("Non-Alcoholic Beverage", null, scrollPane_5, null);
 		
 		nonAlcoholicBeverageTable = new JTable();
+		nonAlcoholicBeverageTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				menuItemSelected = nonAlcoholicBeverages.get(nonAlcoholicBeverageTable.getSelectedRow());
+			}
+		});
 		nonAlcoholicBeverageTable.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
@@ -627,6 +658,16 @@ public class RestoAppGUI extends JFrame {
 		JLabel lblMenuCategory = new JLabel("Menu Category:");
 		lblMenuCategory.setBounds(756, 108, 99, 20);
 		contentPane.add(lblMenuCategory);
+		
+		JButton btnDeleteMenuItem = new JButton("Delete Menu Item");
+		btnDeleteMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				deleteMenuItemButtonActionPerformed(arg0);
+			}
+		});
+		btnDeleteMenuItem.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		btnDeleteMenuItem.setBounds(822, 291, 115, 29);
+		contentPane.add(btnDeleteMenuItem);
 	}
 
 
@@ -1006,4 +1047,25 @@ public class RestoAppGUI extends JFrame {
 		// update visuals
 		refreshData();
 	}
+	
+	private void deleteMenuItemButtonActionPerformed(ActionEvent evt) {
+		// clear error message
+		error = "";
+		
+		// call the controller
+			try {
+
+				RestoController.removeMenuItem((MenuItem)menuItemSelected);
+			} catch (InvalidInputException e) {
+				error = e.getMessage();
+			}
+		
+		// update visuals
+		refreshData();
+	}
+	
+    protected void initDetail(int selectedRow) {
+    	menuItemSelected = appetizers.get(selectedRow);
+    }
+	
 }
