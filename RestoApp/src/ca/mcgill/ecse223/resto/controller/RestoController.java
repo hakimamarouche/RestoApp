@@ -7,6 +7,7 @@ import java.util.List;
 
 import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.application.RestoApplication;
+import ca.mcgill.ecse223.resto.model.Bill;
 import ca.mcgill.ecse223.resto.model.Event;
 import ca.mcgill.ecse223.resto.model.Menu;
 import ca.mcgill.ecse223.resto.model.MenuItem;
@@ -456,5 +457,96 @@ public class RestoController {
 			throw new InvalidInputException(e.getMessage());
 		}
 		
+	}
+	
+	public static void issueBill(List<Seat> seats) throws InvalidInputException {
+		String error = "";
+		if (seats == null || seats.isEmpty()) {
+			error = "No seat was selected!";
+			throw new InvalidInputException(error.trim());
+		}
+		
+		RestoApp r = RestoApplication.getRestoApp();
+		List<Table> currentTables = r.getCurrentTables(); 
+		Order comparedOrder = null;
+		
+		Order lastOrder = null;
+		for (Seat seat : seats) {
+			Table table = seat.getTable();
+			boolean current = currentTables.contains(table);
+			if (!current) {
+				error = "There is no current table for the selected seat(s)!";
+				throw new InvalidInputException(error.trim());
+			}
+			List<Seat> currentSeats = table.getCurrentSeats();
+			current = currentSeats.contains(seat);
+			if (!current) {
+				error = "There is no current table for the selected seat(s)!";
+				throw new InvalidInputException(error.trim());
+			}
+			
+			if (lastOrder == null) {
+				if(table.numberOfOrders() > 0) {
+					lastOrder = table.getOrder(table.numberOfOrders()-1);
+				} 
+				else {
+					error = "One of the tables for the associated seats does not have an orde!";
+					throw new InvalidInputException(error.trim());
+				}
+			}
+			else {
+
+				if (table.numberOfOrders() > 0) {
+					comparedOrder = table.getOrder(table.numberOfOrders()-1);
+				}
+				else {
+					error = "One of the tables for the associated seats does not have an order!";
+					throw new InvalidInputException(error.trim());
+				}
+			}
+			if (!comparedOrder.equals(lastOrder)) {
+				error = "One of the tables for the associated seats has a duplicated order! please fix the issue.";
+				throw new InvalidInputException(error.trim());
+			}
+			
+			if (lastOrder == null) {
+				error = "One of the tables for the associated seats does not have an order!";
+				throw new InvalidInputException(error.trim());
+			}
+			
+			boolean billCreated = false;
+			Bill newBill = null;
+			
+			for (Seat seat1 : seats) {
+				Table table1 = seat.getTable();
+				
+				if (billCreated) {
+					table1.addToBill(newBill, seat1);
+				}
+				else {
+					Bill lastBill = null;
+					if (lastOrder.numberOfBills() > 0) {
+						lastBill = lastOrder.getBill(lastOrder.numberOfBills()-1);
+					}
+					if (lastOrder.numberOfBills() > 0 && !lastOrder.getBill(lastOrder.numberOfBills()-1).equals(lastBill)) {
+						billCreated = true;
+						newBill = lastOrder.getBill(lastOrder.numberOfBills()-1);
+					}
+				}
+			}
+			
+			if (!billCreated) {
+				error = "Oops something went wrong! Please try again";
+				throw new InvalidInputException(error.trim());
+			}
+			
+			try {
+				RestoApplication.save();
+			}
+			catch (RuntimeException e) {
+				throw new InvalidInputException(e.getMessage());
+			}
+			
+		}
 	}
 }
