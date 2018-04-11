@@ -590,7 +590,7 @@ public class RestoAppGUI extends JFrame {
 		btnAddMenuItem.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		btnAddMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				addMenuItemButtonActionPerformed(evt);
+					addMenuItemButtonActionPerformed(evt);
 			}
 		});
 		
@@ -656,6 +656,8 @@ public class RestoAppGUI extends JFrame {
 			tableWidthTextField.setText("");
 			tableLengthTextField.setText("");
 			tableNumberOfSeatsTextField.setText("");
+			txtMenuItemName.setText("");
+			txtMenuItemPrice.setText("");
 			//update table Dropdown
 			tables = new HashMap<Integer, Table>();
 			selectTableDropdown.removeAllItems();
@@ -977,17 +979,30 @@ public class RestoAppGUI extends JFrame {
 
 	private void addMenuItemButtonActionPerformed(ActionEvent evt) {
 		// clear error message
-		error = null;
+		error = "";
+
+		double price = 0;
+		try {
+			price = Double.parseDouble(txtMenuItemPrice.getText());
+		}
+		catch (NumberFormatException e) {
+			error = "The price needs to be a numerical value!";
+		}
+		error.trim();
 
 		// call the controller
-		try {
-			RestoController.addMenuItem(
-					txtMenuItemName.getText(), 
-					(ItemCategory)selectMenuCategoryDropDown.getSelectedItem(), 
-					Double.parseDouble(txtMenuItemPrice.getText()));
-		} catch (InvalidInputException e) {
-			error = e.getMessage();
+		if (error.length() == 0) {
+			try {
+
+				RestoController.addMenuItem(
+						txtMenuItemName.getText(), 
+						(ItemCategory)selectMenuCategoryDropDown.getSelectedItem(), 
+						price);
+			} catch (InvalidInputException e) {
+				error = e.getMessage();
+			}
 		}
+
 		// update visuals
 		refreshData();
 	}
