@@ -150,34 +150,6 @@ public class RestoAppGUI extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Resto App");
 		setBounds(100, 100, 972, 742);
-		
-		JMenuBar menuBar = new JMenuBar();
-		setJMenuBar(menuBar);
-		
-		JMenu mnMenu = new JMenu("Menu Categories");
-		mnMenu.setHorizontalAlignment(SwingConstants.RIGHT);
-		mnMenu.setForeground(new Color(0, 0, 0));
-		menuBar.add(mnMenu);
-		
-		JMenuItem mntmAppetizer = new JMenuItem("Appetizer");
-		mnMenu.add(mntmAppetizer);
-		mnMenu.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				
-			}
-		});
-		
-		JMenuItem mntmMain = new JMenuItem("Main");
-		mnMenu.add(mntmMain);
-		
-		JMenuItem mntmDessert = new JMenuItem("Dessert");
-		mnMenu.add(mntmDessert);
-		
-		JMenuItem mntmAlcholo = new JMenuItem("Alcoholic Beverage");
-		mnMenu.add(mntmAlcholo);
-		
-		JMenuItem mntmNoneAlcoholicBeverage = new JMenuItem("None Alcoholic Beverage");
-		mnMenu.add(mntmNoneAlcoholicBeverage);
 
 		contentPane = new JPanel();
 		contentPane.setToolTipText("");
