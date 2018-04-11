@@ -39,8 +39,8 @@ public class RestoController {
 			throw new InvalidInputException(error.trim());
 		}
 		RestoApp r = RestoApplication.getRestoApp();
-		Event newEvent = new Event(nameOfEvent, description, startDate, endDate, r);
-		r.addEvent(newEvent);
+		new Event(nameOfEvent, description, startDate, endDate, r);
+		//r.addEvent(newEvent);
 		RestoApplication.save();
 	}
 	
