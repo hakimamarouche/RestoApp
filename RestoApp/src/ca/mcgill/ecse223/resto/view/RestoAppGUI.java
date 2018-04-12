@@ -723,6 +723,18 @@ public class RestoAppGUI extends JFrame {
 		JButton btnDisplayOrder = new JButton("Display Order");
 		btnDisplayOrder.setBounds(952, 289, 130, 29);
 		contentPane.add(btnDisplayOrder);
+		
+		JButton btnDeleteOrderItem = new JButton("delete order Item");
+		btnDeleteOrderItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnDeleteOrderItem.setBounds(952, 338, 155, 45);
+		contentPane.add(btnDeleteOrderItem);
+		
+		JButton btnDeleteTableOrder = new JButton("Delete table order");
+		btnDeleteTableOrder.setBounds(953, 397, 164, 29);
+		contentPane.add(btnDeleteTableOrder);
 	}
 	
 
