@@ -104,6 +104,7 @@ public class RestoAppGUI extends JFrame {
 	protected JComboBox selectSeatDropdown;
 	private Integer selectedSeatIndex;
 	protected Seat selectedSeatObject;
+	protected Integer selectedSeatIndexForTable;
 	
 	//error
 	private String error = null;
@@ -116,7 +117,8 @@ public class RestoAppGUI extends JFrame {
 	private HashMap<Integer, MenuItem> mainDishes;
 	private HashMap<Integer, MenuItem> appetizers;
 	private HashMap<Integer, Event> events;
-	protected HashMap<Integer, Seat> seats;
+	protected HashMap<Integer, Seat> seatsDropDown;
+	private HashMap<Integer, Seat> seatsInTable;
 	//Table
 	private Integer selectedTable = -1;
 	private JTextField tablesToReserve;
@@ -271,11 +273,11 @@ public class RestoAppGUI extends JFrame {
 				
 				//update seat Dropdown
 				if (selectedTable >= 0) {
-					seats = new HashMap<Integer, Seat>();
+					seatsDropDown = new HashMap<Integer, Seat>();
 					selectSeatDropdown.removeAllItems();
 					Integer index = 0;
 					for (Seat seat : tables.get(selectedTable).getSeats()) {
-						seats.put(index, seat);
+						seatsDropDown.put(index, seat);
 						selectSeatDropdown.addItem("seat " + (index+1));
 						index++;
 					}
@@ -647,7 +649,7 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(selectMenuCategoryDropDown);
 		
 		JLabel lblSelectATable = new JLabel("Select a table:");
-		lblSelectATable.setBounds(562, 239, 91, 26);
+		lblSelectATable.setBounds(569, 230, 83, 14);
 		contentPane.add(lblSelectATable);
 		
 		JLabel lblMenuCategory = new JLabel("Menu Category:");
@@ -665,11 +667,17 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(btnDeleteMenuItem);
 		
 		JLabel lblSelectSeat = new JLabel("Select a seat:");
-		lblSelectSeat.setBounds(572, 266, 81, 14);
+		lblSelectSeat.setBounds(572, 262, 81, 14);
 		contentPane.add(lblSelectSeat);
 		
 		selectSeatDropdown = new JComboBox();
 		selectSeatDropdown.setBounds(657, 258, 65, 20);
+		selectSeatDropdown.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				JComboBox<String> cb = (JComboBox<String>) evt.getSource();
+				selectedSeatIndex = cb.getSelectedIndex();
+			}
+		});
 		contentPane.add(selectSeatDropdown);
 		
 		
@@ -682,7 +690,7 @@ public class RestoAppGUI extends JFrame {
 		tableSeat.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				selectedSeatObject = seats.get(tableSeat.getSelectedRow());
+				selectedSeatObject = seatsDropDown.get(tableSeat.getSelectedRow());
 			}
 		});
 		tableSeat.setModel(new DefaultTableModel(
@@ -710,7 +718,7 @@ public class RestoAppGUI extends JFrame {
 		JButton btnAddSeatToTable = new JButton("+");
 		btnAddSeatToTable.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				addSeatToTable(seatsDropDown.get(selectedSeatIndex));
 			}
 		});
 		btnAddSeatToTable.setBounds(732, 245, 44, 14);
@@ -719,6 +727,15 @@ public class RestoAppGUI extends JFrame {
 		JButton btnRemoveSeatFromTable = new JButton("-");
 		btnRemoveSeatFromTable.setBounds(733, 264, 43, 14);
 		contentPane.add(btnRemoveSeatFromTable);
+		
+		JButton btnIssueBill = new JButton("Issue Bill");
+		btnIssueBill.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				issueBillButtonActionPerformed(arg0);
+			}
+		});
+		btnIssueBill.setBounds(823, 163, 89, 23);
+		contentPane.add(btnIssueBill);
 	}
 	
 
@@ -795,6 +812,7 @@ public class RestoAppGUI extends JFrame {
 			((DefaultTableModel)dessertTable.getModel()).setRowCount(0);
 			((DefaultTableModel)alcoholicBeverageTable.getModel()).setRowCount(0);
 			((DefaultTableModel)nonAlcoholicBeverageTable.getModel()).setRowCount(0);
+			((DefaultTableModel)tableSeat.getModel()).setRowCount(0);
 			//populate Menu JTables:
 			populateAppetizerTable(AppetizerItems);
 			populateMainTable(mainItems);
@@ -903,6 +921,14 @@ public class RestoAppGUI extends JFrame {
 				appetizers.put(index, item);
 				index++;
 			}
+	}
+	
+	private void addSeatToTable(Seat seat) {
+		DefaultTableModel model = (DefaultTableModel) tableSeat.getModel();
+		seatsInTable = new HashMap<Integer, Seat>();
+		Object[] newData = {tables.get(selectedTable).getNumber(), (selectedSeatIndex+1)};
+		model.addRow(newData);
+		seatsInTable.put(model.getRowCount()-1, seat);
 	}
 
 
@@ -1107,6 +1133,23 @@ public class RestoAppGUI extends JFrame {
 			try {
 
 				RestoController.removeMenuItem((MenuItem)menuItemSelected);
+			} catch (InvalidInputException e) {
+				error = e.getMessage();
+			}
+		
+		// update visuals
+		refreshData();
+	}
+	
+	private void issueBillButtonActionPerformed(ActionEvent evt) {
+		// clear error message
+		error = "";
+		
+		List<Seat> seatList = new ArrayList<Seat>(seatsInTable.values());
+		
+		// call the controller
+			try {
+				RestoController.issueBill(seatList);
 			} catch (InvalidInputException e) {
 				error = e.getMessage();
 			}

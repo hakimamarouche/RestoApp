@@ -606,7 +606,7 @@ public class RestoController {
 					lastOrder = table.getOrder(table.numberOfOrders()-1);
 				} 
 				else {
-					error = "One of the tables for the associated seats does not have an orde!";
+					error = "One of the tables for the associated seats does not have an order!";
 					throw new InvalidInputException(error.trim());
 				}
 			}
