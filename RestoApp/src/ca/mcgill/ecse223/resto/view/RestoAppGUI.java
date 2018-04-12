@@ -160,7 +160,7 @@ public class RestoAppGUI extends JFrame {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Resto App");
-		setBounds(100, 100, 972, 742);
+		setBounds(100, 100, 1220, 810);
 
 		contentPane = new JPanel();
 		contentPane.setToolTipText("");
@@ -727,7 +727,7 @@ public class RestoAppGUI extends JFrame {
 		JButton btnRemoveSeatFromTable = new JButton("-");
 		btnRemoveSeatFromTable.setBounds(733, 264, 43, 14);
 		contentPane.add(btnRemoveSeatFromTable);
-		
+
 		JButton btnIssueBill = new JButton("Issue Bill");
 		btnIssueBill.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -736,6 +736,22 @@ public class RestoAppGUI extends JFrame {
 		});
 		btnIssueBill.setBounds(823, 163, 89, 23);
 		contentPane.add(btnIssueBill);
+
+		JButton btnDisplayOrder = new JButton("Display Order");
+		btnDisplayOrder.setBounds(952, 289, 130, 29);
+		contentPane.add(btnDisplayOrder);
+		
+		JButton btnDeleteOrderItem = new JButton("delete order Item");
+		btnDeleteOrderItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnDeleteOrderItem.setBounds(952, 338, 155, 45);
+		contentPane.add(btnDeleteOrderItem);
+		
+		JButton btnDeleteTableOrder = new JButton("Delete table order");
+		btnDeleteTableOrder.setBounds(953, 397, 164, 29);
+		contentPane.add(btnDeleteTableOrder);
 	}
 	
 
