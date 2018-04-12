@@ -13,11 +13,13 @@ import ca.mcgill.ecse223.resto.model.Menu;
 import ca.mcgill.ecse223.resto.model.MenuItem;
 import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
 import ca.mcgill.ecse223.resto.model.Order;
+import ca.mcgill.ecse223.resto.model.OrderItem;
 import ca.mcgill.ecse223.resto.model.PricedMenuItem;
 import ca.mcgill.ecse223.resto.model.Reservation;
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.model.Seat;
 import ca.mcgill.ecse223.resto.model.Table;
+import ca.mcgill.ecse223.resto.model.Table.Status;
 
 public class RestoController {
 	public RestoController() {
@@ -459,6 +461,123 @@ public class RestoController {
 		
 	}
 	
+	public static List<OrderItem> getOrderItems(Table table) throws InvalidInputException{
+		Order lastOrder;
+		String error = "";
+		if (table == null) {
+			error = "error: Table not found.";
+			throw new InvalidInputException(error.trim());
+		}
+		RestoApp restoApp = RestoApplication.getRestoApp();
+		List<Table> currentTables = restoApp.getCurrentTables();
+
+		boolean current = currentTables.contains(table);
+		
+		if(current == false) {
+			error = "error: The table is available";
+			throw new InvalidInputException(error.trim());
+		}
+		Status status = table.getStatus();
+		
+		if(status == Status.Available) {
+			error = "error: The table is available";
+			throw new InvalidInputException(error.trim());
+		}
+		
+		lastOrder = null;
+		
+		if(table.numberOfOrders() > 0) {
+			lastOrder = table.getOrder(table.numberOfOrders()-1);
+		}
+		
+		else {
+			error = "The table has no order";
+			throw new InvalidInputException(error.trim());
+		}
+		
+		List<Seat> currentSeats = table.getCurrentSeats();
+		
+		List<OrderItem> result = new ArrayList<OrderItem>();
+		
+		for(Seat seat : currentSeats ) {
+			List<OrderItem> orderitems = seat.getOrderItems();
+			
+			for(OrderItem orderitem : orderitems ) {
+				Order order = orderitem.getOrder();
+				
+				if(lastOrder.equals(order) && !result.contains(orderitem)) {
+					result.add(orderitem);
+				}
+				
+			}
+		}
+		
+		return result;
+	}
+	
+public static void cancelOrderItem(OrderItem orderItem) throws InvalidInputException{
+		
+		String error = "";
+		if (orderItem == null) {
+			error = "no ordered Item selected";
+			throw new InvalidInputException(error.trim());
+		}
+		
+
+		 	
+		List<Seat> seats= orderItem.getSeats();
+		Order order = orderItem.getOrder();
+		List<Table> tables = new ArrayList<Table>();
+		
+		for (Seat seat : seats) {
+			Table table = seat.getTable();
+			
+			Order lastOrder=null;
+			
+			if(table.numberOfOrders()>0) {
+				lastOrder= table.getOrder(table.numberOfOrders()-1);
+			} else {
+				error=" Order doesn't exist";
+				throw new InvalidInputException(error.trim());
+			}
+		
+			if (lastOrder.equals(order) && !tables.contains(table)) {
+				tables.add(table);
+			}
+			
+		}
+		for( Table table :tables) {
+			table.cancelOrderItem(orderItem);
+		}
+		RestoApplication.save();
+	}
+
+
+
+
+public static void cancelOrder(Table table) throws InvalidInputException {
+		
+		String error = "";
+		if (table == null) {
+			error = "no table selected";
+			throw new InvalidInputException(error.trim());
+		}	
+			RestoApp r = RestoApplication.getRestoApp();
+			List<Table> currentTables= r.getCurrentTables();
+		
+			boolean current = currentTables.contains(table);
+			if(current == false) {
+				error = "table does not exist.";
+				throw new InvalidInputException(error.trim());
+			}else {
+			
+				table.cancelOrder();
+			}
+			RestoApplication.save();
+			
+		
+	}
+
 	public static void issueBill(List<Seat> seats) throws InvalidInputException {
 		String error = "";
 		if (seats == null || seats.isEmpty()) {
@@ -495,7 +614,7 @@ public class RestoController {
 				}
 			}
 			else {
-
+	
 				if (table.numberOfOrders() > 0) {
 					comparedOrder = table.getOrder(table.numberOfOrders()-1);
 				}
@@ -549,4 +668,6 @@ public class RestoController {
 			
 		}
 	}
+
+	
 }
