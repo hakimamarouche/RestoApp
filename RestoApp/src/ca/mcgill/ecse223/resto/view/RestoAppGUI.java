@@ -680,7 +680,15 @@ public class RestoAppGUI extends JFrame {
 		});
 		contentPane.add(selectSeatDropdown);
 		
-		
+				JButton btnCreateOrder = new JButton("Create Order");
+		btnCreateOrder.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		btnCreateOrder.setBounds(780, 150, 115, 29);
+		contentPane.add(btnCreateOrder);
+		btnCreateOrder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
 		
 		JScrollPane scrollPaneSeat = new JScrollPane();
 		scrollPaneSeat.setBounds(786, 197, 151, 81);
