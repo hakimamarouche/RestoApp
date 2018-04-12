@@ -158,7 +158,7 @@ public class RestoAppGUI extends JFrame {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Resto App");
-		setBounds(100, 100, 972, 742);
+		setBounds(100, 100, 1220, 810);
 
 		contentPane = new JPanel();
 		contentPane.setToolTipText("");
@@ -719,6 +719,10 @@ public class RestoAppGUI extends JFrame {
 		JButton btnRemoveSeatFromTable = new JButton("-");
 		btnRemoveSeatFromTable.setBounds(733, 264, 43, 14);
 		contentPane.add(btnRemoveSeatFromTable);
+		
+		JButton btnDisplayOrder = new JButton("Display Order");
+		btnDisplayOrder.setBounds(952, 289, 130, 29);
+		contentPane.add(btnDisplayOrder);
 	}
 	
 
