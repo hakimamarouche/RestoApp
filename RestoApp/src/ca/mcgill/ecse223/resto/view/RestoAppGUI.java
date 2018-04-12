@@ -680,13 +680,13 @@ public class RestoAppGUI extends JFrame {
 		});
 		contentPane.add(selectSeatDropdown);
 		
-				JButton btnCreateOrder = new JButton("Create Order");
+					JButton btnCreateOrder = new JButton("Create Order");
 		btnCreateOrder.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		btnCreateOrder.setBounds(780, 150, 115, 29);
+		btnCreateOrder.setBounds(780, 135, 115, 29);
 		contentPane.add(btnCreateOrder);
 		btnCreateOrder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				createOrderButtonActionPerformed(arg0);
 			}
 		});
 		
@@ -1181,7 +1181,25 @@ public class RestoAppGUI extends JFrame {
 		// update visuals
 		refreshData();
 	}
+		private void createOrderButtonActionPerformed(ActionEvent evt) {
+		// clear error message
+		error = "";
 	
+		
+		// call the controller
+			try {
+				MenuItem menuItem = null;
+				List<Seat> seats = null;
+				int quantity = 0;
+				RestoController.orderMenuItem(menuItem, quantity, seats);
+			} 
+			catch (InvalidInputException e) {
+				error = e.getMessage();
+			}
+		
+		// update visuals
+		refreshData();
+	}
     protected void initDetail(int selectedRow) {
     	menuItemSelected = appetizers.get(selectedRow);
     }
