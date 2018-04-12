@@ -11,6 +11,7 @@ import ca.mcgill.ecse223.resto.application.RestoApplication;
 import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.controller.RestoController;
 import ca.mcgill.ecse223.resto.model.Reservation;
+import ca.mcgill.ecse223.resto.model.Seat;
 import ca.mcgill.ecse223.resto.model.Table;
 import ca.mcgill.ecse223.resto.model.Event;
 import ca.mcgill.ecse223.resto.model.MenuItem;
@@ -99,6 +100,10 @@ public class RestoAppGUI extends JFrame {
 	private JTable eventTable;
 	//menu Items
 	private JComboBox<ItemCategory> selectMenuCategoryDropDown;
+	//seats for issue bill
+	protected JComboBox selectSeatDropdown;
+	private Integer selectedSeatIndex;
+	protected Seat selectedSeatObject;
 	
 	//error
 	private String error = null;
@@ -111,6 +116,7 @@ public class RestoAppGUI extends JFrame {
 	private HashMap<Integer, MenuItem> mainDishes;
 	private HashMap<Integer, MenuItem> appetizers;
 	private HashMap<Integer, Event> events;
+	protected HashMap<Integer, Seat> seats;
 	//Table
 	private Integer selectedTable = -1;
 	private JTextField tablesToReserve;
@@ -126,6 +132,9 @@ public class RestoAppGUI extends JFrame {
 	private JTextField txtMenuItemName;
 	private JTextField txtMenuItemPrice;
 	protected Object menuItemSelected;
+	private JTable tableSeat;
+
+
 	
 
 	/**
@@ -158,7 +167,7 @@ public class RestoAppGUI extends JFrame {
 		contentPane.setLayout(null);
 		
 		JButton btnMoveTable = new JButton("Move table");
-		btnMoveTable.setBounds(822, 251, 115, 29);
+		btnMoveTable.setBounds(692, 329, 115, 29);
 		btnMoveTable.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				moveTableButtonActionPerformed(evt);
@@ -167,7 +176,7 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(btnMoveTable);
 		
 		JButton btnUpdateTable = new JButton("Update table");
-		btnUpdateTable.setBounds(692, 251, 115, 29);
+		btnUpdateTable.setBounds(692, 289, 115, 29);
 		btnUpdateTable.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnUpdateTable.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -176,17 +185,17 @@ public class RestoAppGUI extends JFrame {
 		});
 		contentPane.add(btnUpdateTable);
 		
-		JButton btnDelete = new JButton("Delete");
-		btnDelete.setBounds(562, 251, 115, 29);
-		btnDelete.addActionListener(new java.awt.event.ActionListener() {
+		JButton btnDeleteTable = new JButton("Delete table");
+		btnDeleteTable.setBounds(562, 291, 115, 29);
+		btnDeleteTable.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				deleteTableButtonActionPerformed(evt);
 			}
 		});
-		contentPane.add(btnDelete);
+		contentPane.add(btnDeleteTable);
 		
 		JButton btnAddTable = new JButton("Add table");
-		btnAddTable.setBounds(692, 291, 115, 29);
+		btnAddTable.setBounds(562, 329, 115, 29);
 		btnAddTable.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				addTableButtonActionPerformed(evt);
@@ -200,7 +209,7 @@ public class RestoAppGUI extends JFrame {
 				reserveButtonActionPerformed(evt);
 			}
 		});
-		btnReservation.setBounds(234, 425, 115, 29);
+		btnReservation.setBounds(234, 439, 115, 29);
 		contentPane.add(btnReservation);
 		
 		tableNumberTextField = new JTextPane();
@@ -254,59 +263,73 @@ public class RestoAppGUI extends JFrame {
 		
 		
 		selectTableDropdown = new JComboBox();
-		selectTableDropdown.setBounds(657, 214, 65, 26);
+		selectTableDropdown.setBounds(657, 227, 65, 20);
 		selectTableDropdown.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				JComboBox<String> cb = (JComboBox<String>) evt.getSource();
 				selectedTable = cb.getSelectedIndex();
+				
+				//update seat Dropdown
+				if (selectedTable >= 0) {
+					seats = new HashMap<Integer, Seat>();
+					selectSeatDropdown.removeAllItems();
+					Integer index = 0;
+					for (Seat seat : tables.get(selectedTable).getSeats()) {
+						seats.put(index, seat);
+						selectSeatDropdown.addItem("seat " + (index+1));
+						index++;
+					}
+					selectedSeatIndex = -1;
+					selectSeatDropdown.setSelectedIndex(selectedSeatIndex);
+				}
 			}
 		});
 		contentPane.add(selectTableDropdown);
 		
 		lblName = new JLabel("Name :");
-		lblName.setBounds(10, 304, 69, 20);
+		lblName.setBounds(10, 338, 69, 20);
 		contentPane.add(lblName);
 		
 		// for the name
 		reservationNameTextField = new JTextField();
-		reservationNameTextField.setBounds(80, 301, 130, 26);
+		reservationNameTextField.setBounds(80, 339, 130, 23);
 		contentPane.add(reservationNameTextField);
 		reservationNameTextField.setColumns(10);
 		
 		JLabel lblDate = new JLabel("Date :");
-		lblDate.setBounds(10, 346, 43, 20);
+		lblDate.setBounds(10, 381, 43, 20);
 		contentPane.add(lblDate);
 		
 		JLabel lblNumberOfPerson = new JLabel("Number of person :");
-		lblNumberOfPerson.setBounds(234, 304, 151, 20);
+		lblNumberOfPerson.setBounds(234, 344, 151, 20);
 		contentPane.add(lblNumberOfPerson);
 		
 		reservationNumberOfPersonTextField = new JTextField();
-		reservationNumberOfPersonTextField.setBounds(395, 299, 146, 26);
+		reservationNumberOfPersonTextField.setBounds(395, 338, 146, 26);
 		contentPane.add(reservationNumberOfPersonTextField);
 		reservationNumberOfPersonTextField.setColumns(10);
 		
 		JLabel lblPhoneNumber = new JLabel("phone number :");
-		lblPhoneNumber.setBounds(234, 346, 151, 20);
+		lblPhoneNumber.setBounds(234, 376, 151, 20);
 		contentPane.add(lblPhoneNumber);
 		
 		reservationPhoneNumberTextField = new JTextField();
-		reservationPhoneNumberTextField.setBounds(395, 343, 146, 26);
+		reservationPhoneNumberTextField.setBounds(395, 373, 146, 26);
 		contentPane.add(reservationPhoneNumberTextField);
 		reservationPhoneNumberTextField.setColumns(10);
 		
 		JLabel lblEmailAdress = new JLabel("email adress :");
-		lblEmailAdress.setBounds(234, 385, 151, 20);
+		lblEmailAdress.setBounds(234, 408, 151, 20);
 		contentPane.add(lblEmailAdress);
 		
 		reservationEmailTextField = new JTextField();
-		reservationEmailTextField.setBounds(395, 382, 146, 26);
+		reservationEmailTextField.setBounds(395, 405, 146, 26);
 		contentPane.add(reservationEmailTextField);
 		reservationEmailTextField.setColumns(10);
 		
 		errorMessage = new JLabel();
 		errorMessage.setForeground(new Color(255, 0, 0));
-		errorMessage.setBounds(548, 0, 398, 48);
+		errorMessage.setBounds(10, 0, 936, 20);
 		contentPane.add(errorMessage);
 		
 		reservationDateChooser = new JDateChooser();
@@ -314,27 +337,27 @@ public class RestoAppGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		reservationDateChooser.setBounds(80, 341, 130, 28);
+		reservationDateChooser.setBounds(80, 373, 130, 28);
 		contentPane.add(reservationDateChooser);
 		
 		JLabel lblTime = new JLabel("Time :");
-		lblTime.setBounds(10, 388, 46, 14);
+		lblTime.setBounds(7, 412, 46, 14);
 		contentPane.add(lblTime);
 		
 		reservationTimeSpinner = new JSpinner();
 		reservationTimeSpinner.setModel(new SpinnerDateModel(new Date(), null, null, Calendar.HOUR_OF_DAY));
 		reservationTimeSpinner.setEditor(new JSpinner.DateEditor(reservationTimeSpinner,"HH:mm"));
-		reservationTimeSpinner.setBounds(80, 382, 130, 26);
+		reservationTimeSpinner.setBounds(80, 406, 130, 26);
 		contentPane.add(reservationTimeSpinner);
 		
 		JLabel lblTables = new JLabel("Tables :");
-		lblTables.setBounds(10, 432, 46, 14);
+		lblTables.setBounds(10, 446, 46, 14);
 		contentPane.add(lblTables);
 		
 		tablesToReserve = new JTextField();
 		tablesToReserve.setToolTipText("Table numbers, seperated by commas");
 		tablesToReserve.setText("1,2,3,4");
-		tablesToReserve.setBounds(80, 425, 130, 24);
+		tablesToReserve.setBounds(80, 441, 130, 24);
 		contentPane.add(tablesToReserve);
 		tablesToReserve.setColumns(10);
 		
@@ -410,41 +433,8 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(tableVisualization);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(10, 8, 531, 273);
+		tabbedPane.setBounds(10, 35, 531, 273);
 		contentPane.add(tabbedPane);
-		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		tabbedPane.addTab("Appetizer", null, scrollPane_1, null);
-		
-		appetizerTable = new JTable();
-		appetizerTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				menuItemSelected = appetizers.get(appetizerTable.getSelectedRow());
-			}
-		});
-		appetizerTable.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"Name", "Price"
-			}
-		) {
-			Class[] columnTypes = new Class[] {
-				String.class, Double.class
-			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-			boolean[] columnEditables = new boolean[] {
-				false, false
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
-		
-		scrollPane_1.setViewportView(appetizerTable);
 		
 		JScrollPane scrollPane_2 = new JScrollPane();
 		tabbedPane.addTab("Main", null, scrollPane_2, null);
@@ -542,6 +532,39 @@ public class RestoAppGUI extends JFrame {
 		});
 		scrollPane_4.setViewportView(alcoholicBeverageTable);
 		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		tabbedPane.addTab("Appetizer", null, scrollPane_1, null);
+		
+		appetizerTable = new JTable();
+		appetizerTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				menuItemSelected = appetizers.get(appetizerTable.getSelectedRow());
+			}
+		});
+		appetizerTable.setModel(new DefaultTableModel(
+			new Object[][] {
+			},
+			new String[] {
+				"Name", "Price"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				String.class, Double.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+			boolean[] columnEditables = new boolean[] {
+				false, false
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		
+		scrollPane_1.setViewportView(appetizerTable);
+		
 		JScrollPane scrollPane_5 = new JScrollPane();
 		tabbedPane.addTab("Non-Alcoholic Beverage", null, scrollPane_5, null);
 		
@@ -597,7 +620,7 @@ public class RestoAppGUI extends JFrame {
 			}
 		});
 		
-		btnAddMenuItem.setBounds(562, 291, 115, 29);
+		btnAddMenuItem.setBounds(822, 289, 115, 29);
 		contentPane.add(btnAddMenuItem);
 		
 		txtMenuItemName = new JTextField();
@@ -624,7 +647,7 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(selectMenuCategoryDropDown);
 		
 		JLabel lblSelectATable = new JLabel("Select a table:");
-		lblSelectATable.setBounds(562, 214, 91, 26);
+		lblSelectATable.setBounds(562, 239, 91, 26);
 		contentPane.add(lblSelectATable);
 		
 		JLabel lblMenuCategory = new JLabel("Menu Category:");
@@ -638,10 +661,66 @@ public class RestoAppGUI extends JFrame {
 			}
 		});
 		btnDeleteMenuItem.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		btnDeleteMenuItem.setBounds(822, 291, 115, 29);
+		btnDeleteMenuItem.setBounds(822, 329, 115, 29);
 		contentPane.add(btnDeleteMenuItem);
+		
+		JLabel lblSelectSeat = new JLabel("Select a seat:");
+		lblSelectSeat.setBounds(572, 266, 81, 14);
+		contentPane.add(lblSelectSeat);
+		
+		selectSeatDropdown = new JComboBox();
+		selectSeatDropdown.setBounds(657, 258, 65, 20);
+		contentPane.add(selectSeatDropdown);
+		
+		
+		
+		JScrollPane scrollPaneSeat = new JScrollPane();
+		scrollPaneSeat.setBounds(786, 197, 151, 81);
+		contentPane.add(scrollPaneSeat);
+		
+		tableSeat = new JTable();
+		tableSeat.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				selectedSeatObject = seats.get(tableSeat.getSelectedRow());
+			}
+		});
+		tableSeat.setModel(new DefaultTableModel(
+				new Object[][] {
+				},
+				new String[] {
+					"Table", "Seat"
+				}
+			) {
+				Class[] columnTypes = new Class[] {
+					String.class, Double.class
+				};
+				public Class getColumnClass(int columnIndex) {
+					return columnTypes[columnIndex];
+				}
+				boolean[] columnEditables = new boolean[] {
+					false, false
+				};
+				public boolean isCellEditable(int row, int column) {
+					return columnEditables[column];
+				}
+			});
+		scrollPaneSeat.setViewportView(tableSeat);
+		
+		JButton btnAddSeatToTable = new JButton("+");
+		btnAddSeatToTable.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
+		btnAddSeatToTable.setBounds(732, 245, 44, 14);
+		contentPane.add(btnAddSeatToTable);
+		
+		JButton btnRemoveSeatFromTable = new JButton("-");
+		btnRemoveSeatFromTable.setBounds(733, 264, 43, 14);
+		contentPane.add(btnRemoveSeatFromTable);
 	}
-
+	
 
 
 	
@@ -677,7 +756,7 @@ public class RestoAppGUI extends JFrame {
 			Integer index = 0;
 			for (Table table : RestoController.getTables()) {
 				tables.put(index, table);
-				selectTableDropdown.addItem("#" + table.getNumber());
+				selectTableDropdown.addItem("Table " + table.getNumber());
 				index++;
 			}
 			selectedTable = -1;
@@ -1039,5 +1118,4 @@ public class RestoAppGUI extends JFrame {
     protected void initDetail(int selectedRow) {
     	menuItemSelected = appetizers.get(selectedRow);
     }
-	
 }
