@@ -574,7 +574,66 @@ public class RestoController {
 
 
 	}
+	
+        public static void orderMenuItem (MenuItem menuItem, int quantity, List <Seat> seats) throws InvalidInputException {
+	
+	RestoApp r = RestoApplication.getRestoApp();
+	String error = "";
+	
+	boolean current = menuItem.hasPricedMenuItems();
+	
+	if (current == false) {
+		error = "Item does not exist.";
+		throw new InvalidInputException(error.trim());
+	}
+	
+	List<Table> currentTables = r.getCurrentTables();
+	for (Table table : currentTables) {
+		boolean currentTable = currentTables.contains(table);
+		if (currentTable == false) {
+			error = "Table: "+table.getNumber()+" does not exist.";
+			throw new InvalidInputException(error.trim());
+		}
+	}
+	
+	for (Seat seat : seats) {
+		Table table = seat.getTable();
+		boolean currentTable = currentTables.contains(table);
+		if (currentTable == false) {
+			error = "Table: " + table.getNumber()+" does not exist.";
+			throw new InvalidInputException(error.trim());
+		}
+		List<Seat> currentSeat = table.getSeats();
+		boolean currentSeats = currentSeat.contains(seat);
+		if (currentSeats == false) {
+			error = "Seat does not exist.";
+			throw new InvalidInputException(error.trim());
+		}
+	}
 
+	PricedMenuItem pmi = menuItem.getCurrentPricedMenuItem();
+	Order lastOrder=null;
+	boolean itemCreated = false;
+	OrderItem newItem = null;
+	OrderItem lastItem = null;
+	for (Seat seat : seats) {
+		
+		Table table = seat.getTable();
+		if (lastOrder.numberOfOrderItems() > 0 && !(lastOrder.getOrderItem(lastOrder.numberOfOrderItems()-1).equals(lastItem))) {
+			itemCreated = true;
+			newItem = lastOrder.getOrderItem(lastOrder.numberOfOrderItems()-1);
+		}
+		if (itemCreated == true) {
+			table.addToOrderItem(newItem, seat);
+		}
+		else {
+			table.orderItem(quantity, lastOrder, seat, pmi);
+		}	
+	}
+	
+	RestoApplication.save();
+}
+    
 	public static void issueBill(List<Seat> seats) throws InvalidInputException {
 		String error = "";
 		if (seats == null || seats.isEmpty()) {
