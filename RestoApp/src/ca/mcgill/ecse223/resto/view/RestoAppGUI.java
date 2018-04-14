@@ -135,6 +135,7 @@ public class RestoAppGUI extends JFrame {
 	private JTextField txtMenuItemPrice;
 	protected Object menuItemSelected;
 	private JTable tableSeat;
+	private JTextField textFieldMenuItemQuantity;
 
 
 	
@@ -682,7 +683,7 @@ public class RestoAppGUI extends JFrame {
 		
 					JButton btnCreateOrder = new JButton("Create Order");
 		btnCreateOrder.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		btnCreateOrder.setBounds(780, 135, 115, 29);
+		btnCreateOrder.setBounds(747, 169, 91, 20);
 		contentPane.add(btnCreateOrder);
 		btnCreateOrder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -742,7 +743,7 @@ public class RestoAppGUI extends JFrame {
 				issueBillButtonActionPerformed(arg0);
 			}
 		});
-		btnIssueBill.setBounds(823, 163, 89, 23);
+		btnIssueBill.setBounds(848, 168, 89, 21);
 		contentPane.add(btnIssueBill);
 
 		JButton btnDisplayOrder = new JButton("Display Order");
@@ -760,6 +761,15 @@ public class RestoAppGUI extends JFrame {
 		JButton btnDeleteTableOrder = new JButton("Delete table order");
 		btnDeleteTableOrder.setBounds(953, 397, 164, 29);
 		contentPane.add(btnDeleteTableOrder);
+		
+		JLabel lblItemQuantity = new JLabel("Item quantity:");
+		lblItemQuantity.setBounds(756, 139, 82, 14);
+		contentPane.add(lblItemQuantity);
+		
+		textFieldMenuItemQuantity = new JTextField();
+		textFieldMenuItemQuantity.setBounds(851, 133, 86, 20);
+		contentPane.add(textFieldMenuItemQuantity);
+		textFieldMenuItemQuantity.setColumns(10);
 	}
 	
 
@@ -1185,13 +1195,11 @@ public class RestoAppGUI extends JFrame {
 		// clear error message
 		error = "";
 	
+		List<Seat> seatList = new ArrayList<Seat>(seatsInTable.values());
 		
 		// call the controller
 			try {
-				MenuItem menuItem = null;
-				List<Seat> seats = null;
-				int quantity = 0;
-				RestoController.orderMenuItem(menuItem, quantity, seats);
+				RestoController.orderMenuItem((MenuItem)menuItemSelected, Integer.parseInt(textFieldMenuItemQuantity.getText()), seatList);
 			} 
 			catch (InvalidInputException e) {
 				error = e.getMessage();
