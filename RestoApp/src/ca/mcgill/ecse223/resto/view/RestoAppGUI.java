@@ -109,6 +109,7 @@ public class RestoAppGUI extends JFrame {
 	//error
 	private String error = null;
 	//Data
+	private List<Reservation> restoReservations;
 	private HashMap<Integer, Reservation> reservations;
 	private HashMap<Integer, Table> tables;
 	private HashMap<Integer, MenuItem> nonAlcoholicBeverages;
@@ -206,13 +207,13 @@ public class RestoAppGUI extends JFrame {
 		});
 		contentPane.add(btnAddTable);
 		
-		JButton btnReservation = new JButton("Reservation");
+		JButton btnReservation = new JButton("Create Reservation");
 		btnReservation.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				reserveButtonActionPerformed(evt);
 			}
 		});
-		btnReservation.setBounds(398, 411, 115, 29);
+		btnReservation.setBounds(237, 411, 151, 29);
 		contentPane.add(btnReservation);
 		
 		tableNumberTextField = new JTextPane();
@@ -788,6 +789,15 @@ public class RestoAppGUI extends JFrame {
 			}
 		});
 		scrollPane_6.setViewportView(reservationTable);
+		
+		JButton btnDeleteReservation = new JButton("Delete Reservation");
+		btnDeleteReservation.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				deleteReservationActionPerformed(e);
+			}
+		});
+		btnDeleteReservation.setBounds(397, 411, 147, 29);
+		contentPane.add(btnDeleteReservation);
 	}
 	
 
@@ -842,14 +852,11 @@ public class RestoAppGUI extends JFrame {
 			selectMenuCategoryDropDown.setSelectedIndex(selectedCategory);
 			
 			//update reservations:
-			index = 0;
-			reservations = new HashMap<Integer, Reservation>();
-			for(Reservation reservation : RestoApplication.getRestoApp().getReservations()) {
-				reservations.put(index, reservation);
-				//System.out.println("Adding Reservation for date: "+reservation.getDate()+". time: "+reservation.getTime());
-				index++;
-			}
-			index = 0;
+			restoReservations = RestoApplication.getRestoApp().getReservations();
+			((DefaultTableModel)reservationTable.getModel()).setRowCount(0);
+			populateReservationTable(restoReservations);
+			
+			
 			//update Tables:
 			tableVisualization.addTables(tables);
 			//Menu Display:			
@@ -881,6 +888,38 @@ public class RestoAppGUI extends JFrame {
 	}
 	
 	
+	private void populateReservationTable(List<Reservation> reservationsList) {
+		if (reservationsList != null && reservationsList.size() > 0) {
+			SimpleDateFormat df = new SimpleDateFormat("E, MMM-d-YYY HH:mm");
+			DefaultTableModel model = (DefaultTableModel) reservationTable.getModel();
+			reservations = new HashMap<Integer, Reservation>();
+			int index = 0;
+			for(Reservation reservation : restoReservations) {
+				if (reservation.getDate().getTime() < new Date().getTime()) {
+					try {
+						RestoController.removeReservation(reservation);
+					} catch (Exception e) {
+						System.out.println("Could not remove reservation");
+					}
+					continue;
+				}
+				String tableNumberList = "";
+				for (Table table : reservation.getTables()) {
+					tableNumberList += table.getNumber();
+					tableNumberList += ", ";
+				}
+				tableNumberList = tableNumberList.substring(0, tableNumberList.length() - 2);
+				Object[] newData = {reservation.getContactName(), df.format(reservation.getDate()), tableNumberList};
+				model.addRow(newData);
+				reservations.put(index, reservation);
+				index++;
+			}
+		}
+		
+	}
+
+
+
 	private void populateEventTable(List<Event> restoEvents) {
 		if(restoEvents != null) {
 			SimpleDateFormat df = new SimpleDateFormat("E, MMM-d-YYY");
@@ -1096,7 +1135,7 @@ public class RestoAppGUI extends JFrame {
 					//to get tables to reserve:
 					
 					List<String> tablesToReserveList = Arrays.asList(tablesToReserve.getText().split("\\s*,\\s*"));
-					
+					//System.out.print(tablesToReserveList.toString());
 					
 					RestoController.reserve(
 						tablesToReserveList,
@@ -1116,6 +1155,23 @@ public class RestoAppGUI extends JFrame {
 			}
 			
 		//update visuals
+		System.out.println("Refreshing data");
+		refreshData();
+	}
+	
+	private void deleteReservationActionPerformed(ActionEvent evt) {
+		int selectedEventRow = reservationTable.getSelectedRow();
+		//System.out.println(selectedEventRow);
+		if (selectedEventRow != -1) {
+			Reservation selectedReservation = reservations.get(selectedEventRow);
+			try {
+				//System.out.println(selectedReservation);
+				RestoController.removeReservation(selectedReservation);
+			} catch (InvalidInputException e) {
+				error = e.getMessage();
+			}
+		}
+		
 		refreshData();
 	}
 	
