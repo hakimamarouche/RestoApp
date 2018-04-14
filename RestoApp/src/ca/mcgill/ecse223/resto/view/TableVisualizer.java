@@ -41,6 +41,7 @@ public class TableVisualizer extends JPanel {
 				}
 				g2d.drawRect(tableX, tableY, tableWidth, tableHeight);
 				g2d.drawString(Integer.toString(table.getNumber()) + ": " + table.getStatusFullName(), tableX, tableY-1);
+				g2d.drawString("Seats: " + table.numberOfCurrentSeats(), tableX, tableY+tableHeight+11);
 			}
 			
 		}
