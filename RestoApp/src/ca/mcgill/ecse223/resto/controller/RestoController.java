@@ -262,7 +262,8 @@ public class RestoController {
 
 		return itemsElements;
 	}
-
+	//The following reserve method is the one that should be called from the GUI, it takes in a List<String> of table numbers
+	//which is will use to get the table objects from the restoapp.
 	public static void reserve(List <String> tables, Date date, Time time, int numberInParty, String contactName, 
 			String contactEmailAddress, String contactPhoneNumber) throws InvalidInputException{
 		List<Table> tableList = new ArrayList<Table>();
@@ -270,6 +271,7 @@ public class RestoController {
 			int tableNumberInt = Integer.parseInt(tableNumberStr);
 			tableList.add(Table.getWithNumber(tableNumberInt));
 		}
+		//System.out.println("Table list: "+ tableList.toString());
 		reserve(date, time, numberInParty, contactName, contactEmailAddress, contactPhoneNumber, tableList);
 	}
 
@@ -314,13 +316,25 @@ public class RestoController {
 			error = "Not enough seats for party.";
 			throw new InvalidInputException(error.trim());
 		}
-		Table[] currentTablesArray = new Table[currentTables.size()];
-		currentTables.toArray(currentTablesArray);
-		Reservation res = new Reservation(date, time, numberInParty, contactName, contactEmailAddress, contactPhoneNumber, r,currentTablesArray);
+		Table[] tablesToReserve = new Table[tables.size()];
+		tables.toArray(tablesToReserve);
+		new Reservation(date, time, numberInParty, contactName, contactEmailAddress, contactPhoneNumber, r, tablesToReserve);
 		System.out.println("Added reservation for tables: ");
-		for (Table table : currentTablesArray) {
-			System.out.print(table.getNumber());
+		for (Table table : tablesToReserve) {
+			System.out.print(table.getNumber()+" ");
 		}
+		RestoApplication.save();
+	}
+	
+	public static void removeReservation(Reservation reservation) throws InvalidInputException {
+		String error = "";
+		if (reservation == null) {
+			error = "Must select reservation to remove.";
+			throw new InvalidInputException(error.trim());
+		}
+		//RestoApp restoApp = RestoApplication.getRestoApp();
+		//restoApp.removeReservation(reservation);
+		reservation.delete();
 		RestoApplication.save();
 	}
 
