@@ -182,7 +182,7 @@ public class RestoAppGUI extends JFrame {
 		
 		JButton btnUpdateTable = new JButton("Update table");
 		btnUpdateTable.setBounds(692, 289, 115, 29);
-		btnUpdateTable.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnUpdateTable.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnUpdateTable.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				updateTableButtonActionPerformed(evt);
@@ -434,7 +434,7 @@ public class RestoAppGUI extends JFrame {
 		
 		tableVisualization = new TableVisualizer();
 		tableVisualization.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		tableVisualization.setBounds(562, 369, 384, 302);
+		tableVisualization.setBounds(562, 369, 632, 369);
 		contentPane.add(tableVisualization);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
@@ -618,14 +618,14 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(eventDescription);
 		
 		JButton btnAddMenuItem = new JButton("Add menu item");
-		btnAddMenuItem.setFont(new Font("Tahoma", Font.PLAIN, 10));
+		btnAddMenuItem.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnAddMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 					addMenuItemButtonActionPerformed(evt);
 			}
 		});
 		
-		btnAddMenuItem.setBounds(822, 289, 115, 29);
+		btnAddMenuItem.setBounds(822, 289, 124, 29);
 		contentPane.add(btnAddMenuItem);
 		
 		txtMenuItemName = new JTextField();
@@ -665,8 +665,8 @@ public class RestoAppGUI extends JFrame {
 				deleteMenuItemButtonActionPerformed(arg0);
 			}
 		});
-		btnDeleteMenuItem.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		btnDeleteMenuItem.setBounds(822, 329, 115, 29);
+		btnDeleteMenuItem.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		btnDeleteMenuItem.setBounds(822, 329, 124, 29);
 		contentPane.add(btnDeleteMenuItem);
 		
 		JLabel lblSelectSeat = new JLabel("Select a seat:");
@@ -683,9 +683,9 @@ public class RestoAppGUI extends JFrame {
 		});
 		contentPane.add(selectSeatDropdown);
 		
-					JButton btnCreateOrder = new JButton("Create Order");
-		btnCreateOrder.setFont(new Font("Tahoma", Font.PLAIN, 10));
-		btnCreateOrder.setBounds(747, 169, 91, 20);
+		JButton btnCreateOrder = new JButton("Create Order");
+		btnCreateOrder.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		btnCreateOrder.setBounds(756, 133, 115, 29);
 		contentPane.add(btnCreateOrder);
 		btnCreateOrder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -749,7 +749,7 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(btnIssueBill);
 
 		JButton btnDisplayOrder = new JButton("Display Order");
-		btnDisplayOrder.setBounds(952, 289, 130, 29);
+		btnDisplayOrder.setBounds(953, 66, 130, 29);
 		contentPane.add(btnDisplayOrder);
 		
 		JButton btnDeleteOrderItem = new JButton("delete order Item");
@@ -757,11 +757,11 @@ public class RestoAppGUI extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		btnDeleteOrderItem.setBounds(952, 338, 155, 45);
+		btnDeleteOrderItem.setBounds(953, 115, 155, 45);
 		contentPane.add(btnDeleteOrderItem);
 		
 		JButton btnDeleteTableOrder = new JButton("Delete table order");
-		btnDeleteTableOrder.setBounds(953, 397, 164, 29);
+		btnDeleteTableOrder.setBounds(954, 174, 164, 29);
 		contentPane.add(btnDeleteTableOrder);
 		
 
