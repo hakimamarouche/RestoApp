@@ -685,7 +685,7 @@ public class RestoAppGUI extends JFrame {
 		
 		JButton btnCreateOrder = new JButton("Create Order");
 		btnCreateOrder.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		btnCreateOrder.setBounds(756, 133, 115, 29);
+		btnCreateOrder.setBounds(754, 158, 101, 29);
 		contentPane.add(btnCreateOrder);
 		btnCreateOrder.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -694,7 +694,7 @@ public class RestoAppGUI extends JFrame {
 		});
 		
 		JScrollPane scrollPaneSeat = new JScrollPane();
-		scrollPaneSeat.setBounds(786, 197, 151, 81);
+		scrollPaneSeat.setBounds(786, 197, 160, 81);
 		contentPane.add(scrollPaneSeat);
 		
 		tableSeat = new JTable();
@@ -745,7 +745,7 @@ public class RestoAppGUI extends JFrame {
 				issueBillButtonActionPerformed(arg0);
 			}
 		});
-		btnIssueBill.setBounds(848, 168, 89, 21);
+		btnIssueBill.setBounds(857, 158, 89, 29);
 		contentPane.add(btnIssueBill);
 
 		JButton btnDisplayOrder = new JButton("Display Order");
@@ -770,7 +770,7 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(lblItemQuantity);
 		
 		textFieldMenuItemQuantity = new JTextField();
-		textFieldMenuItemQuantity.setBounds(851, 133, 86, 20);
+		textFieldMenuItemQuantity.setBounds(857, 133, 86, 20);
 		contentPane.add(textFieldMenuItemQuantity);
 		textFieldMenuItemQuantity.setColumns(10);
 
