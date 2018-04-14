@@ -34,9 +34,13 @@ public class TableVisualizer extends JPanel {
 				int tableY = table.getY() - table.getLength()/2;
 				int tableWidth = table.getWidth() + table.getWidth()/2;
 				int tableHeight = table.getLength() + table.getLength()/2;
-				g2d.setColor(Color.BLACK);
+				if (table.hasReservations()) {
+					g2d.setColor(Color.RED);
+				} else {
+					g2d.setColor(Color.BLACK);
+				}
 				g2d.drawRect(tableX, tableY, tableWidth, tableHeight);
-				g2d.drawString(Integer.toString(table.getNumber()), table.getX(), table.getY()+8);
+				g2d.drawString(Integer.toString(table.getNumber()) + ": " + table.getStatusFullName(), tableX, tableY-1);
 			}
 			
 		}
