@@ -70,18 +70,17 @@ public class RestoController {
 		RestoApp restoApp = RestoApplication.getRestoApp();
 		width = table.getWidth();
 		length = table.getLength();
-		List<Table> currentTable = restoApp.getTables();
-		for (Table currentTables : currentTable) {
-			if ( (x + width) != (currentTables.getX() + currentTables.getWidth()) && (y + length) != (currentTables.getX() + currentTables.getLength()) ) {
-				table.setX(x);
-				table.setY(y);        
-			}
-			else {
+		List<Table> currentTables = restoApp.getCurrentTables();
+		boolean overlaps;
+		for (Table currentTable : currentTables) {
+			if (currentTable.doesOverlaps(x, y, width, length) && table.equals(currentTable)) {
 				error = "There is already a table in this location";
 				throw new InvalidInputException(error.trim());
 			}
-
 		}
+				table.setX(x);
+				table.setY(y);        
+				
 		RestoApplication.save();
 	}
 
@@ -184,12 +183,18 @@ public class RestoController {
 			error = "Table not found.";
 			throw new InvalidInputException(error.trim()); 
 		}
-		else if (numberOfSeats < 0) {
+		else if (numberOfSeats <= 0) {
 			error = "Invalid number of seats.";
 			throw new InvalidInputException(error.trim());
 		}
-		else if (newNumber < 0) {
+		else if (newNumber <= 0) {
 			error = "Invalid table number.";
+			throw new InvalidInputException(error.trim());
+		}
+		
+		boolean reserved = table.hasReservations();
+		if (reserved) {
+			error = "This table is currently reserved! Please, remove all reservations to that table and try again.";
 			throw new InvalidInputException(error.trim());
 		}
 
@@ -198,7 +203,7 @@ public class RestoController {
 		for (Order order : currentOrders) {
 			List<Table> tables = order.getTables();
 			boolean inUse = tables.contains(table);
-			if (inUse == true) {
+			if (inUse) {
 				error = "Table in use.";
 				throw new InvalidInputException(error.trim());
 			}
@@ -217,7 +222,7 @@ public class RestoController {
 
 
 		int n = table.numberOfCurrentSeats();
-		for (int i = 1; i < (numberOfSeats - n); i++) {
+		for (int i = 0; i < (numberOfSeats - n); i++) {
 			Seat seat = table.addSeat();
 			table.addCurrentSeat(seat);
 		}
