@@ -1070,7 +1070,7 @@ public class RestoAppGUI extends JFrame {
 	
 	private void addTableButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		// clear error message
-		error = null;
+		error = "";
 
 		// call the controller
 		try {
