@@ -760,7 +760,7 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(btnIssueBill);
 
 		JButton btnDisplayOrder = new JButton("Display Order");
-		btnDisplayOrder.setBounds(953, 59, 124, 20);
+		btnDisplayOrder.setBounds(953, 59, 151, 20);
 		contentPane.add(btnDisplayOrder);
 		
 		JButton btnDeleteOrderItem = new JButton("delete order Item");
@@ -768,11 +768,11 @@ public class RestoAppGUI extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		btnDeleteOrderItem.setBounds(953, 83, 124, 20);
+		btnDeleteOrderItem.setBounds(953, 83, 151, 20);
 		contentPane.add(btnDeleteOrderItem);
 		
 		JButton btnDeleteTableOrder = new JButton("Delete table order");
-		btnDeleteTableOrder.setBounds(953, 108, 124, 20);
+		btnDeleteTableOrder.setBounds(953, 108, 151, 20);
 		contentPane.add(btnDeleteTableOrder);
 		
 
@@ -821,6 +821,15 @@ public class RestoAppGUI extends JFrame {
 		});
 		btnDeleteReservation.setBounds(397, 411, 147, 29);
 		contentPane.add(btnDeleteReservation);
+		
+		JButton btnStartOrder = new JButton("Start Order");
+		btnStartOrder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				startOrderButtonActionPerformed(e);
+			}
+		});
+		btnStartOrder.setBounds(956, 329, 124, 29);
+		contentPane.add(btnStartOrder);
 	}
 	
 
@@ -1306,21 +1315,35 @@ public class RestoAppGUI extends JFrame {
 		// update visuals
 		refreshData();
 	}
-		private void createOrderButtonActionPerformed(ActionEvent evt) {
+	private void createOrderButtonActionPerformed(ActionEvent evt) {
 		// clear error message
 		error = "";
-	
 		List<Seat> seatList = new ArrayList<Seat>(seatsInTable.values());
-		
 		// call the controller
-			try {
-				RestoController.orderMenuItem((MenuItem)menuItemSelected, Integer.parseInt(textFieldMenuItemQuantity.getText()), seatList);
-			} 
-			catch (InvalidInputException e) {
-				error = e.getMessage();
-			}
-		
+		try {
+			RestoController.orderMenuItem((MenuItem)menuItemSelected, Integer.parseInt(textFieldMenuItemQuantity.getText()), seatList);
+		} 
+		catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
 		// update visuals
+		refreshData();
+	}
+	
+	private void startOrderButtonActionPerformed(ActionEvent evt) {
+		error = "";
+		if (selectedTable < 0) {
+			error = "Table needs to be selected to start order.";
+		} else {
+			try {
+				Table table = tables.get(selectedTable);
+				table.startOrder();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		//update visuals
 		refreshData();
 	}
     protected void initDetail(int selectedRow) {
