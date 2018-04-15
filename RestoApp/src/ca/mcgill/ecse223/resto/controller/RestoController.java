@@ -40,6 +40,9 @@ public class RestoController {
 		if(nameOfEvent == null || description == null || startDate == null || endDate == null) {
 			error = "Missing event information";
 			throw new InvalidInputException(error.trim());
+		} else if (endDate.getTime() < startDate.getTime()) {
+			error = "End date must be after start date.";
+			throw new InvalidInputException(error.trim());
 		}
 		RestoApp r = RestoApplication.getRestoApp();
 		new Event(nameOfEvent, description, startDate, endDate, r);

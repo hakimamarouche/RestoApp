@@ -837,77 +837,75 @@ public class RestoAppGUI extends JFrame {
 	private void refreshData() {
 		//error
 		errorMessage.setText(error);
-		if(error == null || error.length() == 0) {
-			//empty the text fields
-			reservationNameTextField.setText("");
-			//reservationDateTextField.setText("");
-			reservationNumberOfPersonTextField.setText("");
-			reservationPhoneNumberTextField.setText("");
-			reservationEmailTextField.setText("");
-			tableNumberTextField.setText("");
-			tableXPostionTextField.setText("");
-			tableYPostionTextField.setText("");
-			tableWidthTextField.setText("");
-			tableLengthTextField.setText("");
-			tableNumberOfSeatsTextField.setText("");
-			txtMenuItemName.setText("");
-			txtMenuItemPrice.setText("");
-			//update table Dropdown
-			tables = new HashMap<Integer, Table>();
-			selectTableDropdown.removeAllItems();
-			Integer index = 0;
-			for (Table table : RestoController.getTables()) {
-				tables.put(index, table);
-				selectTableDropdown.addItem("Table " + table.getNumber());
-				index++;
-			}
-			selectedTable = -1;
-			selectTableDropdown.setSelectedIndex(selectedTable);
-			
-			//update MenuItemCategoryDropDown
-			selectMenuCategoryDropDown.removeAllItems();
-			index = 0;
-			for (ItemCategory itemCategory : ItemCategory.values())  {
-				selectMenuCategoryDropDown.addItem(itemCategory);
-				index++;
-			}
-			selectedCategory = -1;
-			selectMenuCategoryDropDown.setSelectedIndex(selectedCategory);
-			
-			//update reservations:
-			restoReservations = RestoApplication.getRestoApp().getReservations();
-			((DefaultTableModel)reservationTable.getModel()).setRowCount(0);
-			populateReservationTable(restoReservations);
-			
-			
-			//update Tables:
-			tableVisualization.addTables(tables);
-			//Menu Display:			
-			ArrayList<MenuItem> AppetizerItems = (ArrayList<MenuItem>) RestoController.getMenuItems(MenuItem.ItemCategory.Appetizer);
-			ArrayList<MenuItem> mainItems = (ArrayList<MenuItem>) RestoController.getMenuItems(MenuItem.ItemCategory.Main);
-			ArrayList<MenuItem> dessertItems = (ArrayList<MenuItem>) RestoController.getMenuItems(MenuItem.ItemCategory.Dessert);
-			ArrayList<MenuItem> alcoholicItems = (ArrayList<MenuItem>) RestoController.getMenuItems(MenuItem.ItemCategory.AlcoholicBeverage);
-			ArrayList<MenuItem> nonAlcoholicItems = (ArrayList<MenuItem>) RestoController.getMenuItems(MenuItem.ItemCategory.NonAlcoholicBeverage);
-			//Clear Menu JTables:
-			((DefaultTableModel)appetizerTable.getModel()).setRowCount(0);
-			((DefaultTableModel)mainTable.getModel()).setRowCount(0);
-			((DefaultTableModel)dessertTable.getModel()).setRowCount(0);
-			((DefaultTableModel)alcoholicBeverageTable.getModel()).setRowCount(0);
-			((DefaultTableModel)nonAlcoholicBeverageTable.getModel()).setRowCount(0);
-			((DefaultTableModel)tableSeat.getModel()).setRowCount(0);
-			//populate Menu JTables:
-			populateAppetizerTable(AppetizerItems);
-			populateMainTable(mainItems);
-			populateDessertTable(dessertItems);
-			populateAlcoholicBeverageTable(alcoholicItems);
-			populateNonAlcoholicBeverageTable(nonAlcoholicItems);
-			//Events Display:
-			List<Event> restoEvents = RestoController.getEvents();
-			//Clear Event JTable:
-			((DefaultTableModel)eventTable.getModel()).setRowCount(0);
-			//populate Event JTable:
-			populateEventTable(restoEvents);
+		//empty the text fields
+		reservationNameTextField.setText("");
+		//reservationDateTextField.setText("");
+		reservationNumberOfPersonTextField.setText("");
+		reservationPhoneNumberTextField.setText("");
+		reservationEmailTextField.setText("");
+		tableNumberTextField.setText("");
+		tableXPostionTextField.setText("");
+		tableYPostionTextField.setText("");
+		tableWidthTextField.setText("");
+		tableLengthTextField.setText("");
+		tableNumberOfSeatsTextField.setText("");
+		txtMenuItemName.setText("");
+		txtMenuItemPrice.setText("");
+		//update table Dropdown
+		tables = new HashMap<Integer, Table>();
+		selectTableDropdown.removeAllItems();
+		Integer index = 0;
+		for (Table table : RestoController.getTables()) {
+			tables.put(index, table);
+			selectTableDropdown.addItem("Table " + table.getNumber());
+			index++;
 		}
+		selectedTable = -1;
+		selectTableDropdown.setSelectedIndex(selectedTable);
+		
+		//update MenuItemCategoryDropDown
+		selectMenuCategoryDropDown.removeAllItems();
+		index = 0;
+		for (ItemCategory itemCategory : ItemCategory.values())  {
+			selectMenuCategoryDropDown.addItem(itemCategory);
+			index++;
+		}
+		selectedCategory = -1;
+		selectMenuCategoryDropDown.setSelectedIndex(selectedCategory);
+		
+		//update reservations:
+		restoReservations = RestoApplication.getRestoApp().getReservations();
+		((DefaultTableModel)reservationTable.getModel()).setRowCount(0);
+		populateReservationTable(restoReservations);
+		
+		
+		//update Tables:
+		tableVisualization.addTables(tables);
+		//Menu Display:			
+		ArrayList<MenuItem> AppetizerItems = (ArrayList<MenuItem>) RestoController.getMenuItems(MenuItem.ItemCategory.Appetizer);
+		ArrayList<MenuItem> mainItems = (ArrayList<MenuItem>) RestoController.getMenuItems(MenuItem.ItemCategory.Main);
+		ArrayList<MenuItem> dessertItems = (ArrayList<MenuItem>) RestoController.getMenuItems(MenuItem.ItemCategory.Dessert);
+		ArrayList<MenuItem> alcoholicItems = (ArrayList<MenuItem>) RestoController.getMenuItems(MenuItem.ItemCategory.AlcoholicBeverage);
+		ArrayList<MenuItem> nonAlcoholicItems = (ArrayList<MenuItem>) RestoController.getMenuItems(MenuItem.ItemCategory.NonAlcoholicBeverage);
+		//Clear Menu JTables:
+		((DefaultTableModel)appetizerTable.getModel()).setRowCount(0);
+		((DefaultTableModel)mainTable.getModel()).setRowCount(0);
+		((DefaultTableModel)dessertTable.getModel()).setRowCount(0);
+		((DefaultTableModel)alcoholicBeverageTable.getModel()).setRowCount(0);
+		((DefaultTableModel)nonAlcoholicBeverageTable.getModel()).setRowCount(0);
+		((DefaultTableModel)tableSeat.getModel()).setRowCount(0);
+		//populate Menu JTables:
+		populateAppetizerTable(AppetizerItems);
+		populateMainTable(mainItems);
+		populateDessertTable(dessertItems);
+		populateAlcoholicBeverageTable(alcoholicItems);
+		populateNonAlcoholicBeverageTable(nonAlcoholicItems);
+		//Events Display:
+		List<Event> restoEvents = RestoController.getEvents();
+		//Clear Event JTable:
+		((DefaultTableModel)eventTable.getModel()).setRowCount(0);
+		//populate Event JTable:
+		populateEventTable(restoEvents);
 	}
 	
 	
@@ -1130,6 +1128,7 @@ public class RestoAppGUI extends JFrame {
 		if (error.length() == 0) {
 			try {
 				RestoController.removeTable(tables.get(selectedTable));
+				error = "";
 			} catch (InvalidInputException e) {
 				error = e.getMessage();
 			}
@@ -1207,8 +1206,9 @@ public class RestoAppGUI extends JFrame {
 			refreshData();
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
+			refreshData();
 		}
-		//System.out.println(df.format(eventStartDateChooser.getDate()));
+		refreshData();
 	}
 	
 	private void deleteEventActionPerformed(ActionEvent evt) {
