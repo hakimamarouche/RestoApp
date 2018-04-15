@@ -242,26 +242,32 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(tableNumberOfSeatsTextField);
 		
 		JLabel lblTableNumber = new JLabel("Table Number:");
+		lblTableNumber.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblTableNumber.setBounds(562, 59, 91, 20);
 		contentPane.add(lblTableNumber);
 		
 		JLabel lblXPosition = new JLabel("X position:");
-		lblXPosition.setBounds(587, 83, 59, 20);
+		lblXPosition.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblXPosition.setBounds(587, 83, 66, 20);
 		contentPane.add(lblXPosition);
 		
 		JLabel lblYPosition = new JLabel("Y position:");
-		lblYPosition.setBounds(587, 108, 59, 20);
+		lblYPosition.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblYPosition.setBounds(587, 108, 66, 20);
 		contentPane.add(lblYPosition);
 		
 		JLabel lblTableWidth = new JLabel("Table width :");
-		lblTableWidth.setBounds(575, 133, 71, 20);
+		lblTableWidth.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblTableWidth.setBounds(575, 133, 78, 20);
 		contentPane.add(lblTableWidth);
 		
 		JLabel lblTableHeight = new JLabel("Table height :");
-		lblTableHeight.setBounds(571, 158, 75, 20);
+		lblTableHeight.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblTableHeight.setBounds(571, 158, 82, 20);
 		contentPane.add(lblTableHeight);
 		
 		JLabel lblNumberOfSeats = new JLabel("Number of seats :");
+		lblNumberOfSeats.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNumberOfSeats.setBounds(545, 183, 108, 20);
 		contentPane.add(lblNumberOfSeats);
 		
@@ -635,10 +641,12 @@ public class RestoAppGUI extends JFrame {
 		txtMenuItemName.setColumns(10);
 		
 		JLabel lblMenuItemName = new JLabel("Menu Item name:");
+		lblMenuItemName.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblMenuItemName.setBounds(756, 59, 99, 14);
 		contentPane.add(lblMenuItemName);
 		
 		JLabel lblMenuItemPrice = new JLabel("Menu Item Price:");
+		lblMenuItemPrice.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblMenuItemPrice.setBounds(756, 85, 99, 14);
 		contentPane.add(lblMenuItemPrice);
 		
@@ -652,10 +660,12 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(selectMenuCategoryDropDown);
 		
 		JLabel lblSelectATable = new JLabel("Select a table:");
+		lblSelectATable.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblSelectATable.setBounds(569, 230, 83, 14);
 		contentPane.add(lblSelectATable);
 		
 		JLabel lblMenuCategory = new JLabel("Menu Category:");
+		lblMenuCategory.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblMenuCategory.setBounds(756, 108, 99, 20);
 		contentPane.add(lblMenuCategory);
 		
@@ -670,6 +680,7 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(btnDeleteMenuItem);
 		
 		JLabel lblSelectSeat = new JLabel("Select a seat:");
+		lblSelectSeat.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblSelectSeat.setBounds(572, 262, 81, 14);
 		contentPane.add(lblSelectSeat);
 		
@@ -749,7 +760,7 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(btnIssueBill);
 
 		JButton btnDisplayOrder = new JButton("Display Order");
-		btnDisplayOrder.setBounds(953, 66, 130, 29);
+		btnDisplayOrder.setBounds(953, 59, 124, 20);
 		contentPane.add(btnDisplayOrder);
 		
 		JButton btnDeleteOrderItem = new JButton("delete order Item");
@@ -757,16 +768,17 @@ public class RestoAppGUI extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		btnDeleteOrderItem.setBounds(953, 115, 155, 45);
+		btnDeleteOrderItem.setBounds(953, 83, 124, 20);
 		contentPane.add(btnDeleteOrderItem);
 		
 		JButton btnDeleteTableOrder = new JButton("Delete table order");
-		btnDeleteTableOrder.setBounds(954, 174, 164, 29);
+		btnDeleteTableOrder.setBounds(953, 108, 124, 20);
 		contentPane.add(btnDeleteTableOrder);
 		
 
 		JLabel lblItemQuantity = new JLabel("Item quantity:");
-		lblItemQuantity.setBounds(756, 139, 82, 14);
+		lblItemQuantity.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblItemQuantity.setBounds(773, 133, 82, 20);
 		contentPane.add(lblItemQuantity);
 		
 		textFieldMenuItemQuantity = new JTextField();
