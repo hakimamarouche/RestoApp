@@ -298,7 +298,8 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(selectTableDropdown);
 		
 		lblName = new JLabel("Name :");
-		lblName.setBounds(13, 310, 69, 20);
+		lblName.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblName.setBounds(13, 312, 69, 20);
 		contentPane.add(lblName);
 		
 		// for the name
@@ -308,11 +309,13 @@ public class RestoAppGUI extends JFrame {
 		reservationNameTextField.setColumns(10);
 		
 		JLabel lblDate = new JLabel("Date :");
-		lblDate.setBounds(13, 353, 43, 20);
+		lblDate.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblDate.setBounds(13, 348, 69, 20);
 		contentPane.add(lblDate);
 		
-		JLabel lblNumberOfPerson = new JLabel("Number of person :");
-		lblNumberOfPerson.setBounds(237, 316, 151, 20);
+		JLabel lblNumberOfPerson = new JLabel("Number of people :");
+		lblNumberOfPerson.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblNumberOfPerson.setBounds(237, 312, 151, 20);
 		contentPane.add(lblNumberOfPerson);
 		
 		reservationNumberOfPersonTextField = new JTextField();
@@ -321,6 +324,7 @@ public class RestoAppGUI extends JFrame {
 		reservationNumberOfPersonTextField.setColumns(10);
 		
 		JLabel lblPhoneNumber = new JLabel("phone number :");
+		lblPhoneNumber.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblPhoneNumber.setBounds(237, 348, 151, 20);
 		contentPane.add(lblPhoneNumber);
 		
@@ -330,6 +334,7 @@ public class RestoAppGUI extends JFrame {
 		reservationPhoneNumberTextField.setColumns(10);
 		
 		JLabel lblEmailAdress = new JLabel("email adress :");
+		lblEmailAdress.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblEmailAdress.setBounds(237, 380, 151, 20);
 		contentPane.add(lblEmailAdress);
 		
@@ -352,7 +357,8 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(reservationDateChooser);
 		
 		JLabel lblTime = new JLabel("Time :");
-		lblTime.setBounds(10, 384, 46, 14);
+		lblTime.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblTime.setBounds(10, 384, 72, 14);
 		contentPane.add(lblTime);
 		
 		reservationTimeSpinner = new JSpinner();
@@ -362,7 +368,8 @@ public class RestoAppGUI extends JFrame {
 		contentPane.add(reservationTimeSpinner);
 		
 		JLabel lblTables = new JLabel("Tables :");
-		lblTables.setBounds(13, 418, 46, 14);
+		lblTables.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblTables.setBounds(13, 418, 69, 14);
 		contentPane.add(lblTables);
 		
 		tablesToReserve = new JTextField();
@@ -763,7 +770,7 @@ public class RestoAppGUI extends JFrame {
 		btnDisplayOrder.setBounds(953, 59, 151, 20);
 		contentPane.add(btnDisplayOrder);
 		
-		JButton btnDeleteOrderItem = new JButton("delete order Item");
+		JButton btnDeleteOrderItem = new JButton("Delete order Item");
 		btnDeleteOrderItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
@@ -950,7 +957,6 @@ public class RestoAppGUI extends JFrame {
 				index++;
 			}
 		}
-		
 	}
 
 
